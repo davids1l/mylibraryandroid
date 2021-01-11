@@ -20,7 +20,7 @@ import java.util.Map;
 public class Singleton {
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://localhost:8888/web/api/utilizador/login";
+    private static final String mUrlAPILogin = "http://192.168.1.100:8888/web/api/utilizador/login";
     private LoginListener loginListener;
 
     public static synchronized Singleton getInstance(Context context) {

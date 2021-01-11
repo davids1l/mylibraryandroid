@@ -3,6 +3,7 @@ package com.example.mylibraryandroid.vistas;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -18,7 +19,19 @@ import com.example.mylibraryandroid.utils.JsonParser;
 public class LoginActivity extends AppCompatActivity implements LoginListener {
     private EditText etEmail, etPassword;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        setTitle(getString(R.string.actLogin));
 
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+        etEmail.setText("admin@admin.com");
+        etPassword.setText("qwerty1234");
+
+        Singleton.getInstance(getApplicationContext()).setLoginListener(this);
+    }
 
     public void onClickLogin(View view) {
         if(JsonParser.isConnectionInternet(getApplicationContext())) {

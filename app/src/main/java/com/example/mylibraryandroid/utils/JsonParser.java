@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.example.mylibraryandroid.modelo.Utilizador;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,6 +25,22 @@ public class JsonParser {
             e.printStackTrace();
         }
         return token;
+    }
+
+    public static String parserJsonRegistar(String response){
+        String result = null;
+
+        try {
+            JSONObject utilizador = new JSONObject(response);
+
+            if (utilizador.getBoolean("success")) {
+                result = utilizador.getString("result");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static boolean isConnectionInternet(Context context) {

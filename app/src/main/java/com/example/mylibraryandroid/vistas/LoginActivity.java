@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -33,24 +34,30 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         Singleton.getInstance(getApplicationContext()).setLoginListener(this);
     }
 
+    public void onClickRegistar(View view) {
+        Intent intent;
+        intent = new Intent(this, RegistarActivity.class);
+        startActivity(intent);
+    }
+
     public void onClickLogin(View view) {
-        if(JsonParser.isConnectionInternet(getApplicationContext())) {
+        if (JsonParser.isConnectionInternet(getApplicationContext())) {
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
 
-            if(!isEmailValid(email)){
+            if (!isEmailValid(email)) {
                 etEmail.setError(getString(R.string.etEmailInválido));
                 return;
             }
 
-            if(!isPasswordValid(password)){
+            if (!isPasswordValid(password)) {
                 etPassword.setError(getString(R.string.etPasswordInválida));
                 return;
             }
 
             Singleton.getInstance(getApplicationContext()).loginAPI(email, password, getApplicationContext());
         } else {
-            Toast.makeText(getApplicationContext(),R.string.noInternet, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -58,8 +65,8 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private boolean isPasswordValid(String password){
-        if(password == null){
+    private boolean isPasswordValid(String password) {
+        if (password == null) {
             return false;
         }
 
@@ -68,12 +75,12 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void onValidateLogin(String token, String email) {
-        if(token != null){
+        if (token != null) {
             guardarInfoSharedPref(token, email);
             Intent intent = new Intent(this, MenuMainActivity.class);
             startActivity(intent);
             finish();
-        }else {
+        } else {
             Toast.makeText(getApplicationContext(), "Login inválido", Toast.LENGTH_SHORT).show();
         }
     }
@@ -82,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         SharedPreferences sharedPrefUser = getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefUser.edit();
         editor.putString(MenuMainActivity.EMAIL, email);
-        editor.putString(MenuMainActivity.TOKEN,token);
+        editor.putString(MenuMainActivity.TOKEN, token);
         editor.apply();
     }
 }

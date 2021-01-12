@@ -3,6 +3,7 @@ package com.example.mylibraryandroid.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.example.mylibraryandroid.modelo.Livro;
 
@@ -18,7 +19,8 @@ public class JsonParser {
 
         try {
             JSONObject login = new JSONObject(response);
-            if (login.getBoolean("sucess")) {
+
+            if (login.getBoolean("success")) {
                 token = login.getString("token");
             }
 

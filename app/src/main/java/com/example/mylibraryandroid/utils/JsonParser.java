@@ -4,8 +4,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.example.mylibraryandroid.modelo.Livro;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class JsonParser {
     public static String parserJsonLogin(String response) {
@@ -29,4 +34,5 @@ public class JsonParser {
 
         return ni != null && ni.isConnected();
     }
+
 }

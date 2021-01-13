@@ -3,9 +3,6 @@ package com.example.mylibraryandroid.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
-
-import com.example.mylibraryandroid.modelo.Utilizador;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,4 +46,5 @@ public class JsonParser {
 
         return ni != null && ni.isConnected();
     }
+
 }

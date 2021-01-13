@@ -9,11 +9,19 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.listeners.CatalogoListener;
+import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
 import com.example.mylibraryandroid.utils.JsonParser;
+import com.example.mylibraryandroid.utils.LivroJsonParser;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +30,17 @@ import java.util.Map;
 public class Singleton {
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://192.168.1.77:8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = "http://192.168.1.77:8888/web/api/utilizador/create";
+    private static final String mUrlAPILogin = "http://192.168.1.100:8888/web/api/utilizador/login";
+    private static final String mUrlAPIRegistar = "http://192.168.1.100:8888/web/api/utilizador/create";
+    private static final String mUrlAPICatalogo = "http://192.168.1.100:8888/web/api/livro";
+    private static final String mUrlAPIFavorito = "http://192.168.1.100:8888/web/api/favorito";
     private LoginListener loginListener;
     private RegistarListener registarListener;
+    private CatalogoListener catalogoListener;
+    private FavoritoListener favoritoListener;
+    private BDHelper bdHelper;
+    private ArrayList<Livro> catalogo;
+    private ArrayList<Livro> favorito;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -37,6 +52,9 @@ public class Singleton {
 
     private Singleton(Context context) {
         // Construtor
+        catalogo =  new ArrayList<>();
+        favorito = new ArrayList<>();
+        bdHelper = new BDHelper(context);
     }
 
     public void setLoginListener(LoginListener loginListener) {
@@ -45,6 +63,14 @@ public class Singleton {
 
     public void setRegistarListener(RegistarListener registarListener){
         this.registarListener = registarListener;
+    }
+
+    public void setCatalogoListener(CatalogoListener catalogoListener) {
+        this.catalogoListener = catalogoListener;
+    }
+
+    public void setFavoritoListener(FavoritoListener favoritoListener) {
+        this.favoritoListener = favoritoListener;
     }
 
     public void loginAPI(final String email, final String password, final Context context) {
@@ -104,4 +130,75 @@ public class Singleton {
         volleyQueue.add(req);
     }
 
+
+    /** Acesso aos livro pela BD **/
+    public ArrayList<Livro> getCatalogoBD(){
+        catalogo = bdHelper.getAllLivrosDB();
+        return catalogo;
+    }
+
+
+    /** Acesso aos livros pela API **/
+    public void getCatalogoAPI(final Context context) {
+        if (!LivroJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+            //TODO: no internet -> ir buscar dados à BD local
+            if (catalogoListener != null)
+                catalogoListener.onRefreshCatalogoLivros(bdHelper.getAllLivrosDB());
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPICatalogo, null, new Response.Listener<JSONArray>() {
+
+                @Override
+                public void onResponse(JSONArray response) {
+                    catalogo = LivroJsonParser.parserJsonCatalogo(response);
+                    //TODO: adicionar livros recebidos pela API à BD
+
+                    if (catalogoListener != null)
+                        catalogoListener.onRefreshCatalogoLivros(bdHelper.getAllLivrosDB());
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });/*{
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("token", token);
+                    return params;
+                }
+            };*/
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getFavoritoAPI(final Context context) {
+        if (!LivroJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+            //TODO: no internet -> ir buscar dados à BD local
+            //if (favoritoListener != null)
+                //favoritoListener.onRefreshFavoritoLivros(bdHelper.getAllFavoritosDB());
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito, null, new Response.Listener<JSONArray>() {
+
+                @Override
+                public void onResponse(JSONArray response) {
+                    favorito = LivroJsonParser.parserJsonCatalogo(response);
+                    //TODO: adicionar livros recebidos pela API à BD
+
+                    //if (favoritoListener != null)
+                        //favoritoListener.onRefreshFavoritoLivros(bdHelper.getAllFavoritosDB());
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
 }

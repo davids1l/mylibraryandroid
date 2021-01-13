@@ -9,4 +9,25 @@
     <string name="bemVindo">Bem-vindo!</string>
     <string name="noInternet">Não existe ligação à Internet</string>
     <string name="btnRegistar">Registe-se aqui</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ndOpen">Abrir</string>
+    <string name="ndClose">Fechar</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="nav_catalogo">Catálogo</string>
+    <string name="nav_requisicoes">Requisições</string>
+    <string name="nav_perfil">Perfil</string>
+    <string name="nav_alterar_dados">Alterar dados</string>
+    <string name="nav_logout">Logout</string>
+    <string name="nav_favoritos">Favoritos</string>
 </resources>

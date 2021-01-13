@@ -2,6 +2,7 @@ package com.example.mylibraryandroid.vistas;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mylibraryandroid.R;
@@ -21,11 +23,14 @@ import com.example.mylibraryandroid.modelo.Utilizador;
 import com.example.mylibraryandroid.utils.JsonParser;
 
 import java.text.SimpleDateFormat;
+import java.time.Year;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class RegistarActivity extends AppCompatActivity implements RegistarListener {
-    private EditText etPrimeiroNome, etApelido, etEmail, etDataNascimento, etNif, etTelefone, etPassword, etConfPassword;
+    private EditText etPrimeiroNome, etApelido, etEmail, etDia, etMes, etAno, etNif, etTelefone, etPassword, etConfPassword;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,7 +41,9 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
         etPrimeiroNome = findViewById(R.id.etPrimeiroNome);
         etApelido = findViewById(R.id.etApelido);
         etEmail = findViewById(R.id.etEmail);
-        etDataNascimento = findViewById(R.id.etDataNascimento);
+        etDia = findViewById(R.id.etDia);
+        etMes = findViewById(R.id.etMes);
+        etAno = findViewById(R.id.etAno);
         etNif = findViewById(R.id.etNIF);
         etTelefone = findViewById(R.id.etTelefone);
         etPassword = findViewById(R.id.etPassword);
@@ -56,11 +63,15 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
             String primeiro_nome = etPrimeiroNome.getText().toString();
             String ultimo_nome = etApelido.getText().toString();
             String email = etEmail.getText().toString();
-            String dta_nascimento = etDataNascimento.getText().toString();
+            String dta_nascimento = etAno.getText().toString() + "/" + etMes.getText().toString() + "/" + etDia.getText().toString();
             String nif = etNif.getText().toString();
             String num_telemovel = etTelefone.getText().toString();
             String password = etPassword.getText().toString();
             String confPassword = etConfPassword.getText().toString();
+
+            String ano = etAno.getText().toString();
+            String mes = etMes.getText().toString();
+            String dia = etDia.getText().toString();
 
 
             if (!isNomeValid(primeiro_nome)) {
@@ -78,10 +89,44 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
                 return;
             }
 
-            if (!isDtaNascimentoValid(dta_nascimento)) {
-                etDataNascimento.setError("Campo em branco!");
+
+            if (!isDiaBlank(dia)){
+                etDia.setError("Campo em branco!");
+                return;
+            }else {
+                if(!isDiaValid(Integer.parseInt(dia))){
+                    etDia.setError("Dia inválido. Insira um valor entre 1 e 31");
+                    return;
+                }
+            }
+
+            if(!isMesBlank(mes)){
+                etMes.setError("Campo em branco!");
+                return;
+            }else {
+                if (!isMesValid(Integer.parseInt(mes))){
+                    etMes.setError("Mês inválido. Insira um valor entre 1 e 12.");
+                    return;
+                }
+            }
+
+
+            if (isAnoBlank(ano) == 1){
+                etAno.setError("Campo em branco!");
+                return;
+            }else {
+                if(isAnoBlank(ano) == 2){
+                    etAno.setError("Ano inválido. Tem de conter 4 dígitos.");
+                    return;
+                }
+            }
+
+            if(!isAnoValid(Integer.parseInt(ano))){
+                etAno.setError("Ano inválido.");
                 return;
             }
+
+
 
             if (!isNifValid(nif)) {
                 etNif.setError("NIF inválido. Tem de conter 9 dígitos.");
@@ -185,5 +230,55 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
             return false;
         }
         return true;
+    }
+
+    private int isAnoBlank(String ano){
+        if(ano == null){
+            return 1;
+        }else {
+            if(ano.length() != 4){
+                return 2;
+            }
+        }
+        return 0;
+    }
+
+    private boolean isAnoValid(int ano){
+        if(ano < 1900 || ano > 2021){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    private boolean isMesValid(int mes){
+        if(mes < 1 || mes > 12){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    private boolean isMesBlank(String mes){
+        if(mes == null){
+            return false;
+        }
+        return mes.length() >= 1;
+    }
+
+
+    private boolean isDiaBlank(String dia){
+        if(dia == null){
+            return false;
+        }
+        return dia.length() >= 1;
+    }
+
+    private boolean isDiaValid(int dia){
+        if(dia < 1 || dia > 31){
+            return false;
+        }else {
+            return true;
+        }
     }
 }

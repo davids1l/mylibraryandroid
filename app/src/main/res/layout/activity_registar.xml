@@ -38,13 +38,38 @@
         android:hint="Email"
         android:inputType="textPersonName" />
 
-    <EditText
-        android:id="@+id/etDataNascimento"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Data de Nascimento (dd/mm/yyyy)" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etDia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Dia"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/etMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Mes"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/etAno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Ano"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/etNIF"

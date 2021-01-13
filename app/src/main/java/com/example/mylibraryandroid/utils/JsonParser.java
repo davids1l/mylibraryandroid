@@ -10,6 +10,8 @@ import com.example.mylibraryandroid.modelo.Utilizador;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Console;
+
 public class JsonParser {
     public static String parserJsonLogin(String response) {
         String token = null;

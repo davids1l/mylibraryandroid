@@ -28,13 +28,13 @@ import java.util.Map;
 public class Singleton {
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://192.168.1.100:8888/web/api/utilizador/login";
+    private static final String mUrlAPILogin = "http://192.168.1.97:8888/web/api/utilizador/login";
     private static final String mUrlAPICatalogo = "http://192.168.1.97:8888/web/api/livro";
     private LoginListener loginListener;
     private CatalogoListener catalogoListener;
 
     private BDHelper bdHelper;
-    private ArrayList<Livro> livros;
+    private ArrayList<Livro> catalogo;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -46,7 +46,7 @@ public class Singleton {
 
     private Singleton(Context context) {
         // Construtor
-        livros =  new ArrayList<>();
+        catalogo =  new ArrayList<>();
         bdHelper = new BDHelper(context);
     }
 
@@ -86,9 +86,9 @@ public class Singleton {
 
 
     /** Acesso aos livro pela BD **/
-    //TODO
-    public ArrayList<Livro> getLivrosBD(){
-        catalogo =
+    public ArrayList<Livro> getCatalogoBD(){
+        catalogo = bdHelper.getAllLivrosDB();
+        return catalogo;
     }
 
 
@@ -104,7 +104,7 @@ public class Singleton {
 
                 @Override
                 public void onResponse(JSONArray response) {
-                    livros = LivroJsonParser.parserJsonCatalogo(response);
+                    catalogo = LivroJsonParser.parserJsonCatalogo(response);
                     //TODO: adicionar livros recebidos pela API à BD
 
                     if (catalogoListener != null)
@@ -116,7 +116,14 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });
+            });/*{
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("token", token);
+                    return params;
+                }
+            };*/
             volleyQueue.add(req);
         }
     }

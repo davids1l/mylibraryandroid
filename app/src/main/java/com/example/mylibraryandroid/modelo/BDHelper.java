@@ -88,4 +88,7 @@ public class BDHelper extends SQLiteOpenHelper {
         cursor.close();
         return livros;
     }
+
+
+    //Query to get the autor by it's id
 }

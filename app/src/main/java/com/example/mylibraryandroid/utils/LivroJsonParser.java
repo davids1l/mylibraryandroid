@@ -34,9 +34,8 @@ public class LivroJsonParser {
                 int id_biblioteca = livro.getInt("id_biblioteca");
                 int id_autor = livro.getInt("id_autor");
 
-                Livro auxLivro = new Livro(id_livro, id_autor, id_editora, id_biblioteca, ano, paginas, isbn, titulo, genero, idioma, formato, capa, sinopse);
+                Livro auxLivro = new Livro(id_livro, titulo, isbn, ano, paginas, genero, idioma, formato, capa, sinopse, id_editora, id_biblioteca, id_autor);
                 catalogo.add(auxLivro);
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -63,7 +62,7 @@ public class LivroJsonParser {
             int id_biblioteca = livro.getInt("id_biblioteca");
             int id_autor = livro.getInt("id_autor");
 
-            auxLivro = new Livro(id_livro, id_autor, id_editora, id_biblioteca, ano, paginas, isbn, titulo, genero, idioma, formato, capa, sinopse);
+            auxLivro = new Livro(id_livro, titulo, isbn, ano, paginas, genero, idioma, formato, capa, sinopse, id_editora, id_biblioteca, id_autor);
 
         } catch (JSONException e) {
             e.printStackTrace();

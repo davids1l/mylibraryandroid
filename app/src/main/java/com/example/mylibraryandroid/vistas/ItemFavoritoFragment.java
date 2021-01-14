@@ -47,7 +47,7 @@ public class ItemFavoritoFragment extends Fragment {
         if(favoritos.size() > 0){
             Livro l = favoritos.get(0);
             tvTitulo.setText(l.getTitulo());
-            tvAutor.setText(l.getId_autor()+"");
+            tvAutor.setText(l.getId_autor());
             tvIdioma.setText(l.getIdioma());
             tvFormato.setText(l.getFormato());
 

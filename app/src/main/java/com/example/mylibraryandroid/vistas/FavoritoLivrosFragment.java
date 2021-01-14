@@ -40,7 +40,6 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
         View view = inflater.inflate(R.layout.favorito_livros_fragment, container, false);
         lvFavoritoLivros = view.findViewById(R.id.lvFavoritoLivros);
 
-        // TODO implementar swipe refresh layout
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
 

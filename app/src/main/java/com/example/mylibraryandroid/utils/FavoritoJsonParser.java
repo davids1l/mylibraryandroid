@@ -19,7 +19,7 @@ public class FavoritoJsonParser {
         ArrayList<Favorito> favoritos = new ArrayList<>();
 
         try{
-            for (int i = 0; i < (response.length()-1); i++){
+            for (int i = 0; i < response.length(); i++){
                 JSONObject favorito = (JSONObject) response.get(i);
                 int id_favorito = favorito.getInt("id_favorito");
                 int id_livro = favorito.getInt("id_livro");

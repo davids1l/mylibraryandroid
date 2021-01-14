@@ -31,7 +31,7 @@ public class ItemCatalogoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.catalogo_livros_fragment, container, false);
+        View view = inflater.inflate(R.layout.item_catalogo_fragment, container, false);
 
         tvTitulo = view.findViewById(R.id.tvTitulo);
         tvAutor = view.findViewById(R.id.tvAutor);

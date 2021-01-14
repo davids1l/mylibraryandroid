@@ -62,6 +62,7 @@ public class BDHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //eliminar a BD para ser populada pela API
         String deleteTableLivros="DROP TABLE IF EXISTS " + TABLE_NAME;
         db.execSQL(deleteTableLivros);
 
@@ -110,4 +111,14 @@ public class BDHelper extends SQLiteOpenHelper {
         cursor.close();
         return livros;
     }
+
+    public ArrayList<Livro> getAllFavoritosDB() {
+        ArrayList<Livro> livros = new ArrayList<>();
+
+        // TODO Implementar query para os favoritos (meter acima as constantes e adaptar o onCreate e onUpgrade)
+
+        return livros;
+    }
+
+    //Query to get the autor by it's id
 }

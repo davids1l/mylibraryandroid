@@ -30,7 +30,7 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
     private FragmentManager fragmentManager;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private String email = "";
+    private String email = ""; //TODO: substituir por Nome - utilizador
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,6 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         navigationView = findViewById(R.id.nav_view);
-
         drawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
                 toolbar, R.string.ndOpen, R.string.ndClose);
@@ -69,10 +68,10 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void carregarFragmentoInicial() {
-        navigationView.setCheckedItem(R.id.nav_catalogo);
+        //navigationView.setCheckedItem(R.id.nav_catalogo);
         Fragment fragment = new CatalogoLivrosFragment();
         fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
-        //setTitle(R.string.menu_lista);
+        setTitle(R.string.menu_catalogo);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.mylibraryandroid.modelo;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -61,12 +62,34 @@ public class BDHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //eliminar a BD para ser populada pela API
         String deleteTableLivros="DROP TABLE IF EXISTS " + TABLE_NAME;
         db.execSQL(deleteTableLivros);
 
         //criar a BD novamente
         this.onCreate(db);
+    }
+
+    public void adicionarLivroBD(Livro livro) {
+        ContentValues values = new ContentValues();
+        values.put(ID_LIVRO, livro.getId_livro());
+        values.put(TITULO_LIVRO, livro.getTitulo());
+        values.put(ISBN_LIVRO, livro.getIsbn());
+        values.put(ANO_LIVRO, livro.getAno());
+        values.put(PAGINAS_LIVRO, livro.getPaginas());
+        values.put(GENERO_LIVRO, livro.getGenero());
+        values.put(IDIOMA_LIVRO, livro.getIdioma());
+        values.put(FORMATO_LIVRO, livro.getFormato());
+        values.put(CAPA_LIVRO, livro.getCapa());
+        values.put(SINOPSE_LIVRO, livro.getSinopse());
+        values.put(EDITORA_LIVRO, livro.getId_editora());
+        values.put(BIBLIOTECA_LIVRO, livro.getId_biblioteca());
+        values.put(AUTOR_LIVRO, livro.getId_autor());
+
+        this.db.insert(TABLE_NAME, null, values);
+    }
+
+    public void removerAllLivroBD(){
+        this.db.delete(TABLE_NAME, null, null);
     }
 
     public ArrayList<Livro> getAllLivrosDB() {
@@ -81,14 +104,10 @@ public class BDHelper extends SQLiteOpenHelper {
                 Livro auxLivro = new Livro(cursor.getInt(0),cursor.getString(1), cursor.getInt(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5),
                         cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getInt(10),
                         cursor.getInt(11), cursor.getInt(12));
-
                 livros.add(auxLivro);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return livros;
     }
-
-
-    //Query to get the autor by it's id
 }

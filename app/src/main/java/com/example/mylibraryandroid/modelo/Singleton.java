@@ -137,12 +137,30 @@ public class Singleton {
         return catalogo;
     }
 
+    public void adicionarLivroBD(Livro livro) {
+        bdHelper.adicionarLivroBD(livro);
+    }
+
+    public void adicionarLivrosBD(ArrayList<Livro> livros){
+        bdHelper.removerAllLivroBD();
+        for (Livro l:livros)
+            adicionarLivroBD(l);
+    }
+
+    public Livro getLivro(int id_livro){
+        for (Livro l: catalogo){
+            if (l.getId_livro() == id_livro){
+                return l;
+            }
+        }
+        return null;
+    }
 
     /** Acesso aos livros pela API **/
     public void getCatalogoAPI(final Context context) {
         if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
-            //TODO: no internet -> ir buscar dados à BD local
+
             if (catalogoListener != null)
                 catalogoListener.onRefreshCatalogoLivros(bdHelper.getAllLivrosDB());
         } else {
@@ -151,10 +169,10 @@ public class Singleton {
                 @Override
                 public void onResponse(JSONArray response) {
                     catalogo = LivroJsonParser.parserJsonCatalogo(response);
-                    //TODO: adicionar livros recebidos pela API à BD
+                    adicionarLivrosBD(catalogo);
 
                     if (catalogoListener != null)
-                        catalogoListener.onRefreshCatalogoLivros(bdHelper.getAllLivrosDB());
+                        catalogoListener.onRefreshCatalogoLivros(catalogo);
                 }
             }, new Response.ErrorListener() {
                 @Override

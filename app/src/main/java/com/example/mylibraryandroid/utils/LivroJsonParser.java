@@ -18,7 +18,7 @@ public class LivroJsonParser {
         ArrayList<Livro> catalogo = new ArrayList<>();
 
         try{
-            for (int i = 0; i < response.length(); i++){
+            for (int i = 0; i < (response.length()-1); i++){
                 JSONObject livro = (JSONObject) response.get(i);
                 int id_livro = livro.getInt("id_livro");
                 String titulo = livro.getString("titulo");

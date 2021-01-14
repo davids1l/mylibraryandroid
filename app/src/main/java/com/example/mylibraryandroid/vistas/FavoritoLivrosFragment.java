@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, FavoritoListener {
 
     private ListView lvFavoritoLivros;
-    private ArrayList<Livro> FavoritoLivros;
+    private ArrayList<Livro> favoritoLivros;
     private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -64,7 +64,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
 
     @Override
     public void onRefresh() {
-        Singleton.getInstance(getContext()).getFavoritosBD();
+        Singleton.getInstance(getContext()).getLivrosFavoritosBD();
         swipeRefreshLayout.setRefreshing(false);
     }
 

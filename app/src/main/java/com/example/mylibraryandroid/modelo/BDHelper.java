@@ -2,6 +2,7 @@ package com.example.mylibraryandroid.modelo;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -27,6 +28,13 @@ public class BDHelper extends SQLiteOpenHelper {
     private static final String EDITORA_LIVRO = "id_editora";
     private static final String BIBLIOTECA_LIVRO = "id_biblioteca";
     private static final String AUTOR_LIVRO = "id_autor";
+
+    private static final String TABLE_NAME_FAV = "favorito";
+    private static final String ID_LIVRO_FAV = "id_livro";
+    private static final String ID_FAVORITO_FAV = "id_favorito";
+    private static final String ID_UTILIZADOR_FAV = "id_utilizador";
+    private static final String DTA_FAV = "dta_favorito";
+
 
     private final SQLiteDatabase db;
 
@@ -58,6 +66,16 @@ public class BDHelper extends SQLiteOpenHelper {
                 AUTOR_LIVRO+" INTEGER NOT NULL );";
 
         db.execSQL(createTableLivro);
+
+        // Sql de criação da tabela favorito
+        String createTableFavorito = "CREATE TABLE "+TABLE_NAME_FAV+"( " +
+                ID_FAVORITO_FAV+" INTEGER PRIMARY KEY, " +
+                DTA_FAV+"NUMERIC NOT NULL, " +
+                ID_LIVRO_FAV+" INTEGER NOT NULL, " +
+                ID_UTILIZADOR_FAV+"INTEGER NOT NULL );";
+
+        db.execSQL(createTableFavorito);
+
     }
 
     @Override
@@ -65,6 +83,9 @@ public class BDHelper extends SQLiteOpenHelper {
         //eliminar a BD para ser populada pela API
         String deleteTableLivros="DROP TABLE IF EXISTS " + TABLE_NAME;
         db.execSQL(deleteTableLivros);
+
+        String deleteTableFavoritos="DROP TABLE IF EXISTS " + TABLE_NAME_FAV;
+        db.execSQL(deleteTableFavoritos);
 
         //criar a BD novamente
         this.onCreate(db);
@@ -112,12 +133,33 @@ public class BDHelper extends SQLiteOpenHelper {
         return livros;
     }
 
-    public ArrayList<Livro> getAllFavoritosDB() {
-        ArrayList<Livro> livros = new ArrayList<>();
+    public void adicionarFavoritoBD(Favorito favorito) {
+        ContentValues values = new ContentValues();
+        values.put(ID_FAVORITO_FAV, favorito.getId_favorito());
+        values.put(ID_LIVRO_FAV, favorito.getId_livro());
+        values.put(ID_UTILIZADOR_FAV, favorito.getId_utilizador());
+        values.put(DTA_FAV, favorito.getDta_favorito());
 
-        // TODO Implementar query para os favoritos (meter acima as constantes e adaptar o onCreate e onUpgrade)
+        this.db.insert(TABLE_NAME_FAV, null, values);
+    }
 
-        return livros;
+    public void removerAllFavoritoBD(){
+        this.db.delete(TABLE_NAME_FAV, null, null);
+    }
+
+    public ArrayList<Favorito> getAllFavoritosDB() {
+        ArrayList<Favorito> favoritos = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_NAME_FAV, new String[]{ID_FAVORITO_FAV, DTA_FAV,ID_LIVRO_FAV, ID_UTILIZADOR_FAV},
+                null, null, null, null, null);
+
+        if(cursor.moveToFirst()) {
+            do {
+                Favorito auxFavorito = new Favorito(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return favoritos;
     }
 
     //Query to get the autor by it's id

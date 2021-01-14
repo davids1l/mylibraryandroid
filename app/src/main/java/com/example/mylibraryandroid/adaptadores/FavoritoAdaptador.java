@@ -50,7 +50,7 @@ public class FavoritoAdaptador extends BaseAdapter {
         }
 
         if(convertView == null){
-            convertView = inflater.inflate(R.layout.item_favorito_livro, null);
+            convertView = inflater.inflate(R.layout.item_favorito_fragment, null);
 
             ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
             if(viewHolder == null){

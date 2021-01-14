@@ -1,6 +1,7 @@
 package com.example.mylibraryandroid.modelo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.example.mylibraryandroid.listeners.CatalogoListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
+import com.example.mylibraryandroid.utils.FavoritoJsonParser;
 import com.example.mylibraryandroid.utils.JsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
 
@@ -30,17 +32,18 @@ import java.util.Map;
 public class Singleton {
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://192.168.1.77:8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = "http://192.168.1.77:8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = "http://192.168.1.77:8888/web/api/livro";
-    private static final String mUrlAPIFavorito = "http://192.168.1.77:8888/web/api/favorito";
+    private static final String mUrlAPILogin = "http://192.168.1.100:8888/web/api/utilizador/login";
+    private static final String mUrlAPIRegistar = "http://192.168.1.100:8888/web/api/utilizador/create";
+    private static final String mUrlAPICatalogo = "http://192.168.1.100:8888/web/api/livro";
+    private static final String mUrlAPIFavorito = "http://192.168.1.100:8888/web/api/favorito/utilizador/1";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
     private FavoritoListener favoritoListener;
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
-    private ArrayList<Livro> favorito;
+    private ArrayList<Favorito> favorito;
+    private ArrayList<Livro> livrosFav;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -54,6 +57,7 @@ public class Singleton {
         // Construtor
         catalogo =  new ArrayList<>();
         favorito = new ArrayList<>();
+        livrosFav = new ArrayList<>();
         bdHelper = new BDHelper(context);
     }
 
@@ -155,12 +159,38 @@ public class Singleton {
         }
         return null;
     }
+
     // Ir buscar os favoritos à base de dados.
-    public ArrayList<Livro> getFavoritosBD() {
+    public ArrayList<Favorito> getFavoritosBD() {
         favorito = bdHelper.getAllFavoritosDB();
         return favorito;
-     }
+    }
 
+    public void adicionarFavoritoBD(Favorito favorito) {
+        bdHelper.adicionarFavoritoBD(favorito);
+    }
+
+    public void adicionarFavoritosBD(ArrayList<Favorito> favoritos){
+        bdHelper.removerAllLivroBD();
+        for (Favorito f:favoritos)
+            adicionarFavoritoBD(f);
+    }
+
+    public Favorito getFavorito(int id_favorito){
+        for (Favorito f: favorito){
+            if (f.getId_favorito() == id_favorito){
+                return f;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Livro> getLivrosFavoritosBD() {
+        for (Favorito f: favorito){
+            livrosFav.add(getLivro(f.getId_livro()));
+        }
+        return livrosFav;
+    }
 
     /** Acesso aos livros pela API **/
     public void getCatalogoAPI(final Context context) {
@@ -198,21 +228,21 @@ public class Singleton {
     }
 
     public void getFavoritoAPI(final Context context) {
-        if (!LivroJsonParser.isConnectionInternet(context)) {
+        if (!FavoritoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
-            //TODO: no internet -> ir buscar dados à BD local
+
             if (favoritoListener != null)
-                favoritoListener.onRefreshFavoritoLivros(bdHelper.getAllFavoritosDB());
+                favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito, null, new Response.Listener<JSONArray>() {
 
                 @Override
                 public void onResponse(JSONArray response) {
-                    favorito = LivroJsonParser.parserJsonCatalogo(response);
-                    //TODO: adicionar livros recebidos pela API à BD
+                    favorito = FavoritoJsonParser.parserJsonFavorito(response);
+                    adicionarFavoritosBD(favorito);
 
                     if (favoritoListener != null)
-                        favoritoListener.onRefreshFavoritoLivros(bdHelper.getAllFavoritosDB());
+                        favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());
                 }
             }, new Response.ErrorListener() {
 

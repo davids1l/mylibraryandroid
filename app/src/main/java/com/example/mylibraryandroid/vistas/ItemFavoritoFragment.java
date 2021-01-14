@@ -30,7 +30,8 @@ public class ItemFavoritoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_favorito_fragment, container, false);
+        View view = inflater.inflate(R.layout.favorito_livros_fragment, container, false);
+
         tvTitulo = view.findViewById(R.id.tvTitulo);
         tvAutor = view.findViewById(R.id.tvAutor);
         tvIdioma = view.findViewById(R.id.tvIdioma);
@@ -42,14 +43,14 @@ public class ItemFavoritoFragment extends Fragment {
     }
 
     private void carregarFavorito() {
-        ArrayList<Livro> favoritos = Singleton.getInstance(getContext()).getFavoritosBD();
+        ArrayList<Livro> favoritos = Singleton.getInstance(getContext()).getLivrosFavoritosBD();
         if(favoritos.size() > 0){
             Livro l = favoritos.get(0);
             tvTitulo.setText(l.getTitulo());
             tvAutor.setText(l.getId_autor()+"");
             tvIdioma.setText(l.getIdioma());
             tvFormato.setText(l.getFormato());
-            //imageCapa.setImageResource(l.getCapa());
+
             Glide.with(getContext())
                     .load(l.getCapa())
                     .placeholder(R.drawable.logoipl)

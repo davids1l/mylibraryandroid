@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -52,6 +53,15 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
 
         Singleton.getInstance(getContext()).setCatalogoListener(this);
         Singleton.getInstance(getContext()).getCatalogoAPI(getContext());
+
+        lvCatalogoLivros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), DetalhesLivroActivity.class);
+                intent.putExtra(DetalhesLivroActivity.ID_LIVRO, (int) id);
+                startActivityForResult(intent, 1);
+            }
+        });
 
         return view;
     }

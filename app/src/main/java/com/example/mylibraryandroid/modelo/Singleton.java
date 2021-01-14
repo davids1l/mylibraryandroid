@@ -30,10 +30,10 @@ import java.util.Map;
 public class Singleton {
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://192.168.1.100:8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = "http://192.168.1.100:8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = "http://192.168.1.100:8888/web/api/livro";
-    private static final String mUrlAPIFavorito = "http://192.168.1.100:8888/web/api/favorito";
+    private static final String mUrlAPILogin = "http://192.168.1.77:8888/web/api/utilizador/login";
+    private static final String mUrlAPIRegistar = "http://192.168.1.77:8888/web/api/utilizador/create";
+    private static final String mUrlAPICatalogo = "http://192.168.1.77:8888/web/api/livro";
+    private static final String mUrlAPIFavorito = "http://192.168.1.77:8888/web/api/favorito";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -77,9 +77,9 @@ public class Singleton {
         StringRequest req = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                String token = JsonParser.parserJsonLogin(response);
+                String[] dados = JsonParser.parserJsonLogin(response);
                 if(loginListener != null){
-                    loginListener.onValidateLogin(token, email);
+                    loginListener.onValidateLogin(dados[0], dados[1], email);
                 }
             }
         }, new Response.ErrorListener() {
@@ -157,7 +157,6 @@ public class Singleton {
                         catalogoListener.onRefreshCatalogoLivros(bdHelper.getAllLivrosDB());
                 }
             }, new Response.ErrorListener() {
-
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -166,10 +165,9 @@ public class Singleton {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
-                    params.put("token", token);
+                    params.put("id_livro", );
                     return params;
-                }
-            };*/
+                }*/
             volleyQueue.add(req);
         }
     }

@@ -72,9 +72,9 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void onValidateLogin(String token, String email) {
+    public void onValidateLogin(String token, String id, String email) {
         if (token != null) {
-            guardarInfoSharedPref(token, email);
+            guardarInfoSharedPref(token, id, email);
             Intent intent = new Intent(this, MenuMainActivity.class);
             startActivity(intent);
             finish();
@@ -83,10 +83,11 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         }
     }
 
-    private void guardarInfoSharedPref(String token, String email) {
+    private void guardarInfoSharedPref(String token, String id, String email) {
         SharedPreferences sharedPrefUser = getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefUser.edit();
         editor.putString(MenuMainActivity.EMAIL, email);
+        editor.putString(MenuMainActivity.ID, id);
         editor.putString(MenuMainActivity.TOKEN, token);
         editor.apply();
     }

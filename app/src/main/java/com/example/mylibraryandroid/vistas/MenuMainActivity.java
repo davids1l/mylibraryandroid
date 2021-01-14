@@ -24,6 +24,7 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
 
     public static final String EMAIL = "EMAIL";
     public static final String TOKEN = "TOKEN";
+    public static final String ID = "ID";
     public static final String PREF_INFO_USER = "PREF_INFO_USER";
 
     private FragmentManager fragmentManager;
@@ -49,6 +50,8 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentManager = getSupportFragmentManager();
+
+
 
         carregarCabecalho();
         carregarFragmentoInicial();

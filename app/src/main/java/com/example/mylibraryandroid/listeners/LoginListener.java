@@ -1,5 +1,5 @@
 package com.example.mylibraryandroid.listeners;
 
 public interface LoginListener {
-    void onValidateLogin(String token, String email);
+    void onValidateLogin(String dado, String token, String email);
 }

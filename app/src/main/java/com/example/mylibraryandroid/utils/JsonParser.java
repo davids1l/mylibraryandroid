@@ -3,27 +3,31 @@ package com.example.mylibraryandroid.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Console;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JsonParser {
-    public static String parserJsonLogin(String response) {
-        String token = null;
+    public static String[] parserJsonLogin(String response) {
+        String[] dados = new String[2];
 
         try {
             JSONObject login = new JSONObject(response);
 
             if (login.getBoolean("success")) {
-                token = login.getString("token");
+                dados[0] = login.getString("token");
+                dados[1] = login.getString("id");
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return token;
+        return dados;
     }
 
     public static String parserJsonRegistar(String response){

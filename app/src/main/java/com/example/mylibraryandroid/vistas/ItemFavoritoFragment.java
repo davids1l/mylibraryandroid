@@ -19,44 +19,43 @@ import com.example.mylibraryandroid.modelo.Singleton;
 import java.util.ArrayList;
 
 
-public class ItemCatalogoFragment extends Fragment {
+public class ItemFavoritoFragment extends Fragment {
 
     private TextView tvTitulo, tvAutor, tvIdioma, tvFormato;
-    private ImageView imgCapa;
+    private ImageView imageCapa;
 
-
-    public ItemCatalogoFragment() {
+    public ItemFavoritoFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.catalogo_livros_fragment, container, false);
-
+        View view = inflater.inflate(R.layout.item_favorito_fragment, container, false);
         tvTitulo = view.findViewById(R.id.tvTitulo);
         tvAutor = view.findViewById(R.id.tvAutor);
         tvIdioma = view.findViewById(R.id.tvIdioma);
         tvFormato = view.findViewById(R.id.tvFormato);
-        imgCapa = view.findViewById(R.id.imageCapa);
-        carregarLivro();
+        imageCapa = view.findViewById(R.id.imageCapa);
 
+        carregarFavorito();
         return view;
     }
 
-    private void carregarLivro() {
-        ArrayList<Livro> catalogo = Singleton.getInstance(getContext()).getCatalogoBD();
-        if (catalogo.size() > 0){
-            Livro l = catalogo.get(0);
+    private void carregarFavorito() {
+        ArrayList<Livro> favoritos = Singleton.getInstance(getContext()).getFavoritosBD();
+        if(favoritos.size() > 0){
+            Livro l = favoritos.get(0);
             tvTitulo.setText(l.getTitulo());
-            tvAutor.setText(l.getId_autor());
+            tvAutor.setText(l.getId_autor()+"");
             tvIdioma.setText(l.getIdioma());
             tvFormato.setText(l.getFormato());
-
-            Glide.with(this)
+            //imageCapa.setImageResource(l.getCapa());
+            Glide.with(getContext())
                     .load(l.getCapa())
                     .placeholder(R.drawable.logoipl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgCapa);
+                    .into(imageCapa);
         }
     }
+
 }

@@ -137,6 +137,12 @@ public class Singleton {
         return catalogo;
     }
 
+    // Ir buscar os favoritos à base de dados.
+    public ArrayList<Livro> getFavoritosBD() {
+        favorito = bdHelper.getAllFavoritosDB();
+        return favorito;
+     }
+
 
     /** Acesso aos livros pela API **/
     public void getCatalogoAPI(final Context context) {
@@ -178,8 +184,8 @@ public class Singleton {
         if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
             //TODO: no internet -> ir buscar dados à BD local
-            //if (favoritoListener != null)
-                //favoritoListener.onRefreshFavoritoLivros(bdHelper.getAllFavoritosDB());
+            if (favoritoListener != null)
+                favoritoListener.onRefreshFavoritoLivros(bdHelper.getAllFavoritosDB());
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito, null, new Response.Listener<JSONArray>() {
 
@@ -188,8 +194,8 @@ public class Singleton {
                     favorito = LivroJsonParser.parserJsonCatalogo(response);
                     //TODO: adicionar livros recebidos pela API à BD
 
-                    //if (favoritoListener != null)
-                        //favoritoListener.onRefreshFavoritoLivros(bdHelper.getAllFavoritosDB());
+                    if (favoritoListener != null)
+                        favoritoListener.onRefreshFavoritoLivros(bdHelper.getAllFavoritosDB());
                 }
             }, new Response.ErrorListener() {
 

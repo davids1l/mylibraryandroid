@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.adaptadores.FavoritoAdaptador;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.modelo.Livro;
 import com.example.mylibraryandroid.modelo.Singleton;
@@ -21,7 +22,7 @@ import com.example.mylibraryandroid.modelo.Singleton;
 import java.util.ArrayList;
 
 
-public class FavoritoLivrosFragment extends Fragment implements FavoritoListener {
+public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, FavoritoListener {
 
     private ListView lvFavoritoLivros;
     private ArrayList<Livro> FavoritoLivros;
@@ -40,8 +41,8 @@ public class FavoritoLivrosFragment extends Fragment implements FavoritoListener
         lvFavoritoLivros = view.findViewById(R.id.lvFavoritoLivros);
 
         // TODO implementar swipe refresh layout
-        //swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        //swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         Singleton.getInstance(getContext()).setFavoritoListener(this);
         Singleton.getInstance(getContext()).getFavoritoAPI(getContext());
@@ -61,20 +62,20 @@ public class FavoritoLivrosFragment extends Fragment implements FavoritoListener
         Singleton.getInstance(getContext()).setFavoritoListener(this);
     }
 
-    /*@Override
+    @Override
     public void onRefresh() {
-        Singleton.getInstance(getContext()).getLivrosBD();
+        Singleton.getInstance(getContext()).getFavoritosBD();
         swipeRefreshLayout.setRefreshing(false);
-    }*/
+    }
 
     @Override
     public void onRefreshFavoritoLivros(ArrayList<Livro> favoritoLivros) {
-        //if(favoritoLivros != null)
-        //    lvFavoritoLivros.setAdapter(new FavoritoAdaptador(getContext(), favoritoLivros));
+        if(favoritoLivros != null)
+            lvFavoritoLivros.setAdapter(new FavoritoAdaptador(getContext(), favoritoLivros));
     }
 
     @Override
     public void onRefreshDetalhes() {
-
+        //empty
     }
 }

@@ -89,6 +89,13 @@ public class BDHelper extends SQLiteOpenHelper {
         return livros;
     }
 
+    public ArrayList<Livro> getAllFavoritosDB() {
+        ArrayList<Livro> livros = new ArrayList<>();
+
+        // TODO Implementar query para os favoritos (meter acima as constantes e adaptar o onCreate e onUpgrade)
+
+        return livros;
+    }
 
     //Query to get the autor by it's id
 }

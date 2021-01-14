@@ -72,7 +72,7 @@ public class CatalogoAdaptador extends BaseAdapter {
             tvAutor = view.findViewById(R.id.tvAutor);
             tvIdioma = view.findViewById(R.id.tvIdioma);
             tvFormato = view.findViewById(R.id.tvFormato);
-            imgCapa = view.findViewById(R.id.imageView1);
+            imgCapa = view.findViewById(R.id.imageCapa);
         }
 
         public void update(Livro livro){

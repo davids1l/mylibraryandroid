@@ -33,7 +33,7 @@ public class Singleton {
     private static final String mUrlAPILogin = "http://192.168.1.100:8888/web/api/utilizador/login";
     private static final String mUrlAPIRegistar = "http://192.168.1.100:8888/web/api/utilizador/create";
     private static final String mUrlAPICatalogo = "http://192.168.1.100:8888/web/api/livro";
-    private static final String mUrlAPIFavorito = "http://192.168.1.100:8888/web/api/favorito";
+    private static final String mUrlAPIFavorito = "http://192.168.1.100:8888/web/api/favorito/utilizador/1";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;

@@ -32,12 +32,9 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
     //private CatalogoLivrosViewModel mViewModel;
     private ListView lvCatalogoLivros;
     private ArrayList<Livro> catalogoLivros;
+
     //TODO: searchView e swipeRefresh
 
-
-    /*public static CatalogoLivrosFragment newInstance() {
-        return new CatalogoLivrosFragment();
-    }*/
 
     public CatalogoLivrosFragment() {
         //Required empty public constructor
@@ -117,4 +114,6 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
 
         super.onCreateOptionsMenu(menu, inflater);*/
     }
+
+
 }

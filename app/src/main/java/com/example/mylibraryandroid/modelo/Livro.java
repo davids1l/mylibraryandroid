@@ -7,18 +7,18 @@ public class Livro {
 
     public Livro(int id_livro, String titulo, int isbn, int ano, int paginas, String genero, String idioma, String formato, String capa, String sinopse, int id_editora, int id_biblioteca, int id_autor) {
         this.id_livro = id_livro;
-        this.id_autor = id_autor;
-        this.id_editora = id_editora;
-        this.id_biblioteca = id_biblioteca;
+        this.titulo = titulo;
+        this.isbn = isbn;
         this.ano = ano;
         this.paginas = paginas;
-        this.isbn = isbn;
-        this.titulo = titulo;
         this.genero = genero;
         this.idioma = idioma;
         this.formato = formato;
         this.capa = capa;
         this.sinopse = sinopse;
+        this.id_editora = id_editora;
+        this.id_biblioteca = id_biblioteca;
+        this.id_autor = id_autor;
     }
 
 

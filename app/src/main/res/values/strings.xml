@@ -29,4 +29,6 @@
     <string name="nav_alterar_dados">Alterar dados</string>
     <string name="nav_logout">Logout</string>
     <string name="nav_favoritos">Favoritos</string>
+
+    <string name="menu_catalogo">Catálogo</string>
 </resources>

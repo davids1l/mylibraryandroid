@@ -30,6 +30,7 @@ public class Singleton {
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = "http://192.168.1.97:8888/web/api/utilizador/login";
     private static final String mUrlAPICatalogo = "http://192.168.1.97:8888/web/api/livro";
+    private static final String mUrlCapas = "http://192.168.1.97:8888/web/imgs/capas/";
     private LoginListener loginListener;
     private CatalogoListener catalogoListener;
 
@@ -84,6 +85,12 @@ public class Singleton {
         volleyQueue.add(req);
     }
 
+    public void getCapaLivro(String capa){
+        String url;
+        url = mUrlCapas + capa;
+
+    }
+
 
     /** Acesso aos livro pela BD **/
     public ArrayList<Livro> getCatalogoBD(){
@@ -99,6 +106,15 @@ public class Singleton {
         bdHelper.removerAllLivroBD();
         for (Livro l:livros)
             adicionarLivroBD(l);
+    }
+
+    public Livro getLivro(int id_livro){
+        for (Livro l: catalogo){
+            if (l.getId_livro() == id_livro){
+                return l;
+            }
+        }
+        return null;
     }
 
     /** Acesso aos livros pela API **/

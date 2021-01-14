@@ -62,7 +62,6 @@ public class BDHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //eliminar a BD para ser populada pela API
         String deleteTableLivros="DROP TABLE IF EXISTS " + TABLE_NAME;
         db.execSQL(deleteTableLivros);
 

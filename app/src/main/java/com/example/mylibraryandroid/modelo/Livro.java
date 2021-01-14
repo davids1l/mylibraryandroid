@@ -14,7 +14,7 @@ public class Livro {
         this.genero = genero;
         this.idioma = idioma;
         this.formato = formato;
-        this.capa = capa;
+        this.capa = "http://192.168.1.97:8888/web/imgs/capas/" + capa;
         this.sinopse = sinopse;
         this.id_editora = id_editora;
         this.id_biblioteca = id_biblioteca;

@@ -50,7 +50,7 @@ public class FavoritoAdaptador extends BaseAdapter {
         }
 
         if(convertView == null){
-            convertView = inflater.inflate(R.layout.item_favorito_livro, null);
+            convertView = inflater.inflate(R.layout.item_favorito_fragment, null);
 
             ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
             if(viewHolder == null){
@@ -80,6 +80,7 @@ public class FavoritoAdaptador extends BaseAdapter {
             tvAutor.setText(livro.getId_autor()+"");
             tvIdioma.setText(livro.getIdioma());
             tvFormato.setText(livro.getFormato());
+
             Glide.with(context)
                     .load(livro.getCapa())
                     .placeholder(R.drawable.logoipl)

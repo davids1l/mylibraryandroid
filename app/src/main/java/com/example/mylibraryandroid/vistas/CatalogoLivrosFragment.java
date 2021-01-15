@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -27,11 +29,12 @@ import com.example.mylibraryandroid.modelo.Singleton;
 
 import java.util.ArrayList;
 
-public class CatalogoLivrosFragment extends Fragment implements CatalogoListener {
+public class CatalogoLivrosFragment extends Fragment implements CatalogoListener, SwipeRefreshLayout.OnRefreshListener {
 
     //private CatalogoLivrosViewModel mViewModel;
     private ListView lvCatalogoLivros;
     private ArrayList<Livro> catalogoLivros;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     //TODO: searchView e swipeRefresh
 
@@ -48,10 +51,20 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
         View view = inflater.inflate(R.layout.catalogo_livros_fragment, container, false);
         lvCatalogoLivros = view.findViewById(R.id.lvCatalogoLivros);
 
-        //TODO: implementar o swipeRefresh
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         Singleton.getInstance(getContext()).setCatalogoListener(this);
         Singleton.getInstance(getContext()).getCatalogoAPI(getContext());
+
+        lvCatalogoLivros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), DetalhesLivroActivity.class);
+                intent.putExtra(DetalhesLivroActivity.ID_LIVRO, (int) id);
+                startActivityForResult(intent, 1);
+            }
+        });
 
         return view;
     }
@@ -63,6 +76,11 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
         // TODO: Use the ViewModel
     }*/
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Singleton.getInstance(getContext()).setCatalogoListener(this);
+    }
 
     @Override
     public void onRefreshCatalogoLivros(ArrayList<Livro> catalogoLivros) {
@@ -116,4 +134,9 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
     }
 
 
+    @Override
+    public void onRefresh() {
+        Singleton.getInstance(getContext()).getCatalogoAPI(getContext());
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }

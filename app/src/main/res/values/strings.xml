@@ -32,4 +32,8 @@
     <string name="nav_favoritos">Favoritos</string>
 
     <string name="menu_catalogo">Catálogo</string>
+    <string name="detalhes_autor_estatico">de </string>
+    <string name="detalhes_genero_estatico">Gênero:</string>
+    <string name="detalhes_livro_detalhes">Detalhes:</string>
+    <string name="menuPesquisa">Pesquisar Livro</string>
 </resources>

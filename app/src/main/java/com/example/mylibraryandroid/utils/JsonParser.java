@@ -3,14 +3,11 @@ package com.example.mylibraryandroid.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
+
+import com.example.mylibraryandroid.modelo.Utilizador;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.Console;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JsonParser {
     public static String[] parserJsonLogin(String response) {
@@ -44,6 +41,34 @@ public class JsonParser {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static Utilizador parserJsonPerfil(String response){
+        Utilizador utilizador = null;
+
+        try {
+            JSONObject perfil = new JSONObject(response);
+
+            int id_utilizador = perfil.getInt("id_utilizador");
+            String primeiro_nome = perfil.getString("primeiro_nome");
+            String ultimo_nome = perfil.getString("ultimo_nome");
+            String numero = perfil.getString("numero");
+            //int bloqueado = perfil.getInt("bloqueado");
+            String dta_bloqueado = perfil.getString("dta_bloqueado");
+            String dta_nascimento = perfil.getString("dta_nascimento");
+            String nif = perfil.getString("nif");
+            String num_telemovel = perfil.getString("num_telemovel");
+            String dta_registo = perfil.getString("dta_registo");
+            String foto_perfil = perfil.getString("foto_perfil");
+            //int id_biblioteca = perfil.getInt("id_biblioteca");
+
+            utilizador = new Utilizador(id_utilizador, 0, nif, num_telemovel, primeiro_nome, ultimo_nome,
+                    numero, dta_bloqueado, dta_nascimento, dta_registo, foto_perfil, 0);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return utilizador;
     }
 
     public static boolean isConnectionInternet(Context context) {

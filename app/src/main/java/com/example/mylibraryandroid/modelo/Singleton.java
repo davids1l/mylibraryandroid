@@ -35,11 +35,11 @@ import java.util.Map;
 public class Singleton {
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://192.168.0.100:8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = "http://192.168.0.100:8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = "http://192.168.0.100:8888/web/api/livro";
-    private static final String mUrlAPIFavorito = "http://192.168.0.100:8888/web/api/favorito/utilizador/1";
-    private static final String mUrlAPILeitor = "http://192.168.0.100:8888/web/api/utilizador/";
+    private static final String mUrlAPILogin = "http://192.168.1.100:8888/web/api/utilizador/login";
+    private static final String mUrlAPIRegistar = "http://192.168.1.100:8888/web/api/utilizador/create";
+    private static final String mUrlAPICatalogo = "http://192.168.1.100:8888/web/api/livro";
+    private static final String mUrlAPIFavorito = "http://192.168.1.100:8888/web/api/favorito/utilizador/";
+    private static final String mUrlAPILeitor = "http://192.168.1.100:8888/web/api/utilizador/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -241,14 +241,14 @@ public class Singleton {
         }
     }
 
-    public void getFavoritoAPI(final Context context) {
+    public void getFavoritoAPI(final Context context, final String id) {
         if (!FavoritoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 
             if (favoritoListener != null)
                 favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());
         } else {
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito, null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito + id, null, new Response.Listener<JSONArray>() {
 
                 @Override
                 public void onResponse(JSONArray response) {
@@ -264,7 +264,14 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });
+            });/*{
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("token", token);
+                    return params;
+                }
+            };*/
             volleyQueue.add(req);
         }
     }

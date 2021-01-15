@@ -4,7 +4,7 @@ public class Livro {
 
     private int id_livro, ano, paginas, id_editora, id_biblioteca, id_autor, isbn;
     private String titulo, genero, idioma, formato, capa, sinopse;
-    private String urlCapas = "http://192.168.0.101:8888/web/imgs/capas/";
+    private String urlCapas = "http://192.168.0.100:8888/web/imgs/capas/";
 
     public Livro(int id_livro, String titulo, int isbn, int ano, int paginas, String genero, String idioma, String formato, String capa, String sinopse, int id_editora, int id_biblioteca, int id_autor) {
         this.id_livro = id_livro;

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 public class JsonParser {
     public static String[] parserJsonLogin(String response) {
-        String[] dados = new String[2];
+        String[] dados = new String[3];
 
         try {
             JSONObject login = new JSONObject(response);
@@ -19,6 +19,7 @@ public class JsonParser {
             if (login.getBoolean("success")) {
                 dados[0] = login.getString("token");
                 dados[1] = login.getString("id");
+                dados[2] = login.getString("bloqueado");
             }
 
         } catch (JSONException e) {
@@ -27,7 +28,7 @@ public class JsonParser {
         return dados;
     }
 
-    public static String parserJsonRegistar(String response){
+    public static String parserJsonRegistar(String response) {
         String result = null;
 
         try {
@@ -43,7 +44,7 @@ public class JsonParser {
         return result;
     }
 
-    public static Utilizador parserJsonPerfil(String response){
+    public static Utilizador parserJsonPerfil(String response) {
         Utilizador utilizador = null;
 
         try {

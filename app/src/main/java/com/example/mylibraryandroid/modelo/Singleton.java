@@ -33,11 +33,11 @@ import java.util.Map;
 public class Singleton {
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://192.168.0.101:8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = "http://192.168.0.101:8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = "http://192.168.0.101:8888/web/api/livro";
-    private static final String mUrlAPIFavorito = "http://192.168.0.101:8888/web/api/favorito";
-    private static final String mUrlAPILeitor = "http://192.168.0.101:8888/web/api/utilizador/";
+    private static final String mUrlAPILogin = "http://192.168.0.100:8888/web/api/utilizador/login";
+    private static final String mUrlAPIRegistar = "http://192.168.0.100:8888/web/api/utilizador/create";
+    private static final String mUrlAPICatalogo = "http://192.168.0.100:8888/web/api/livro";
+    private static final String mUrlAPIFavorito = "http://192.168.0.100:8888/web/api/favorito";
+    private static final String mUrlAPILeitor = "http://192.168.0.100:8888/web/api/utilizador/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -78,7 +78,7 @@ public class Singleton {
         this.favoritoListener = favoritoListener;
     }
 
-    public void setPerfilListener(PerfilListener perfilListener){
+    public void setPerfilListener(PerfilListener perfilListener) {
         this.perfilListener = perfilListener;
     }
 
@@ -88,7 +88,7 @@ public class Singleton {
             public void onResponse(String response) {
                 String[] dados = JsonParser.parserJsonLogin(response);
                 if (loginListener != null) {
-                    loginListener.onValidateLogin(dados[0], dados[1], email);
+                    loginListener.onValidateLogin(dados[0], dados[1], email, dados[2]);
                 }
             }
         }, new Response.ErrorListener() {
@@ -249,7 +249,7 @@ public class Singleton {
             public void onResponse(String response) {
                 Utilizador utilizador = JsonParser.parserJsonPerfil(response);
 
-                if(perfilListener != null){
+                if (perfilListener != null) {
                     perfilListener.onRefreshUtilizador(utilizador);
                 }
             }

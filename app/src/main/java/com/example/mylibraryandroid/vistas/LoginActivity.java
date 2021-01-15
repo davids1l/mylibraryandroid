@@ -72,14 +72,20 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void onValidateLogin(String token, String id, String email) {
+    public void onValidateLogin(String token, String id, String email, String bloqueado) {
         if (token != null) {
-            guardarInfoSharedPref(token, id, email);
-            Intent intent = new Intent(this, MenuMainActivity.class);
-            startActivity(intent);
-            finish();
+            if(bloqueado.equals("null")){
+                guardarInfoSharedPref(token, id, email);
+                Intent intent = new Intent(this, MenuMainActivity.class);
+                startActivity(intent);
+                finish();
+            }else {
+                Toast.makeText(getApplicationContext(), "A conta encontra-se bloqueada!", Toast.LENGTH_LONG).show();
+                etPassword.setText("");
+            }
         } else {
-            Toast.makeText(getApplicationContext(), "Login inválido", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Login inválido", Toast.LENGTH_LONG).show();
+            etPassword.setText("");
         }
     }
 

@@ -80,6 +80,7 @@ public class FavoritoAdaptador extends BaseAdapter {
             tvAutor.setText(livro.getId_autor()+"");
             tvIdioma.setText(livro.getIdioma());
             tvFormato.setText(livro.getFormato());
+
             Glide.with(context)
                     .load(livro.getCapa())
                     .placeholder(R.drawable.logoipl)

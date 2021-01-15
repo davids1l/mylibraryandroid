@@ -43,7 +43,6 @@ public class Singleton {
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
-    private ArrayList<Livro> livrosFav;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -57,7 +56,6 @@ public class Singleton {
         // Construtor
         catalogo =  new ArrayList<>();
         favorito = new ArrayList<>();
-        livrosFav = new ArrayList<>();
         bdHelper = new BDHelper(context);
     }
 
@@ -186,6 +184,7 @@ public class Singleton {
     }
 
     public ArrayList<Livro> getLivrosFavoritosBD() {
+        ArrayList<Livro> livrosFav = new ArrayList<>();
         for (Favorito f: favorito){
             livrosFav.add(getLivro(f.getId_livro()));
         }

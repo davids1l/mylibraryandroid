@@ -25,6 +25,7 @@ import com.example.mylibraryandroid.utils.LivroJsonParser;
 
 import org.json.JSONArray;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +44,7 @@ public class Singleton {
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
+    private ArrayList<Livro> carrinho;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -57,6 +59,7 @@ public class Singleton {
         catalogo =  new ArrayList<>();
         favorito = new ArrayList<>();
         bdHelper = new BDHelper(context);
+        carrinho = new ArrayList<>();
     }
 
     public void setLoginListener(LoginListener loginListener) {
@@ -252,5 +255,25 @@ public class Singleton {
             });
             volleyQueue.add(req);
         }
+    }
+
+    public void adicionarCarrinho (int id_livro){
+        //ArrayList<Livro> carrinhoLivros = new ArrayList<>();
+
+        Livro livro =  getLivro(id_livro);
+
+        if (!favorito.contains(livro)){
+            carrinho.add(getLivro(id_livro));
+        }
+    }
+
+    public ArrayList<Livro> getLivrosCarrinho(){
+        ArrayList<Livro> livrosCarrinho = new ArrayList<>();
+
+        for(int i = 0; i< carrinho.size(); i++) {
+            livrosCarrinho.add(carrinho.get(i));
+        }
+
+        return livrosCarrinho;
     }
 }

@@ -44,7 +44,7 @@ public class Singleton {
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
-    private ArrayList<Livro> carrinho;
+    private ArrayList<Integer> carrinho;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -260,20 +260,21 @@ public class Singleton {
     public void adicionarCarrinho (int id_livro){
         //ArrayList<Livro> carrinhoLivros = new ArrayList<>();
 
-        Livro livro =  getLivro(id_livro);
+        //Livro livro =  getLivro(id_livro);
 
-        if (!favorito.contains(livro)){
-            carrinho.add(getLivro(id_livro));
-        }
+        //if (!favorito.contains(livro)){
+            carrinho.add(id_livro);
+        //}
     }
 
     public ArrayList<Livro> getLivrosCarrinho(){
         ArrayList<Livro> livrosCarrinho = new ArrayList<>();
 
         for(int i = 0; i< carrinho.size(); i++) {
-            livrosCarrinho.add(carrinho.get(i));
+            livrosCarrinho.add(getLivro(carrinho.get(i)));
         }
 
+        //return livrosCarrinho;
         return livrosCarrinho;
     }
 }

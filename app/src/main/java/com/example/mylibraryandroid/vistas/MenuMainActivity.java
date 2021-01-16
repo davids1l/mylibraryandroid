@@ -90,6 +90,10 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
                 fragment = new CarrinhoLivrosFragment();
                 setTitle(item.getTitle());
                 break;
+            case R.id.nav_perfil:
+                fragment = new PerfilFragment();
+                setTitle(item.getTitle());
+                break;
         }
 
         if (fragment != null)

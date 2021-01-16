@@ -18,13 +18,16 @@ import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.BibliotecaListener;
 import com.example.mylibraryandroid.listeners.CarrinhoListener;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
+import com.example.mylibraryandroid.listeners.EditarPerfilListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
+import com.example.mylibraryandroid.listeners.PerfilListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
 import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
 import com.example.mylibraryandroid.utils.FavoritoJsonParser;
 import com.example.mylibraryandroid.utils.JsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
+import com.example.mylibraryandroid.vistas.MenuMainActivity;
 
 import org.json.JSONArray;
 
@@ -34,19 +37,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Singleton {
+
+    public static final String IP = "http://192.168.0.102";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://192.168.1.100:8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = "http://192.168.1.100:8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = "http://192.168.1.100:8888/web/api/livro";
-    private static final String mUrlAPIFavorito = "http://192.168.1.100:8888/web/api/favorito/utilizador/1";
-    private static final String mUrlAPIBiblioteca = "http://192.168.1.100:8888/web/api/biblioteca";
+    private static final String mUrlAPILogin = IP + ":8888/web/api/utilizador/login";
+    private static final String mUrlAPIRegistar = IP + ":8888/web/api/utilizador/create";
+    private static final String mUrlAPICatalogo = IP + ":8888/web/api/livro";
+    private static final String mUrlAPIFavorito =  IP + ":8888/web/api/favorito/utilizador/1";
+    private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
+    private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
+    private static final String mUrlAPIBiblioteca = IP + ":8888/web/api/biblioteca";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
     private FavoritoListener favoritoListener;
     private CarrinhoListener carrinhoListener;
     private BibliotecaListener bibliotecaListener;
+    private PerfilListener perfilListener;
+    private EditarPerfilListener editarPerfilListener;
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
@@ -63,7 +72,7 @@ public class Singleton {
 
     private Singleton(Context context) {
         // Construtor
-        catalogo =  new ArrayList<>();
+        catalogo = new ArrayList<>();
         favorito = new ArrayList<>();
         bdHelper = new BDHelper(context);
         carrinho = new ArrayList<>();
@@ -73,7 +82,7 @@ public class Singleton {
         this.loginListener = loginListener;
     }
 
-    public void setRegistarListener(RegistarListener registarListener){
+    public void setRegistarListener(RegistarListener registarListener) {
         this.registarListener = registarListener;
     }
 
@@ -89,13 +98,21 @@ public class Singleton {
         this.favoritoListener = favoritoListener;
     }
 
+    public void setPerfilListener(PerfilListener perfilListener) {
+        this.perfilListener = perfilListener;
+    }
+
+    public void setEditarPerfilListener(EditarPerfilListener editarPerfilListener){
+        this.editarPerfilListener = editarPerfilListener;
+    }
+
     public void loginAPI(final String email, final String password, final Context context) {
         StringRequest req = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String[] dados = JsonParser.parserJsonLogin(response);
-                if(loginListener != null){
-                    loginListener.onValidateLogin(dados[0], dados[1], email);
+                if (loginListener != null) {
+                    loginListener.onValidateLogin(dados[0], dados[1], email, dados[2]);
                 }
             }
         }, new Response.ErrorListener() {
@@ -115,12 +132,12 @@ public class Singleton {
         volleyQueue.add(req);
     }
 
-    public void registarAPI(final String primeiro_nome, final String ultimo_nome, final String email, final String dta_nascimento, final String nif, final String num_telemovel, final String password, final Context context){
+    public void registarAPI(final String primeiro_nome, final String ultimo_nome, final String email, final String dta_nascimento, final String nif, final String num_telemovel, final String password, final Context context) {
         StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIRegistar, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 String result = JsonParser.parserJsonRegistar(response);
-                if(registarListener != null){
+                if (registarListener != null) {
                     registarListener.onValidateRegisto(result);
                 }
             }
@@ -147,8 +164,10 @@ public class Singleton {
     }
 
 
-    /** Acesso aos livro pela BD **/
-    public ArrayList<Livro> getCatalogoBD(){
+    /**
+     * Acesso aos livro pela BD
+     **/
+    public ArrayList<Livro> getCatalogoBD() {
         catalogo = bdHelper.getAllLivrosDB();
         return catalogo;
     }
@@ -268,6 +287,37 @@ public class Singleton {
         }
     }
 
+    /**
+     * Acesso aos dados leitor através da API
+     **/
+    public void getDadosLeitorAPI(final Context context, final String id) {
+        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitor + id, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                Utilizador utilizador = JsonParser.parserJsonPerfil(response);
+
+                if (perfilListener != null) {
+                    perfilListener.onRefreshUtilizador(utilizador);
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });/*{
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("token", token);
+                    return params;
+                }
+            };*/
+        volleyQueue.add(req);
+    }
+
     public Boolean adicionarCarrinho (int id_livro){
 
         //verifica se o arrayList já contem o id_livro a inserir
@@ -282,7 +332,7 @@ public class Singleton {
 
     public ArrayList<Livro> getLivrosCarrinho(){
         ArrayList<Livro> livrosCarrinho = new ArrayList<>();
-        
+
         for(int i = 0; i< carrinho.size(); i++) {
             livrosCarrinho.add(getLivro(carrinho.get(i)));
         }
@@ -327,5 +377,34 @@ public class Singleton {
 
     public ArrayList<Biblioteca> getBibliotecas(){
         getBibliotecasAPI(this);
+    }
+
+    public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String nif, final String id){
+        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIEditarLeitor + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Utilizador utilizador = JsonParser.parserJsonEditarPerfil(response);
+                if (editarPerfilListener != null) {
+                    editarPerfilListener.onRefreshPerfil();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("primeiro_nome", nome);
+                params.put("ultimo_nome", apelido);
+                params.put("num_telemovel", telemovel);
+                params.put("dta_nascimento", dia);
+                params.put("nif", nif);
+                return params;
+            }
+        };
+        volleyQueue.add(req);
     }
 }

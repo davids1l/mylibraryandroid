@@ -1,10 +1,18 @@
 package com.example.mylibraryandroid.modelo;
 
 public class Utilizador {
-    private int id, bloqueado, nif, numTelemovel;
-    private String primeiroNome, ultimoNome, numero, dtaBloqueado, dtaNascimento, dtaRegisto;
+    private int id, bloqueado, id_biblioteca;
+    private String primeiroNome;
+    private String ultimoNome;
+    private String numero;
+    private String dtaBloqueado;
+    private String dtaNascimento;
+    private String dtaRegisto;
+    private String foto_perfil;
+    private String nif;
+    private String numTelemovel;
 
-    public Utilizador(int id, int bloqueado, int nif, int numTelemovel, String primeiroNome, String ultimoNome, String numero, String dtaBloqueado, String dtaNascimento, String dtaRegisto) {
+    public Utilizador(int id, int bloqueado, String nif, String numTelemovel, String primeiroNome, String ultimoNome, String numero, String dtaBloqueado, String dtaNascimento, String dtaRegisto, String fotoPerfil, int idBiblioteca) {
         this.id = id;
         this.bloqueado = bloqueado;
         this.nif = nif;
@@ -15,6 +23,24 @@ public class Utilizador {
         this.dtaBloqueado = dtaBloqueado;
         this.dtaNascimento = dtaNascimento;
         this.dtaRegisto = dtaRegisto;
+        this.foto_perfil = fotoPerfil;
+        this.id_biblioteca = idBiblioteca;
+    }
+
+    public int getId_biblioteca() {
+        return id_biblioteca;
+    }
+
+    public void setId_biblioteca(int id_biblioteca) {
+        this.id_biblioteca = id_biblioteca;
+    }
+
+    public String getFoto_perfil() {
+        return foto_perfil;
+    }
+
+    public void setFoto_perfil(String foto_perfil) {
+        this.foto_perfil = foto_perfil;
     }
 
     public int getId() {
@@ -33,19 +59,19 @@ public class Utilizador {
         this.bloqueado = bloqueado;
     }
 
-    public int getNif() {
+    public String getNif() {
         return nif;
     }
 
-    public void setNif(int nif) {
+    public void setNif(String nif) {
         this.nif = nif;
     }
 
-    public int getNumTelemovel() {
+    public String getNumTelemovel() {
         return numTelemovel;
     }
 
-    public void setNumTelemovel(int numTelemovel) {
+    public void setNumTelemovel(String numTelemovel) {
         this.numTelemovel = numTelemovel;
     }
 

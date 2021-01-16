@@ -27,6 +27,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     private ArrayList<Livro> carrinho;
     private TextView tvTitulo, tvAutor, tvEdicao, tvPaginas, tvBiblioteca, tvSinopse, tvIsbn, tvGenero, tvIdioma, tvEditora;
     private ImageView imgCapa;
+    StringBuilder stringBuilder = new StringBuilder();
 
 
     @Override
@@ -61,22 +62,20 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
             public void onClick(View v) {
                 if(LivroJsonParser.isConnectionInternet(getApplicationContext())) {
 
-                    Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro);
+                    //Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro);
 
-                    carrinho = Singleton.getInstance(getApplicationContext()).getLivrosCarrinho();
-
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (int i=0; i<carrinho.size(); i++){
-                        stringBuilder.append(carrinho.get(i) + "\n");
-                        //carrinho.get(i);
+                    if (Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro) == true){
+                        /*carrinho = Singleton.getInstance(getApplicationContext()).getLivrosCarrinho();
+                        for (int i=0; i<carrinho.size(); i++){
+                            //stringBuilder.append(carrinho.get(i) + "\n");
+                            //carrinho.get(i);
+                            stringBuilder.append(carrinho.get(i).getTitulo() + "\n");
+                        }
+                        tvPaginas.setText(stringBuilder);*/
+                        Toast.makeText(getApplicationContext(), "Livro adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "O livro já se encontra no seu carrinho", Toast.LENGTH_SHORT).show();
                     }
-
-                    tvPaginas.setText(stringBuilder);
-
-                    //ArrayList<Livro> getLivro = Singleton.getInstance(getApplicationContext()).getLivrosCarrinho();
-
-                    //Toast.makeText(getApplicationContext(), (CharSequence) getLivro, Toast.LENGTH_LONG).show();
-
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }

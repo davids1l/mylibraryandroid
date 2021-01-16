@@ -7,10 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,52 +19,43 @@ import com.example.mylibraryandroid.modelo.Singleton;
 import java.util.ArrayList;
 
 
-public class ItemFavoritoFragment extends Fragment {
+public class ItemCarrinhoFragment extends Fragment {
 
     private TextView tvTitulo, tvAutor, tvIdioma, tvFormato;
-    private ImageView imageCapa;
+    private ImageView imgCapa;
 
-    public ItemFavoritoFragment() {
+    public ItemCarrinhoFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_favorito_fragment, container, false);
+        View view = inflater.inflate(R.layout.item_carrinho_fragment, container, false);
 
         tvTitulo = view.findViewById(R.id.tvTitulo);
         tvAutor = view.findViewById(R.id.tvAutor);
         tvIdioma = view.findViewById(R.id.tvIdioma);
         tvFormato = view.findViewById(R.id.tvFormato);
-        imageCapa = view.findViewById(R.id.imageCapa);
+        imgCapa = view.findViewById(R.id.imageCapa);
+        carregarLivroCarrinho();
 
-        // TODO Implementar clique nos items para remover livro clicado dos favoritos
-        Button buttonRem = (Button) view.findViewById(R.id.remFavorite);
-        buttonRem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(),"Teste", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        carregarFavorito();
         return view;
     }
 
-    private void carregarFavorito() {
-        ArrayList<Livro> favoritos = Singleton.getInstance(getContext()).getLivrosFavoritosBD();
-        if(favoritos.size() > 0){
-            Livro l = favoritos.get(0);
+    private void carregarLivroCarrinho() {
+        ArrayList<Livro> carrinho = Singleton.getInstance(getContext()).getLivrosCarrinho();
+        if (carrinho.size() > 0){
+            Livro l = carrinho.get(0);
             tvTitulo.setText(l.getTitulo());
             tvAutor.setText(l.getId_autor());
             tvIdioma.setText(l.getIdioma());
             tvFormato.setText(l.getFormato());
 
-            Glide.with(getContext())
+            Glide.with(this)
                     .load(l.getCapa())
-                    .placeholder(R.drawable.logoipl)
+                    .placeholder(R.drawable.ic_loading)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imageCapa);
+                    .into(imgCapa);
         }
     }
 

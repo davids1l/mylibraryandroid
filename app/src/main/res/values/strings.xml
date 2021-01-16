@@ -36,4 +36,10 @@
     <string name="detalhes_genero_estatico">Gênero:</string>
     <string name="detalhes_livro_detalhes">Detalhes:</string>
     <string name="menuPesquisa">Pesquisar Livro</string>
+    <string name="nav_carrinho">Carrinho</string>
+    <string name="nav_string_email">Email</string>
+    <string name="dialog_tv_bib_de_levantamento">Bib. de levantamento</string>
+    <string name="dialog_tv_finalizar_requisicao">Finalizar Requisição</string>
+    <string name="dialog_btn_finalizar_requisicao">Finalizar Requisição</string>
+    <string name="dialog_spinner_empty_error">Selecione a biblioteca de levantamento.</string>
 </resources>

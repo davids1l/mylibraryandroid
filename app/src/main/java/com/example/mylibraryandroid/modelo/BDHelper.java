@@ -30,8 +30,8 @@ public class BDHelper extends SQLiteOpenHelper {
     private static final String AUTOR_LIVRO = "id_autor";
 
     private static final String TABLE_NAME_FAV = "favorito";
-    private static final String ID_LIVRO_FAV = "id_livro";
     private static final String ID_FAVORITO_FAV = "id_favorito";
+    private static final String ID_LIVRO_FAV = "id_livro";
     private static final String ID_UTILIZADOR_FAV = "id_utilizador";
     private static final String DTA_FAV = "dta_favorito";
 
@@ -70,9 +70,9 @@ public class BDHelper extends SQLiteOpenHelper {
         // Sql de criação da tabela favorito
         String createTableFavorito = "CREATE TABLE "+TABLE_NAME_FAV+"( " +
                 ID_FAVORITO_FAV+" INTEGER PRIMARY KEY, " +
-                DTA_FAV+"NUMERIC NOT NULL, " +
                 ID_LIVRO_FAV+" INTEGER NOT NULL, " +
-                ID_UTILIZADOR_FAV+"INTEGER NOT NULL );";
+                ID_UTILIZADOR_FAV+"INTEGER NOT NULL, " +
+                DTA_FAV+"NUMERIC NOT NULL );";
 
         db.execSQL(createTableFavorito);
 
@@ -150,7 +150,7 @@ public class BDHelper extends SQLiteOpenHelper {
     public ArrayList<Favorito> getAllFavoritosDB() {
         ArrayList<Favorito> favoritos = new ArrayList<>();
 
-        Cursor cursor = this.db.query(TABLE_NAME_FAV, new String[]{ID_FAVORITO_FAV, DTA_FAV,ID_LIVRO_FAV, ID_UTILIZADOR_FAV},
+        Cursor cursor = this.db.query(TABLE_NAME_FAV, new String[]{ID_FAVORITO_FAV,ID_LIVRO_FAV, ID_UTILIZADOR_FAV, DTA_FAV},
                 null, null, null, null, null);
 
         if(cursor.moveToFirst()) {

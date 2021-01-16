@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,6 +61,14 @@ public class FavoritoAdaptador extends BaseAdapter {
             }
             viewHolder.update(livros.get(position));
         }
+
+        Button remove = (Button) convertView.findViewById(R.id.remFavorite);
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context,"Teste", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return convertView;
     }

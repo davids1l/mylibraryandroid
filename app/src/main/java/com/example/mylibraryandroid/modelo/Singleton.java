@@ -15,6 +15,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.listeners.CarrinhoListener;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
@@ -41,6 +42,7 @@ public class Singleton {
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
     private FavoritoListener favoritoListener;
+    private CarrinhoListener carrinhoListener;
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
@@ -72,6 +74,10 @@ public class Singleton {
 
     public void setCatalogoListener(CatalogoListener catalogoListener) {
         this.catalogoListener = catalogoListener;
+    }
+
+    public void setCarrinhoListener(CarrinhoListener carrinhoListener){
+        this.carrinhoListener = carrinhoListener;
     }
 
     public void setFavoritoListener(FavoritoListener favoritoListener) {
@@ -257,24 +263,24 @@ public class Singleton {
         }
     }
 
-    public void adicionarCarrinho (int id_livro){
-        //ArrayList<Livro> carrinhoLivros = new ArrayList<>();
+    public Boolean adicionarCarrinho (int id_livro){
+        Boolean flag = false;
 
-        //Livro livro =  getLivro(id_livro);
-
-        //if (!favorito.contains(livro)){
+        if (!carrinho.contains(id_livro)){
             carrinho.add(id_livro);
-        //}
+            flag = true;
+        }
+
+        return flag;
     }
 
     public ArrayList<Livro> getLivrosCarrinho(){
         ArrayList<Livro> livrosCarrinho = new ArrayList<>();
-
+        
         for(int i = 0; i< carrinho.size(); i++) {
             livrosCarrinho.add(getLivro(carrinho.get(i)));
         }
 
-        //return livrosCarrinho;
         return livrosCarrinho;
     }
 }

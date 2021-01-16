@@ -36,4 +36,5 @@
     <string name="detalhes_genero_estatico">Gênero:</string>
     <string name="detalhes_livro_detalhes">Detalhes:</string>
     <string name="menuPesquisa">Pesquisar Livro</string>
+    <string name="nav_carrinho">Carrinho</string>
 </resources>

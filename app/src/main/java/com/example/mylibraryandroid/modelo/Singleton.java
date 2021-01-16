@@ -382,9 +382,9 @@ public class Singleton {
        // }
     }
 
-    public ArrayList<Biblioteca> getBibliotecas(){
+    /*public ArrayList<Biblioteca> getBibliotecas(){
         getBibliotecasAPI(this);
-    }
+    }*/
 
     public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String nif, final String id){
         StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIEditarLeitor + id, new Response.Listener<String>() {

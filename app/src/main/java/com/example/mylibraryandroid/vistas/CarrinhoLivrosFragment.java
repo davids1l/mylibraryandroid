@@ -68,18 +68,18 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                 final Spinner spinner = (Spinner) viewDialog.findViewById(R.id.spinnerBibliotecas);
                 Button button = (Button) viewDialog.findViewById(R.id.btnFinalizar);
 
-                bibliotecas = Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
+                //bibliotecas = Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
 
                /*
                 for (int i=0; i<bibliotecas.size(); i++){
                     adapterList.add(bibliotecas.get(i).getNome());
                 }*/
-                if (!bibliotecas.isEmpty()) {
+                /*if (!bibliotecas.isEmpty()) {
                     ArrayAdapter<Biblioteca> adapter = new ArrayAdapter<Biblioteca>(viewDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, bibliotecas);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                     spinner.setAdapter(adapter);
-                }
+                }*/
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override

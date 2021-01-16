@@ -1,6 +1,8 @@
 package com.example.mylibraryandroid.vistas;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,8 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.adaptadores.FavoritoAdaptador;
@@ -32,6 +36,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
     private ArrayList<Livro> favoritoLivros;
     private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private String id;
 
     public FavoritoLivrosFragment() {
         // Required empty public constructor
@@ -41,6 +46,9 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        id = sharedPreferences.getString(MenuMainActivity.ID, "");
+
         View view = inflater.inflate(R.layout.favorito_livros_fragment, container, false);
         lvFavoritoLivros = view.findViewById(R.id.lvFavoritoLivros);
 
@@ -48,9 +56,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
         swipeRefreshLayout.setOnRefreshListener(this);
 
         Singleton.getInstance(getContext()).setFavoritoListener(this);
-        Singleton.getInstance(getContext()).getFavoritoAPI(getContext());
-
-        // TODO Implementar clique nos items para mostrar os detalhes dos favoritos referentes ao livro clicado
+        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id);
 
         return view;
     }
@@ -96,7 +102,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
 
     @Override
     public void onRefresh() {
-        Singleton.getInstance(getContext()).getFavoritoAPI(getContext());
+        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id);
         swipeRefreshLayout.setRefreshing(false);
     }
 

@@ -16,6 +16,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
+import com.example.mylibraryandroid.listeners.EditarPerfilListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
 import com.example.mylibraryandroid.listeners.PerfilListener;
@@ -33,18 +34,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Singleton {
+
+    public static final String IP = "http://192.168.0.102";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://192.168.0.100:8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = "http://192.168.0.100:8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = "http://192.168.0.100:8888/web/api/livro";
-    private static final String mUrlAPIFavorito = "http://192.168.0.100:8888/web/api/favorito/utilizador/1";
-    private static final String mUrlAPILeitor = "http://192.168.0.100:8888/web/api/utilizador/";
+    private static final String mUrlAPILogin = IP + ":8888/web/api/utilizador/login";
+    private static final String mUrlAPIRegistar = IP + ":8888/web/api/utilizador/create";
+    private static final String mUrlAPICatalogo = IP + ":8888/web/api/livro";
+    private static final String mUrlAPIFavorito =  IP + ":8888/web/api/favorito/utilizador/1";
+    private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
+    private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
     private FavoritoListener favoritoListener;
     private PerfilListener perfilListener;
+    private EditarPerfilListener editarPerfilListener;
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
@@ -84,6 +89,10 @@ public class Singleton {
 
     public void setPerfilListener(PerfilListener perfilListener) {
         this.perfilListener = perfilListener;
+    }
+
+    public void setEditarPerfilListener(EditarPerfilListener editarPerfilListener){
+        this.editarPerfilListener = editarPerfilListener;
     }
 
     public void loginAPI(final String email, final String password, final Context context) {
@@ -318,5 +327,34 @@ public class Singleton {
         }
 
         return livrosCarrinho;
+    }
+
+    public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String nif, final String id){
+        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIEditarLeitor + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Utilizador utilizador = JsonParser.parserJsonEditarPerfil(response);
+                if (editarPerfilListener != null) {
+                    editarPerfilListener.onRefreshPerfil();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("primeiro_nome", nome);
+                params.put("ultimo_nome", apelido);
+                params.put("num_telemovel", telemovel);
+                params.put("dta_nascimento", dia);
+                params.put("nif", nif);
+                return params;
+            }
+        };
+        volleyQueue.add(req);
     }
 }

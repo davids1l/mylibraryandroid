@@ -8,6 +8,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.mylibraryandroid.R;
@@ -45,7 +46,9 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         swipeRefreshLayout.setOnRefreshListener(this);
 
         Singleton.getInstance(getContext()).setCarrinhoListener(this);
-        Singleton.getInstance(getContext()).getLivrosCarrinho();
+        livrosCarrinho =  Singleton.getInstance(getContext()).getLivrosCarrinho();
+
+        lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
 
         return view;
     }

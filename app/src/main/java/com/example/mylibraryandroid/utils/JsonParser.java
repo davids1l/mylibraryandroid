@@ -72,6 +72,32 @@ public class JsonParser {
         return utilizador;
     }
 
+    public static Utilizador parserJsonEditarPerfil(String response){
+        Utilizador utilizador = null;
+
+        try {
+            JSONObject dados = new JSONObject(response);
+
+            int id = dados.getInt("id_utilizador");
+            String nome = dados.getString("primeiro_nome");
+            String apelido = dados.getString("ultimo_nome");
+            String numero = dados.getString("numero");
+            int bloqueado = dados.getInt("bloqueado");
+            String dataBloqueado = dados.getString("dta_bloqueado");
+            String dataNascimento = dados.getString("dta_nascimento");
+            String nif = dados.getString("nif");
+            String numTelemovel = dados.getString("num_telemovel");
+            String dataRegisto = dados.getString("dta_registo");
+            String fotoPerfil = dados.getString("foto_perfil");
+            int idBiblioteca = dados.getInt("id_biblioteca");
+
+            utilizador = new Utilizador(id, bloqueado, nif, numTelemovel, nome, apelido, numero, dataBloqueado, dataNascimento, dataRegisto, fotoPerfil, idBiblioteca);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return utilizador;
+    }
+
     public static boolean isConnectionInternet(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();

@@ -1,7 +1,5 @@
 package com.example.mylibraryandroid.vistas;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 
-import com.example.mylibraryandroid.PerfilFragment;
 import com.example.mylibraryandroid.R;
 import com.google.android.material.navigation.NavigationView;
 

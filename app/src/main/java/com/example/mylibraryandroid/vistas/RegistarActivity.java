@@ -1,33 +1,19 @@
 package com.example.mylibraryandroid.vistas;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
-import android.view.Menu;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.RegistarListener;
 import com.example.mylibraryandroid.modelo.Singleton;
-import com.example.mylibraryandroid.modelo.Utilizador;
 import com.example.mylibraryandroid.utils.JsonParser;
-
-import java.text.SimpleDateFormat;
-import java.time.Year;
-import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class RegistarActivity extends AppCompatActivity implements RegistarListener {
     private EditText etPrimeiroNome, etApelido, etEmail, etDia, etMes, etAno, etNif, etTelefone, etPassword, etConfPassword;
@@ -44,7 +30,7 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
         etDia = findViewById(R.id.etDia);
         etMes = findViewById(R.id.etMes);
         etAno = findViewById(R.id.etAno);
-        etNif = findViewById(R.id.etNIF);
+        etNif = findViewById(R.id.tvNIF);
         etTelefone = findViewById(R.id.etTelefone);
         etPassword = findViewById(R.id.etPassword);
         etConfPassword = findViewById(R.id.etConfPassword);

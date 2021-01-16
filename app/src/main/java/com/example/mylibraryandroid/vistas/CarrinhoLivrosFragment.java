@@ -19,6 +19,7 @@ import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.adaptadores.CarrinhoAdaptador;
 import com.example.mylibraryandroid.adaptadores.CatalogoAdaptador;
 import com.example.mylibraryandroid.listeners.CarrinhoListener;
+import com.example.mylibraryandroid.modelo.Biblioteca;
 import com.example.mylibraryandroid.modelo.Livro;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
@@ -30,6 +31,8 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
     private ListView lvCarrinhoLivros;
     private ArrayList<Livro> livrosCarrinho;
+    private ArrayList<Biblioteca> bibliotecas;
+    private ArrayList<String> adapterList;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public CarrinhoLivrosFragment() {
@@ -65,6 +68,19 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                 final Spinner spinner = (Spinner) viewDialog.findViewById(R.id.spinnerBibliotecas);
                 Button button = (Button) viewDialog.findViewById(R.id.btnFinalizar);
 
+                bibliotecas = Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
+
+               /*
+                for (int i=0; i<bibliotecas.size(); i++){
+                    adapterList.add(bibliotecas.get(i).getNome());
+                }*/
+                if (!bibliotecas.isEmpty()) {
+                    ArrayAdapter<Biblioteca> adapter = new ArrayAdapter<Biblioteca>(viewDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, bibliotecas);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    spinner.setAdapter(adapter);
+                }
+
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -73,15 +89,15 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                             /**
                              * 1- get do arrayList dos livros presentes no carrinho
                              * 2- na API criar um método REST CUSTOM para criar uma requisicao e para cada livro criar uma requisicao_livro
-                             * 3- efetuar post para a url da REST CUSTOM anterior em que deveram ser enviados os livros no carrinho e
+                             * 3- efetuar post para a url da REST CUSTOM anterior em que deveram ser enviados os livros(id) no carrinho e id bib.
                              */
+                            Toast.makeText(getContext(), "Button finalizar requisicao clicado!", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getContext(), R.string.dialog_spinner_empty_error, Toast.LENGTH_LONG).show();
                         }
                     }
                 });
 
-                    //Toast.makeText(getContext(), "Clicou no FAB", Toast.LENGTH_LONG).show();
                 dialogBuilder.setView(viewDialog);
                 AlertDialog dialog = dialogBuilder.create();
                 dialog.show();

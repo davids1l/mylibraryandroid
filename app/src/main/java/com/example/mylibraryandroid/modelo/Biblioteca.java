@@ -22,4 +22,14 @@ public class Biblioteca {
     public String getCod_postal() {
         return cod_postal;
     }
+
+    @Override
+    public String toString() {
+        /*return "Biblioteca{" +
+                "id_biblioteca=" + id_biblioteca +
+                ", nome='" + nome + '\'' +
+                ", cod_postal='" + cod_postal + '\'' +
+                '}';*/
+        return nome;
+    }
 }

@@ -15,6 +15,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.listeners.BibliotecaListener;
 import com.example.mylibraryandroid.listeners.CarrinhoListener;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
@@ -45,6 +46,7 @@ public class Singleton {
     private CatalogoListener catalogoListener;
     private FavoritoListener favoritoListener;
     private CarrinhoListener carrinhoListener;
+    private BibliotecaListener bibliotecaListener;
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
@@ -267,14 +269,15 @@ public class Singleton {
     }
 
     public Boolean adicionarCarrinho (int id_livro){
-        Boolean flag = false;
 
+        //verifica se o arrayList já contem o id_livro a inserir
+        //se não contem, insere e retorna a true (sucesso na inserção), caso contrário retorna false (já contem)
         if (!carrinho.contains(id_livro)){
             carrinho.add(id_livro);
-            flag = true;
+            return true;
         }
 
-        return flag;
+        return false;
     }
 
     public ArrayList<Livro> getLivrosCarrinho(){
@@ -298,9 +301,9 @@ public class Singleton {
     }
 
     public void getBibliotecasAPI(final Context context){
-        if (!LivroJsonParser.isConnectionInternet(context)){
+        /*if (!LivroJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
-        } else {
+        } else {*/
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIBiblioteca, null, new Response.Listener<JSONArray>() {
 
                 @Override
@@ -308,8 +311,8 @@ public class Singleton {
                     bibliotecas = BibliotecaJsonParser.parserJsonBibliotecas(response);
                     //adicionarFavoritosBD(favorito);
 
-                    /*if (favoritoListener != null)
-                        favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());*/
+                    if (bibliotecaListener != null)
+                        bibliotecaListener.onRefreshBibliotecas(bibliotecas);
                 }
             }, new Response.ErrorListener() {
 
@@ -319,6 +322,10 @@ public class Singleton {
                 }
             });
             volleyQueue.add(req);
-        }
+       // }
+    }
+
+    public ArrayList<Biblioteca> getBibliotecas(){
+        getBibliotecasAPI(this);
     }
 }

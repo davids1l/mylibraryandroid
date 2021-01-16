@@ -283,4 +283,14 @@ public class Singleton {
 
         return livrosCarrinho;
     }
+
+    public Boolean removerCarrinho(int id_livro){
+        for (int i=0; i<carrinho.size(); i++){
+            if (carrinho.get(i) == id_livro){
+                carrinho.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
 }

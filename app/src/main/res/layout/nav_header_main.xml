@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Email"
+        android:text="@string/nav_string_email"
         android:textStyle="bold"
         android:textSize="22sp"/>
 

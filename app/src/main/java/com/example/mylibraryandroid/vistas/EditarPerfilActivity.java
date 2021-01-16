@@ -86,28 +86,53 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                         return;
                     }
 
-                    if (!isTelemovelValid(telemovel)) {
-                        etTelemovel.setError("Campo em branco!");
+                    if (isNumTelemovelValid(telemovel) == 1) {
+                        etTelemovel.setError("Nº de telemóvel inválido. Tem de conter 9 dígitos.");
                         return;
+                    } else {
+                        if (isNumTelemovelValid(telemovel) == 2) {
+                            etTelemovel.setError("Nº de telemóvel tem de começar por 9");
+                            return;
+                        }
                     }
 
-                    if (!isDiaValid(dia)) {
+                    if (!isDiaBlank(dia)) {
                         etDia.setError("Campo em branco!");
                         return;
+                    }else {
+                        if(!isDiaValid(Integer.parseInt(dia))){
+                            etDia.setError("Dia inválido. Insira um valor entre 1 e 31");
+                            return;
+                        }
                     }
 
-                    if (!isMesValid(mes)) {
+                    if (!isMesBlank(mes)) {
                         etMes.setError("Campo em branco!");
                         return;
+                    }else {
+                        if (!isMesValid(Integer.parseInt(mes))){
+                            etMes.setError("Mês inválido. Insira um valor entre 1 e 12.");
+                            return;
+                        }
                     }
 
-                    if (!isAnoValid(ano)) {
+                    if (isAnoBlank(ano) == 1) {
                         etAno.setError("Campo em branco!");
+                        return;
+                    }else {
+                        if(isAnoBlank(ano) == 2){
+                            etAno.setError("Ano inválido. Tem de conter 4 dígitos.");
+                            return;
+                        }
+                    }
+
+                    if(!isAnoValid(Integer.parseInt(ano))){
+                        etAno.setError("Ano inválido.");
                         return;
                     }
 
                     if (!isNIFValid(nif)) {
-                        etNIF.setError("Campo em branco!");
+                        etNIF.setError("NIF inválido. Tem de conter 9 dígitos.");
                         return;
                     }
 
@@ -148,39 +173,72 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         return apelido.length() >= 1;
     }
 
-    private boolean isTelemovelValid(String telemovel){
-        if(telemovel == null){
-            return false;
+    private int isNumTelemovelValid(String numTelemovel) {
+        if (numTelemovel.length() != 9) {
+            return 1;
+        } else {
+            if (!numTelemovel.substring(0, 1).equals("9")) {
+                return 2;
+            } else {
+                return 0;
+            }
         }
-        return telemovel.length() >= 1;
     }
 
-    private boolean isDiaValid(String dia){
+    private boolean isDiaBlank(String dia){
         if(dia == null){
             return false;
         }
         return dia.length() >= 1;
     }
 
-    private boolean isMesValid(String mes){
+    private boolean isDiaValid(int dia){
+        if(dia < 1 || dia > 31){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    private boolean isMesBlank(String mes){
         if(mes == null){
             return false;
         }
         return mes.length() >= 1;
     }
 
-    private boolean isAnoValid(String ano){
-        if(ano == null){
+    private boolean isMesValid(int mes){
+        if(mes < 1 || mes > 12){
             return false;
+        }else {
+            return true;
         }
-        return ano.length() >= 1;
+    }
+
+    private int isAnoBlank(String ano){
+        if(ano == null){
+            return 1;
+        }else {
+            if(ano.length() != 4){
+                return 2;
+            }
+        }
+        return 0;
+    }
+
+    private boolean isAnoValid(int ano){
+        if(ano < 1900 || ano > 2021){
+            return false;
+        }else {
+            return true;
+        }
     }
 
     private boolean isNIFValid(String nif){
-        if(nif == null){
+        if (nif.length() != 9) {
             return false;
         }
-        return nif.length() >= 1;
+        return true;
     }
 
     private boolean isEmailValid(String email){

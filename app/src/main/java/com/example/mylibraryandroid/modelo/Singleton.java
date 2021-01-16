@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class Singleton {
 
-    public static final String IP = "http://192.168.0.102";
+    public static final String IP = "http://192.168.0.100";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = IP + ":8888/web/api/utilizador/login";
@@ -43,7 +43,8 @@ public class Singleton {
     private static final String mUrlAPICatalogo = IP + ":8888/web/api/livro";
     private static final String mUrlAPIFavorito =  IP + ":8888/web/api/favorito/utilizador/1";
     private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
-    private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
+    //private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
+    private static final String mUrlAPILeitorEmail = IP + ":8888/web/api/user/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -298,14 +299,28 @@ public class Singleton {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });/*{
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("token", token);
-                    return params;
+        });
+        volleyQueue.add(req);
+    }
+
+    public void getLeitorEmailAPI(final Context context, final String id) {
+        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitorEmail + id, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                String email = JsonParser.parserJsonPerfilEmail(response);
+
+                if (perfilListener != null) {
+                    perfilListener.onRefreshEmailUtilizador(email);
                 }
-            };*/
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
         volleyQueue.add(req);
     }
 
@@ -329,8 +344,8 @@ public class Singleton {
         return livrosCarrinho;
     }
 
-    public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String nif, final String id){
-        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIEditarLeitor + id, new Response.Listener<String>() {
+    public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String mes, final String ano, final String nif, final String id){
+        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPILeitor + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Utilizador utilizador = JsonParser.parserJsonEditarPerfil(response);
@@ -350,8 +365,34 @@ public class Singleton {
                 params.put("primeiro_nome", nome);
                 params.put("ultimo_nome", apelido);
                 params.put("num_telemovel", telemovel);
-                params.put("dta_nascimento", dia);
+                params.put("dta_nascimento", ano + "-" + mes + "-" + dia);
                 params.put("nif", nif);
+                return params;
+            }
+        };
+        volleyQueue.add(req);
+    }
+
+
+    public void atualizarEmailLeitorAPI(final Context context, final String email, final String id){
+        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPILeitorEmail + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String email = JsonParser.parserJsonEditarEmail(response);
+                if (editarPerfilListener != null) {
+                    editarPerfilListener.onRefreshPerfil();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email);
                 return params;
             }
         };

@@ -9,6 +9,11 @@
     tools:context=".vistas.EditarPerfilActivity">
 
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +21,7 @@
 
         <TextView
             android:id="@+id/tvNome"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Nome:" />
@@ -27,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
+            android:gravity="center"
             android:inputType="textPersonName" />
     </LinearLayout>
 
@@ -37,7 +43,7 @@
 
         <TextView
             android:id="@+id/tvApelido"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Apelido:" />
@@ -48,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
+            android:gravity="center"
             android:inputType="textPersonName" />
     </LinearLayout>
 
@@ -58,7 +65,7 @@
 
         <TextView
             android:id="@+id/tvEmail"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Email:" />
@@ -69,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
+            android:gravity="center"
             android:inputType="textPersonName" />
     </LinearLayout>
 
@@ -79,7 +87,7 @@
 
         <TextView
             android:id="@+id/tvTelemovel"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Telemóvel:" />
@@ -90,6 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
+            android:gravity="center"
             android:inputType="number" />
 
     </LinearLayout>
@@ -101,17 +110,18 @@
 
         <TextView
             android:id="@+id/tvDataNascimento"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Data de Nascimento" />
+            android:text="Data de Nascimento:" />
 
         <EditText
             android:id="@+id/etDia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="1"
+            android:gravity="center"
             android:inputType="number" />
 
         <EditText
@@ -119,7 +129,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="1"
+            android:gravity="center"
             android:inputType="number" />
 
         <EditText
@@ -127,7 +138,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="4"
+            android:gravity="center"
             android:inputType="number" />
     </LinearLayout>
 
@@ -138,7 +150,7 @@
 
         <TextView
             android:id="@+id/tvNIF"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="NIF:" />
@@ -149,9 +161,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
+            android:gravity="center"
             android:inputType="number" />
 
     </LinearLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabGuardarPerfil"
@@ -161,6 +175,7 @@
         android:layout_margin="10dp"
         android:clickable="true"
         android:src="@android:drawable/ic_menu_save" />
+
 
 </LinearLayout>
 

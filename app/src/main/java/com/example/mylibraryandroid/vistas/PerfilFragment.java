@@ -1,5 +1,6 @@
 package com.example.mylibraryandroid.vistas;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,7 @@ public class PerfilFragment extends Fragment implements PerfilListener {
 
     private TextView tvNumLeitor, tvNome, tvEmail, tvNumTelemovel, tvDataNascimento, tvNIF;
     private Utilizador dadosLeitor;
+    private String leitorEmail;
     public PerfilFragment() {
         // Required empty public constructor
     }
@@ -37,7 +39,6 @@ public class PerfilFragment extends Fragment implements PerfilListener {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         String id = sharedPreferences.getString(MenuMainActivity.ID,"");
-        final String email = sharedPreferences.getString(MenuMainActivity.EMAIL,"");
 
         View view = inflater.inflate(R.layout.perfil_fragment, container, false);
 
@@ -51,6 +52,7 @@ public class PerfilFragment extends Fragment implements PerfilListener {
 
         Singleton.getInstance(getContext()).setPerfilListener(this);
         Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id);
+        Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id);
 
         FloatingActionButton fab = view.findViewById(R.id.fabGuardarPerfil);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +61,7 @@ public class PerfilFragment extends Fragment implements PerfilListener {
                 Intent intent = new Intent(getContext(), EditarPerfilActivity.class);
                 intent.putExtra(EditarPerfilActivity.NOME, dadosLeitor.getPrimeiroNome());
                 intent.putExtra(EditarPerfilActivity.APELIDO, dadosLeitor.getUltimoNome());
-                intent.putExtra(EditarPerfilActivity.EMAIL, email);
+                intent.putExtra(EditarPerfilActivity.EMAIL, leitorEmail);
                 intent.putExtra(EditarPerfilActivity.NUM_TELEMOVEL, dadosLeitor.getNumTelemovel());
                 intent.putExtra(EditarPerfilActivity.DATA_NASCIMENTO, dadosLeitor.getDtaNascimento());
                 intent.putExtra(EditarPerfilActivity.NIF, dadosLeitor.getNif());
@@ -77,23 +79,39 @@ public class PerfilFragment extends Fragment implements PerfilListener {
 
         if(resultCode == Activity.RESULT_OK){
             Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id);
+            Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id);
             Toast.makeText(getContext(), "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onRefreshUtilizador(Utilizador utilizador) {
-
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        String email = sharedPreferences.getString(MenuMainActivity.EMAIL,"");
 
         tvNumLeitor.setText(utilizador.getNumero());
         String nome = utilizador.getPrimeiroNome() + " " + utilizador.getUltimoNome();
         tvNome.setText(nome);
-        tvEmail.setText(email);
         tvNumTelemovel.setText(utilizador.getNumTelemovel());
-        tvDataNascimento.setText(utilizador.getDtaNascimento());
+        String data = utilizador.getDtaNascimento();
+        String dia = data.substring(8,10);
+        String mes = data.substring(5,7);
+        String ano = data.substring(0,4);
+        tvDataNascimento.setText(dia + "/" + mes + "/" + ano);
         tvNIF.setText(utilizador.getNif());
         dadosLeitor = utilizador;
+    }
+
+    @Override
+    public void onRefreshEmailUtilizador(String email) {
+        tvEmail.setText(email);
+        leitorEmail = email;
+        guardarInfoSharedPref(email);
+    }
+
+    private void guardarInfoSharedPref(String email) {
+        SharedPreferences sharedPrefUser = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefUser.edit();
+        editor.putString(MenuMainActivity.EMAIL, email);
+        editor.apply();
     }
 }

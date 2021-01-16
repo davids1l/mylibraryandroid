@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etEmail.setText("admin@admin.com");
-        etPassword.setText("qwerty1234");
+        etPassword.setText("123123123");
 
         Singleton.getInstance(getApplicationContext()).setLoginListener(this);
     }

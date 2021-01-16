@@ -72,6 +72,21 @@ public class JsonParser {
         return utilizador;
     }
 
+
+    public static String parserJsonPerfilEmail(String response) {
+        String email = null;
+
+        try {
+            JSONObject dados = new JSONObject(response);
+
+            email = dados.getString("email");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
+
     public static Utilizador parserJsonEditarPerfil(String response){
         Utilizador utilizador = null;
 
@@ -96,6 +111,20 @@ public class JsonParser {
             e.printStackTrace();
         }
         return utilizador;
+    }
+
+    public static String parserJsonEditarEmail(String response){
+        String auxEmail = null;
+
+        try {
+            JSONObject dados = new JSONObject(response);
+
+            auxEmail = dados.getString("email");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return auxEmail;
     }
 
     public static boolean isConnectionInternet(Context context) {

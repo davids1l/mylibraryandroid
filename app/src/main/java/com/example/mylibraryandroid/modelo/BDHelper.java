@@ -161,6 +161,4 @@ public class BDHelper extends SQLiteOpenHelper {
         cursor.close();
         return favoritos;
     }
-
-    //Query to get the autor by it's id
 }

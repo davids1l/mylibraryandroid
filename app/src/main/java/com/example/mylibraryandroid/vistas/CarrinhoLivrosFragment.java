@@ -22,6 +22,7 @@ import com.example.mylibraryandroid.listeners.CarrinhoListener;
 import com.example.mylibraryandroid.modelo.Biblioteca;
 import com.example.mylibraryandroid.modelo.Livro;
 import com.example.mylibraryandroid.modelo.Singleton;
+import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -59,6 +60,8 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
         lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
 
+        Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
+
         FloatingActionButton fab =  view.findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,18 +71,12 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                 final Spinner spinner = (Spinner) viewDialog.findViewById(R.id.spinnerBibliotecas);
                 Button button = (Button) viewDialog.findViewById(R.id.btnFinalizar);
 
-                //bibliotecas = Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
+                bibliotecas = Singleton.getInstance(getContext()).getBibliotecas();
 
-               /*
-                for (int i=0; i<bibliotecas.size(); i++){
-                    adapterList.add(bibliotecas.get(i).getNome());
-                }*/
-                /*if (!bibliotecas.isEmpty()) {
-                    ArrayAdapter<Biblioteca> adapter = new ArrayAdapter<Biblioteca>(viewDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, bibliotecas);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<Biblioteca> adapter = new ArrayAdapter<Biblioteca>(viewDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, bibliotecas);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                    spinner.setAdapter(adapter);
-                }*/
+                spinner.setAdapter(adapter);
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override

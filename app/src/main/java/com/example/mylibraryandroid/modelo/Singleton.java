@@ -106,6 +106,10 @@ public class Singleton {
         this.editarPerfilListener = editarPerfilListener;
     }
 
+    public void setBibliotecaListener(BibliotecaListener bibliotecaListener){
+        this.bibliotecaListener = bibliotecaListener;
+    }
+
     public void loginAPI(final String email, final String password, final Context context) {
         StringRequest req = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
             @Override
@@ -382,9 +386,15 @@ public class Singleton {
        // }
     }
 
-    /*public ArrayList<Biblioteca> getBibliotecas(){
-        getBibliotecasAPI(this);
-    }*/
+    public ArrayList<Biblioteca> getBibliotecas(){
+        ArrayList<Biblioteca> listaBibliotecas = new ArrayList<>();
+
+        for (int i = 0; i<bibliotecas.size(); i++){
+            listaBibliotecas.add(bibliotecas.get(i));
+        }
+
+        return listaBibliotecas;
+    }
 
     public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String nif, final String id){
         StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIEditarLeitor + id, new Response.Listener<String>() {

@@ -41,4 +41,5 @@
     <string name="dialog_tv_bib_de_levantamento">Bib. de levantamento</string>
     <string name="dialog_tv_finalizar_requisicao">Finalizar Requisição</string>
     <string name="dialog_btn_finalizar_requisicao">Finalizar Requisição</string>
+    <string name="dialog_spinner_empty_error">Selecione a biblioteca de levantamento.</string>
 </resources>

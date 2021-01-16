@@ -21,6 +21,7 @@ import com.example.mylibraryandroid.adaptadores.CatalogoAdaptador;
 import com.example.mylibraryandroid.listeners.CarrinhoListener;
 import com.example.mylibraryandroid.modelo.Livro;
 import com.example.mylibraryandroid.modelo.Singleton;
+import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -61,24 +62,42 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
             public void onClick(View v) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
                 View viewDialog = getLayoutInflater().inflate(R.layout.dialog_finalizar_requisicao, null);
-                Spinner spinner = (Spinner) viewDialog.findViewById(R.id.spinnerBibliotecas);
+                final Spinner spinner = (Spinner) viewDialog.findViewById(R.id.spinnerBibliotecas);
                 Button button = (Button) viewDialog.findViewById(R.id.btnFinalizar);
-                Toast.makeText(getContext(), "Clicou no FAB", Toast.LENGTH_LONG).show();
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(spinner.getSelectedItem() != null){
+                            //TODO: Efetuar requisicao - API POST
+                            /**
+                             * 1- get do arrayList dos livros presentes no carrinho
+                             * 2- na API criar um método REST CUSTOM para criar uma requisicao e para cada livro criar uma requisicao_livro
+                             * 3- efetuar post para a url da REST CUSTOM anterior em que deveram ser enviados os livros no carrinho e
+                             */
+                        } else {
+                            Toast.makeText(getContext(), R.string.dialog_spinner_empty_error, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+                    //Toast.makeText(getContext(), "Clicou no FAB", Toast.LENGTH_LONG).show();
                 dialogBuilder.setView(viewDialog);
                 AlertDialog dialog = dialogBuilder.create();
                 dialog.show();
             }
         });
 
-        if (livrosCarrinho.isEmpty()){
-            fab.setClickable(false);
-            fab.setEnabled(false);
+        if (livrosCarrinho.isEmpty() || !LivroJsonParser.isConnectionInternet(getContext())){
+            /*fab.setClickable(false);
+            fab.setEnabled(false);*/
+            fab.setVisibility(View.GONE);
             Toast.makeText(getContext(), "O carrinho está vazio", Toast.LENGTH_LONG).show();
         }
 
 
 
-        //TODO: Fazer o onItemClick para mostrar os detalhes do livro
+        //TODO: Fazer o listner onItemClick para mostrar os detalhes do livro
 
 
 

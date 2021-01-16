@@ -20,6 +20,7 @@ import com.example.mylibraryandroid.listeners.CatalogoListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
+import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
 import com.example.mylibraryandroid.utils.FavoritoJsonParser;
 import com.example.mylibraryandroid.utils.JsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
@@ -38,6 +39,7 @@ public class Singleton {
     private static final String mUrlAPIRegistar = "http://192.168.1.100:8888/web/api/utilizador/create";
     private static final String mUrlAPICatalogo = "http://192.168.1.100:8888/web/api/livro";
     private static final String mUrlAPIFavorito = "http://192.168.1.100:8888/web/api/favorito/utilizador/1";
+    private static final String mUrlAPIBiblioteca = "http://192.168.1.100:8888/web/api/biblioteca";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -47,6 +49,7 @@ public class Singleton {
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
     private ArrayList<Integer> carrinho;
+    private ArrayList<Biblioteca> bibliotecas;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -292,5 +295,30 @@ public class Singleton {
             }
         }
         return false;
+    }
+
+    public void getBibliotecasAPI(final Context context){
+        if (!LivroJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIBiblioteca, null, new Response.Listener<JSONArray>() {
+
+                @Override
+                public void onResponse(JSONArray response) {
+                    bibliotecas = BibliotecaJsonParser.parserJsonBibliotecas(response);
+                    //adicionarFavoritosBD(favorito);
+
+                    /*if (favoritoListener != null)
+                        favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());*/
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
     }
 }

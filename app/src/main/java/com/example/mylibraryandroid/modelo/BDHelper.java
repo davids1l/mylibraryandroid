@@ -64,16 +64,14 @@ public class BDHelper extends SQLiteOpenHelper {
                 EDITORA_LIVRO+" INTEGER NOT NULL, " +
                 BIBLIOTECA_LIVRO+" INTEGER NOT NULL, " +
                 AUTOR_LIVRO+" INTEGER NOT NULL );";
-
         db.execSQL(createTableLivro);
 
         // Sql de criação da tabela favorito
         String createTableFavorito = "CREATE TABLE "+TABLE_NAME_FAV+"( " +
                 ID_FAVORITO_FAV+" INTEGER PRIMARY KEY, " +
                 ID_LIVRO_FAV+" INTEGER NOT NULL, " +
-                ID_UTILIZADOR_FAV+"INTEGER NOT NULL, " +
-                DTA_FAV+"NUMERIC NOT NULL );";
-
+                ID_UTILIZADOR_FAV+" INTEGER NOT NULL, " +
+                DTA_FAV+" NUMERIC NOT NULL );";
         db.execSQL(createTableFavorito);
 
     }
@@ -141,6 +139,11 @@ public class BDHelper extends SQLiteOpenHelper {
         values.put(DTA_FAV, favorito.getDta_favorito());
 
         this.db.insert(TABLE_NAME_FAV, null, values);
+    }
+
+    public boolean removerFavoritoBD(int id) {
+        int nRows = this.db.delete(TABLE_NAME_FAV, ID_FAVORITO_FAV+" = ?", new String[]{id + ""});
+        return (nRows > 0);
     }
 
     public void removerAllFavoritoBD(){

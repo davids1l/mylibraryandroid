@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,6 +25,7 @@ import com.example.mylibraryandroid.listeners.LoginListener;
 import com.example.mylibraryandroid.listeners.PerfilListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
 import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
+import com.example.mylibraryandroid.utils.CarrinhoJsonParser;
 import com.example.mylibraryandroid.utils.FavoritoJsonParser;
 import com.example.mylibraryandroid.utils.JsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
@@ -48,6 +50,7 @@ public class Singleton {
     private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
     private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/web/api/biblioteca";
+    private static final String mUrlAPIRequisicao = IP + ":8888/web/api/requisicao/create";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -106,9 +109,6 @@ public class Singleton {
         this.editarPerfilListener = editarPerfilListener;
     }
 
-    public void setBibliotecaListener(BibliotecaListener bibliotecaListener){
-        this.bibliotecaListener = bibliotecaListener;
-    }
 
     public void loginAPI(final String email, final String password, final Context context) {
         StringRequest req = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
@@ -253,9 +253,9 @@ public class Singleton {
                 }
             });/*{
                 @Override
-                protected Map<String, String> getParams() {
+                public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<>();
-                    params.put("token", token);
+                    params.put("authorization", token);
                     return params;
                 }
             };*/
@@ -361,6 +361,10 @@ public class Singleton {
         return false;
     }
 
+    public Boolean removerAllCarrinho(){
+        
+    }
+
     public void getBibliotecasAPI(final Context context){
         /*if (!LivroJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
@@ -419,6 +423,36 @@ public class Singleton {
                 params.put("num_telemovel", telemovel);
                 params.put("dta_nascimento", dia);
                 params.put("nif", nif);
+                return params;
+            }
+        };
+        volleyQueue.add(req);
+    }
+
+
+
+    public void adicionarRequisicaoAPI(final Context context, final int id_biblioteca, final int id_utilizador) {
+        StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIRequisicao, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //CarrinhoJsonParser.parserJsonCarrinho(carrinho);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id_biblioteca", id_biblioteca+"");
+                params.put("id_utilizador", id_utilizador+"");
+                params.put("carrinho_size", carrinho.size()+"");
+
+                for (int i = 0; i<carrinho.size(); i++){
+                    params.put("id_livro"+i, carrinho.get(i)+"");
+                }
                 return params;
             }
         };

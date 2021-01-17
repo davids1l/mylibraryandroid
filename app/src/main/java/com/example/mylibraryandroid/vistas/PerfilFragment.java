@@ -13,11 +13,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.PerfilListener;
+import com.example.mylibraryandroid.modelo.BDHelper;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.modelo.Utilizador;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,6 +33,8 @@ public class PerfilFragment extends Fragment implements PerfilListener {
     private TextView tvNumLeitor, tvNome, tvEmail, tvNumTelemovel, tvDataNascimento, tvNIF;
     private Utilizador dadosLeitor;
     private String leitorEmail;
+    private ImageView imagemPerfil;
+    private BDHelper bdHelper;
     public PerfilFragment() {
         // Required empty public constructor
     }
@@ -39,20 +45,23 @@ public class PerfilFragment extends Fragment implements PerfilListener {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         String id = sharedPreferences.getString(MenuMainActivity.ID,"");
+        String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
 
         View view = inflater.inflate(R.layout.perfil_fragment, container, false);
 
+        bdHelper = new BDHelper(getContext());
         tvNumLeitor = view.findViewById(R.id.tvNumLeitor);
         tvNome = view.findViewById(R.id.tvNome);
         tvEmail = view.findViewById(R.id.tvEmail);
         tvNumTelemovel = view.findViewById(R.id.tvNumTelemovel);
         tvDataNascimento = view.findViewById(R.id.tvDataNascimento);
         tvNIF = view.findViewById(R.id.tvNIF);
+        imagemPerfil = view.findViewById(R.id.ivImagemPerfil);
 
 
         Singleton.getInstance(getContext()).setPerfilListener(this);
-        Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id);
-        Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id);
+        Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
+        Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id, token);
 
         FloatingActionButton fab = view.findViewById(R.id.fabGuardarPerfil);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -76,10 +85,11 @@ public class PerfilFragment extends Fragment implements PerfilListener {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         String id = sharedPreferences.getString(MenuMainActivity.ID,"");
+        String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
 
         if(resultCode == Activity.RESULT_OK){
-            Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id);
-            Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id);
+            Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
+            Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id, token);
             Toast.makeText(getContext(), "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -98,6 +108,11 @@ public class PerfilFragment extends Fragment implements PerfilListener {
         String ano = data.substring(0,4);
         tvDataNascimento.setText(dia + "/" + mes + "/" + ano);
         tvNIF.setText(utilizador.getNif());
+        Glide.with(getContext())
+                .load(utilizador.getFoto_perfil())
+                .placeholder(R.drawable.logoipl)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imagemPerfil);
         dadosLeitor = utilizador;
     }
 
@@ -105,13 +120,8 @@ public class PerfilFragment extends Fragment implements PerfilListener {
     public void onRefreshEmailUtilizador(String email) {
         tvEmail.setText(email);
         leitorEmail = email;
-        guardarInfoSharedPref(email);
+        //TODO COLOCAR A GUARDAR NA BD
+        //bdHelper.adicionarLeitorBD(dadosLeitor, email);
     }
 
-    private void guardarInfoSharedPref(String email) {
-        SharedPreferences sharedPrefUser = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPrefUser.edit();
-        editor.putString(MenuMainActivity.EMAIL, email);
-        editor.apply();
-    }
 }

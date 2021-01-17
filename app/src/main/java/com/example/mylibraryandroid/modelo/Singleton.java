@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -38,17 +39,17 @@ import java.util.Map;
 
 public class Singleton {
 
-    public static final String IP = "http://192.168.0.100";
+    public static final String IP = "http://192.168.0.101";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = IP + ":8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = IP + ":8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = IP + ":8888/web/api/livro";
-    private static final String mUrlAPIFavorito =  IP + ":8888/web/api/favorito/utilizador/";
-    private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
-    private static final String mUrlAPILeitorEmail = IP + ":8888/web/api/user/";
-    private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
-    private static final String mUrlAPIBiblioteca = IP + ":8888/web/api/biblioteca";
+    private static final String mUrlAPILogin = IP + ":8888/backend/web/api/utilizador/login";
+    private static final String mUrlAPIRegistar = IP + ":8888/backend/web/api/utilizador/create";
+    private static final String mUrlAPICatalogo = IP + ":8888/backend/web/api/livro";
+    private static final String mUrlAPIFavorito =  IP + ":8888/backend/web/api/favorito/utilizador/";
+    private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/";
+    private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
+    private static final String mUrlAPIEditarLeitorEmail = IP + ":8888/backend/web/api/user/email/";
+    private static final String mUrlAPIBiblioteca = IP + ":8888/backend/web/api/biblioteca";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -302,7 +303,7 @@ public class Singleton {
     /**
      * Acesso aos dados leitor através da API
      **/
-    public void getDadosLeitorAPI(final Context context, final String id) {
+    public void getDadosLeitorAPI(final Context context, final String id, final String token) {
         StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitor + id, new Response.Listener<String>() {
 
             @Override
@@ -319,11 +320,19 @@ public class Singleton {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError{
+                Map<String, String> params = new HashMap<>();
+                params.put("authorization", token);
+
+                return params;
+            }
+        };
         volleyQueue.add(req);
     }
 
-    public void getLeitorEmailAPI(final Context context, final String id) {
+    public void getLeitorEmailAPI(final Context context, final String id, final String token) {
         StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitorEmail + id, new Response.Listener<String>() {
 
             @Override
@@ -340,7 +349,15 @@ public class Singleton {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError{
+                Map<String, String> params = new HashMap<>();
+                params.put("authorization", token);
+
+                return params;
+            }
+        };
         volleyQueue.add(req);
     }
 
@@ -411,7 +428,7 @@ public class Singleton {
         return listaBibliotecas;
     }
 
-    public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String mes, final String ano, final String nif, final String id){
+    public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String mes, final String ano, final String nif, final String id, final String token){
         StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPILeitor + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -436,18 +453,26 @@ public class Singleton {
                 params.put("nif", nif);
                 return params;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("authorization", token);
+
+                return params;
+            }
         };
         volleyQueue.add(req);
     }
 
 
-    public void atualizarEmailLeitorAPI(final Context context, final String email, final String id){
-        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPILeitorEmail + id, new Response.Listener<String>() {
+    public void atualizarEmailLeitorAPI(final Context context, final String email, final String id, final String token, final String password){
+        StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIEditarLeitorEmail + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                String email = JsonParser.parserJsonEditarEmail(response);
+                String[] email = JsonParser.parserJsonEditarEmail(response);
                 if (editarPerfilListener != null) {
-                    editarPerfilListener.onRefreshPerfil();
+                    editarPerfilListener.onRefreshPerfilEmail(email[0], email[1]);
                 }
             }
         }, new Response.ErrorListener() {
@@ -460,6 +485,14 @@ public class Singleton {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("email", email);
+                params.put("password", password);
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("authorization", token);
                 return params;
             }
         };

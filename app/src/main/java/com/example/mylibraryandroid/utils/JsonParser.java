@@ -113,13 +113,14 @@ public class JsonParser {
         return utilizador;
     }
 
-    public static String parserJsonEditarEmail(String response){
-        String auxEmail = null;
+    public static String[] parserJsonEditarEmail(String response){
+        String[] auxEmail = new String[2];
 
         try {
             JSONObject dados = new JSONObject(response);
 
-            auxEmail = dados.getString("email");
+            auxEmail[0] = dados.getString("email");
+            auxEmail[1] = dados.getString("token");
 
         } catch (JSONException e) {
             e.printStackTrace();

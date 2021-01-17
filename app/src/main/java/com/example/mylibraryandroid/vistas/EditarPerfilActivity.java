@@ -25,7 +25,7 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
     public static final String DATA_NASCIMENTO = "DATA_NASCIMENTO";
     public static final String NIF = "NIF";
     public static final String EMAIL = "EMAIL";
-    private EditText etNome, etApelido, etEmail, etTelemovel, etDia, etMes, etAno, etNIF;
+    private EditText etNome, etApelido, etEmail, etTelemovel, etDia, etMes, etAno, etNIF, etPassword;
 
 
     @Override
@@ -44,6 +44,7 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
 
         SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         final String id = sharedPreferences.getString(MenuMainActivity.ID,"");
+        final String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
 
         etNome = findViewById(R.id.etNome);
         etApelido = findViewById(R.id.etApelido);
@@ -53,6 +54,7 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         etMes = findViewById(R.id.etMes);
         etAno = findViewById(R.id.etAno);
         etNIF = findViewById(R.id.etNIF);
+        etPassword = findViewById(R.id.etPassword);
 
         etNome.setText(nome);
         etApelido.setText(apelido);
@@ -76,6 +78,7 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                         String ano = etAno.getText().toString();
                         String nif = etNIF.getText().toString();
                         String email = etEmail.getText().toString();
+                        String password = etPassword.getText().toString();
 
                     if (!isNomeValid(nome)) {
                         etNome.setError("Campo em branco!");
@@ -142,8 +145,8 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                         return;
                     }
 
-                    Singleton.getInstance(getApplicationContext()).atualizarDadosLeitorAPI(getApplicationContext(), nome, apelido, telemovel, dia, mes, ano, nif, id);
-                    Singleton.getInstance(getApplicationContext()).atualizarEmailLeitorAPI(getApplicationContext(), email, id);
+                    Singleton.getInstance(getApplicationContext()).atualizarDadosLeitorAPI(getApplicationContext(), nome, apelido, telemovel, dia, mes, ano, nif, id, token);
+                    Singleton.getInstance(getApplicationContext()).atualizarEmailLeitorAPI(getApplicationContext(), email, id, token, password);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }
@@ -153,9 +156,24 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
     }
 
     @Override
+    public void onRefreshPerfilEmail(String email, String token) {
+        guardarInfoSharedPref(email, token);
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
     public void onRefreshPerfil() {
         setResult(RESULT_OK);
         finish();
+    }
+
+    private void guardarInfoSharedPref(String email, String token) {
+        SharedPreferences sharedPrefUser = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefUser.edit();
+        editor.putString(MenuMainActivity.EMAIL, email);
+        editor.putString(MenuMainActivity.TOKEN, token);
+        editor.apply();
     }
 
 
@@ -245,4 +263,6 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
     private boolean isEmailValid(String email){
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+
 }

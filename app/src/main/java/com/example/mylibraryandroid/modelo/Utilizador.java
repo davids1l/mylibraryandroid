@@ -11,6 +11,8 @@ public class Utilizador {
     private String foto_perfil;
     private String nif;
     private String numTelemovel;
+    private static final String IP = "http://192.168.0.101";
+    private String urlImagem = IP + ":8888/frontend/web/imgs/perfil/";
 
     public Utilizador(int id, int bloqueado, String nif, String numTelemovel, String primeiroNome, String ultimoNome, String numero, String dtaBloqueado, String dtaNascimento, String dtaRegisto, String fotoPerfil, int idBiblioteca) {
         this.id = id;
@@ -23,7 +25,7 @@ public class Utilizador {
         this.dtaBloqueado = dtaBloqueado;
         this.dtaNascimento = dtaNascimento;
         this.dtaRegisto = dtaRegisto;
-        this.foto_perfil = fotoPerfil;
+        this.foto_perfil = urlImagem + fotoPerfil;
         this.id_biblioteca = idBiblioteca;
     }
 

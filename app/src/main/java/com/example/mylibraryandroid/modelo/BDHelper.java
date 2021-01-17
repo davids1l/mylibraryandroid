@@ -35,6 +35,20 @@ public class BDHelper extends SQLiteOpenHelper {
     private static final String ID_UTILIZADOR_FAV = "id_utilizador";
     private static final String DTA_FAV = "dta_favorito";
 
+    private static final String TABLE_NAME_UTILIZADOR = "utilizador";
+    private static final String ID_UTILIZADOR = "id_utilizador";
+    private static final String NOME = "nome";
+    private static final String APELIDO = "apelido";
+    private static final String NUMERO_LEITOR = "numero_leitor";
+    private static final String EMAIL = "email";
+    private static final String BLOQUEADO = "bloqueado";
+    private static final String DATA_BLOQUEADO = "data_bloqueado";
+    private static final String DATA_NASCIMENTO = "data_nascimento";
+    private static final String NIF = "nif";
+    private static final String NUM_TELEMOVEL = "num_telemovel";
+    private static final String DATA_REGISTO = "data_registo";
+    private static final String FOTO_PERFIL = "foto_perfil";
+    private static final String ID_BIBLIOTECA = "id_biblioteca";
 
     private final SQLiteDatabase db;
 
@@ -76,6 +90,24 @@ public class BDHelper extends SQLiteOpenHelper {
 
         db.execSQL(createTableFavorito);
 
+
+        //SQL da criação da tabela utilizador
+        String createTableUtilizador = "CREATE TABLE "+TABLE_NAME_UTILIZADOR+"( " +
+                ID_UTILIZADOR+" INTEGER PRIMARY KEY, " +
+                NOME+" TEXT NOT NULL, " +
+                APELIDO+" TEXT NOT NULL, " +
+                NUMERO_LEITOR+" TEXT NOT NULL, " +
+                EMAIL+" TEXT NOT NULL, " +
+                //BLOQUEADO + " INTEGER, " +
+                //DATA_BLOQUEADO + " TEXT, " +
+                DATA_NASCIMENTO+" TEXT NOT NULL, " +
+                NIF+" INTEGER NOT NULL, " +
+                NUM_TELEMOVEL+" INTEGER NOT NULL, " +
+                //DATA_REGISTO + " TEXT NOT NULL, " +
+                FOTO_PERFIL+" TEXT NOT NULL);";
+                //ID_BIBLIOTECA + " INTEGER);";
+
+        db.execSQL(createTableUtilizador);
     }
 
     @Override
@@ -86,6 +118,9 @@ public class BDHelper extends SQLiteOpenHelper {
 
         String deleteTableFavoritos="DROP TABLE IF EXISTS " + TABLE_NAME_FAV;
         db.execSQL(deleteTableFavoritos);
+
+        String deleteTableUtilizador="DROP TABLE IF EXISTS " + TABLE_NAME_UTILIZADOR;
+        db.execSQL(deleteTableUtilizador);
 
         //criar a BD novamente
         this.onCreate(db);
@@ -161,4 +196,20 @@ public class BDHelper extends SQLiteOpenHelper {
         cursor.close();
         return favoritos;
     }
+
+    public void adicionarLeitorBD(Utilizador utilizador, String email) {
+        ContentValues values = new ContentValues();
+        values.put(ID_UTILIZADOR, utilizador.getId());
+        values.put(NOME, utilizador.getPrimeiroNome());
+        values.put(APELIDO, utilizador.getUltimoNome());
+        values.put(NUMERO_LEITOR, utilizador.getNumero());
+        values.put(EMAIL, email);
+        values.put(DATA_NASCIMENTO, utilizador.getDtaNascimento());
+        values.put(NIF, utilizador.getNif());
+        values.put(NUM_TELEMOVEL, utilizador.getNumTelemovel());
+        values.put(FOTO_PERFIL, utilizador.getFoto_perfil());
+
+        this.db.insert(TABLE_NAME_UTILIZADOR, null, values);
+    }
+
 }

@@ -4,9 +4,11 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,15 +41,6 @@ public class ItemFavoritoFragment extends Fragment {
         tvIdioma = view.findViewById(R.id.tvIdioma);
         tvFormato = view.findViewById(R.id.tvFormato);
         imageCapa = view.findViewById(R.id.imageCapa);
-
-        // TODO Implementar clique nos items para remover livro clicado dos favoritos
-        Button buttonRem = (Button) view.findViewById(R.id.remFavorite);
-        buttonRem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(),"Teste", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         carregarFavorito();
         return view;

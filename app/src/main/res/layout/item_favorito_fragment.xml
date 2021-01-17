@@ -112,12 +112,13 @@
 
         <Button
             android:id="@+id/remFavorite"
-            android:layout_width="0dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:clickable="true"
             android:layout_weight="1"
             android:background="@drawable/ic_remove"
-            android:backgroundTint="#B71C1C" />
+            android:backgroundTint="#E60F0F" />
 
     </LinearLayout>
 

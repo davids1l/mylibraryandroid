@@ -208,9 +208,10 @@ public class Singleton {
     }
 
     public void adicionarFavoritosBD(ArrayList<Favorito> favoritos){
-        bdHelper.removerAllLivroBD();
-        for (Favorito f:favoritos)
+        bdHelper.removerAllFavoritoBD();
+        for (Favorito f: favoritos) {
             adicionarFavoritoBD(f);
+        }
     }
 
     public Favorito getFavorito(int id_favorito){
@@ -231,6 +232,23 @@ public class Singleton {
     }
 
     /** Acesso aos livros pela API **/
+    public void removerFavoritoBD(int id) {
+        Favorito f = getFavorito(id);
+
+        if(f != null) {
+            bdHelper.removerFavoritoBD(id);
+        }
+    }
+
+    public String findFavoritoByIDS(int id_livro, int id_utilizador) {
+        for (Favorito f: favorito) {
+            if(f.getId_livro() == id_livro && f.getId_utilizador() == id_utilizador) {
+                return f.getId_favorito() + "";
+            }
+        }
+        return null;
+    }
+
     public void getCatalogoAPI(final Context context) {
         if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
@@ -273,17 +291,18 @@ public class Singleton {
                 favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito + id, null, new Response.Listener<JSONArray>() {
-
                 @Override
                 public void onResponse(JSONArray response) {
                     favorito = FavoritoJsonParser.parserJsonFavorito(response);
-                    adicionarFavoritosBD(favorito);
+                    if(!favorito.isEmpty()) {
+                        adicionarFavoritosBD(favorito);
+                    } else
+                        Toast.makeText(context, "Ainda não existem favoritos!", Toast.LENGTH_LONG).show();
 
                     if (favoritoListener != null)
                         favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());
                 }
             }, new Response.ErrorListener() {
-
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -298,6 +317,28 @@ public class Singleton {
             };*/
             volleyQueue.add(req);
         }
+    }
+
+    public void removerFavoritoAPI(final Context context, int id_utilizador, int id_livro) {
+        final String id_favorito = findFavoritoByIDS(id_livro, id_utilizador);
+        StringRequest req = new StringRequest(Request.Method.DELETE, mUrlAPIRemoverFavorito + id_favorito, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Favorito f = FavoritoJsonParser.parserJsonFav(response);
+                int id = Integer.parseInt(id_favorito);
+                removerFavoritoBD(id);
+
+                if (favoritoListener != null){
+                    favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        volleyQueue.add(req);
     }
 
     /**

@@ -59,6 +59,11 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
         Singleton.getInstance(getContext()).setFavoritoListener(this);
         Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id);
 
+        favoritoLivros = Singleton.getInstance(getContext()).getLivrosFavoritosBD();
+        if(favoritoLivros.isEmpty()){
+            Toast.makeText(getContext(), "Não existem favoritos!", Toast.LENGTH_SHORT).show();
+        }
+
         return view;
     }
 
@@ -105,12 +110,16 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
     public void onRefresh() {
         Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id);
         swipeRefreshLayout.setRefreshing(false);
+        if(favoritoLivros.isEmpty()){
+            Toast.makeText(getContext(), "Não existem favoritos!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onRefreshFavoritoLivros(ArrayList<Livro> favoritoLivros) {
-        if(favoritoLivros != null)
+        if(favoritoLivros != null) {
             lvFavoritoLivros.setAdapter(new FavoritoAdaptador(getContext(), favoritoLivros));
+        }
     }
 
     @Override

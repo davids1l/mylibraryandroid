@@ -50,6 +50,14 @@ public class BDHelper extends SQLiteOpenHelper {
     private static final String FOTO_PERFIL = "foto_perfil";
     private static final String ID_BIBLIOTECA = "id_biblioteca";
 
+    private static final String TABLE_NAME_COM = "comentario";
+    private static final String ID_COMENTARIO_COM = "id_comentario";
+    private static final String ID_LIVRO_COM = "id_livro";
+    private static final String ID_UTILIZADOR_COM = "id_utilizador";
+    private static final String COMENTARIO_COM = "comentario";
+    private static final String DTA_COM = "dta_comentario";
+
+
     private final SQLiteDatabase db;
 
 
@@ -106,6 +114,16 @@ public class BDHelper extends SQLiteOpenHelper {
                 //ID_BIBLIOTECA + " INTEGER);";
 
         db.execSQL(createTableUtilizador);
+
+        // Sql de criação da tabela comentario
+        String createTableComentario = "CREATE TABLE "+TABLE_NAME_COM+"( " +
+                ID_COMENTARIO_COM+" INTEGER PRIMARY KEY, " +
+                ID_LIVRO_COM+" INTEGER NOT NULL, " +
+                ID_UTILIZADOR_COM+" INTEGER NOT NULL, " +
+                COMENTARIO_COM+" TEXT NOT NULL, " +
+                DTA_COM+" NUMERIC NOT NULL );";
+        db.execSQL(createTableComentario);
+
     }
 
     @Override
@@ -119,6 +137,9 @@ public class BDHelper extends SQLiteOpenHelper {
 
         String deleteTableUtilizador="DROP TABLE IF EXISTS " + TABLE_NAME_UTILIZADOR;
         db.execSQL(deleteTableUtilizador);
+
+        String deleteTableComentarios="DROP TABLE IF EXISTS " + TABLE_NAME_COM;
+        db.execSQL(deleteTableComentarios);
 
         //criar a BD novamente
         this.onCreate(db);
@@ -228,4 +249,41 @@ public class BDHelper extends SQLiteOpenHelper {
         return utilizador;
     }
 
+
+    public void adicionarComentarioBD(Comentario comentario) {
+        ContentValues values = new ContentValues();
+        values.put(ID_COMENTARIO_COM, comentario.getId_comentario());
+        values.put(ID_LIVRO_COM, comentario.getId_livro());
+        values.put(ID_UTILIZADOR_COM, comentario.getId_utilizador());
+        values.put(COMENTARIO_COM, comentario.getComentario());
+        values.put(DTA_COM, comentario.getDta_comentario());
+
+        this.db.insert(TABLE_NAME_COM, null, values);
+    }
+
+    public boolean removerComentarioBD(int id) {
+        int nRows = this.db.delete(TABLE_NAME_COM, ID_COMENTARIO_COM+" = ?", new String[]{id + ""});
+        return (nRows > 0);
+    }
+
+    public void removerAllComentarioBD(){
+        this.db.delete(TABLE_NAME_COM, null, null);
+    }
+
+    public ArrayList<Comentario> getAllComentariosDB() {
+        ArrayList<Comentario> comentarios = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_NAME_COM, new String[]{ID_COMENTARIO_COM,ID_LIVRO_COM, ID_UTILIZADOR_COM, COMENTARIO_COM, DTA_COM},
+                null, null, null, null, null);
+
+        if(cursor.moveToFirst()) {
+            do {
+                Comentario auxComentario = new Comentario(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return comentarios;
+    }
+
+    //Query to get the autor by it's id
 }

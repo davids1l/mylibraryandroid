@@ -44,26 +44,20 @@ import java.util.Map;
 
 public class Singleton {
 
-    public static final String IP = "http://192.168.0.100";
+    public static final String IP = "http://192.168.1.77";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = IP + ":8888/backend/web/api/utilizador/login";
     private static final String mUrlAPIRegistar = IP + ":8888/backend/web/api/utilizador/create";
     private static final String mUrlAPICatalogo = IP + ":8888/backend/web/api/livro";
     private static final String mUrlAPIFavorito =  IP + ":8888/backend/web/api/favorito/utilizador/";
-    private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/";
+    private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/dadosLeitor/";
+    private static final String mUrlAPIEditarLeitor = IP + ":8888/backend/web/api/utilizador/";
     private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/backend/web/api/biblioteca";
     private static final String mUrlAPIRemoverFavorito =  IP + ":8888/backend/web/api/favorito/";
-    private static final String mUrlAPILogin = IP + ":8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = IP + ":8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = IP + ":8888/web/api/livro";
-    private static final String mUrlAPIFavorito =  IP + ":8888/web/api/favorito/utilizador/";
-    private static final String mUrlAPIRemoverFavorito =  IP + ":8888/web/api/favorito/";
-    private static final String mUrlAPIAdicionarFavorito =  IP + ":8888/web/api/favorito";
-    private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
-    private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
-    private static final String mUrlAPIComentario = IP + ":8888/web/api/favorito/utilizador/";
+    private static final String mUrlAPIAdicionarFavorito =  IP + ":8888/backend/web/api/favorito";
+    private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/favorito/utilizador/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -79,7 +73,7 @@ public class Singleton {
     private ArrayList<Integer> carrinho;
     private ArrayList<Biblioteca> bibliotecas;
     private ArrayList<Comentario> comentario;
-    private ArrayList<Livro> carrinho;
+    private String emailUtilizador;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -439,6 +433,8 @@ public class Singleton {
     /**
      * Acesso aos dados leitor através da API
      **/
+
+
     public void getDadosLeitorAPI(final Context context, final String id, final String token) {
         if (!JsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
@@ -453,6 +449,8 @@ public class Singleton {
                 @Override
                 public void onResponse(String response) {
                     Utilizador utilizador = JsonParser.parserJsonPerfil(response);
+
+                    adicionarDadosLeitorBD(context, utilizador);
 
                     if (perfilListener != null) {
                         perfilListener.onRefreshUtilizador(utilizador);
@@ -477,12 +475,57 @@ public class Singleton {
         }
     }
 
+
+    /*public void getDadosLeitorAPI(final Context context, final String id, final String token) {
+        if (!JsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+
+            //TODO IR BUSCAR OS DADOS À BD
+            /*if (perfilListener != null){
+                perfilListener.onRefreshUtilizador(bdHelper.getUtilizadorBD());
+            }*/
+        /*} else {
+            StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitor + id, new Response.Listener<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    Utilizador utilizador = JsonParser.parserJsonPerfil(response);
+
+                    adicionarDadoLeitorBD(utilizador, emailUtilizador);
+
+                    if (perfilListener != null) {
+                        perfilListener.onRefreshUtilizador(utilizador);
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("authorization", token);
+
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }*/
+
+
     public void getLeitorEmailAPI(final Context context, final String id, final String token) {
         StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitorEmail + id, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 String email = JsonParser.parserJsonPerfilEmail(response);
+
+                emailUtilizador = email;
+
 
                 if (perfilListener != null) {
                     perfilListener.onRefreshEmailUtilizador(email);
@@ -504,6 +547,15 @@ public class Singleton {
             }
         };
         volleyQueue.add(req);
+    }
+
+    public void adicionarDadoLeitorBD(Utilizador utilizador){
+        bdHelper.adicionarLeitorBD(utilizador);
+    }
+
+    public void adicionarDadosLeitorBD(Context context, Utilizador utilizador){
+        bdHelper.removerLeitorBD();
+        adicionarDadoLeitorBD(utilizador);
     }
 
     public Boolean adicionarCarrinho (int id_livro){
@@ -574,10 +626,13 @@ public class Singleton {
     }
 
     public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String mes, final String ano, final String nif, final String id, final String token){
-        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPILeitor + id, new Response.Listener<String>() {
+        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIEditarLeitor + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Utilizador utilizador = JsonParser.parserJsonEditarPerfil(response);
+
+                //adicionarDadosLeitorBD(context, utilizador);
+
                 if (editarPerfilListener != null) {
                     editarPerfilListener.onRefreshPerfil();
                 }

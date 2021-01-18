@@ -221,13 +221,13 @@ public class BDHelper extends SQLiteOpenHelper {
         return favoritos;
     }
 
-    public void adicionarLeitorBD(Utilizador utilizador, String email) {
+    public void adicionarLeitorBD(Utilizador utilizador) {
         ContentValues values = new ContentValues();
         values.put(ID_UTILIZADOR, utilizador.getId());
         values.put(NOME, utilizador.getPrimeiroNome());
         values.put(APELIDO, utilizador.getUltimoNome());
         values.put(NUMERO_LEITOR, utilizador.getNumero());
-        values.put(EMAIL, email);
+        values.put(EMAIL, utilizador.getEmail());
         values.put(DATA_NASCIMENTO, utilizador.getDtaNascimento());
         values.put(NIF, utilizador.getNif());
         values.put(NUM_TELEMOVEL, utilizador.getNumTelemovel());

@@ -11,10 +11,11 @@ public class Utilizador {
     private String foto_perfil;
     private String nif;
     private String numTelemovel;
-    private static final String IP = "http://192.168.0.100";
+    private String email;
+    private static final String IP = "http://192.168.1.77";
     private String urlImagem = IP + ":8888/frontend/web/imgs/perfil/";
 
-    public Utilizador(int id, int bloqueado, String nif, String numTelemovel, String primeiroNome, String ultimoNome, String numero, String dtaBloqueado, String dtaNascimento, String dtaRegisto, String fotoPerfil, int idBiblioteca) {
+    public Utilizador(int id, int bloqueado, String nif, String email, String numTelemovel, String primeiroNome, String ultimoNome, String numero, String dtaBloqueado, String dtaNascimento, String dtaRegisto, String fotoPerfil, int idBiblioteca) {
         this.id = id;
         this.bloqueado = bloqueado;
         this.nif = nif;
@@ -27,6 +28,15 @@ public class Utilizador {
         this.dtaRegisto = dtaRegisto;
         this.foto_perfil = urlImagem + fotoPerfil;
         this.id_biblioteca = idBiblioteca;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getId_biblioteca() {

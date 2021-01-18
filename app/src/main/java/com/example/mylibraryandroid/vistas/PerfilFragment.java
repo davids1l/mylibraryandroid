@@ -62,7 +62,7 @@ public class PerfilFragment extends Fragment implements PerfilListener {
 
         Singleton.getInstance(getContext()).setPerfilListener(this);
         Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
-        Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id, token);
+        //Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id, token);
 
         FloatingActionButton fab = view.findViewById(R.id.fabGuardarPerfil);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +93,7 @@ public class PerfilFragment extends Fragment implements PerfilListener {
 
         if(resultCode == Activity.RESULT_OK){
             Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
-            Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id, token);
+            //Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id, token);
             Toast.makeText(getContext(), "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -112,21 +112,22 @@ public class PerfilFragment extends Fragment implements PerfilListener {
         String ano = data.substring(0,4);
         tvDataNascimento.setText(dia + "/" + mes + "/" + ano);
         tvNIF.setText(utilizador.getNif());
+        tvEmail.setText(utilizador.getEmail());
         Glide.with(getContext())
                 .load(utilizador.getFoto_perfil())
                 .placeholder(R.drawable.logoipl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imagemPerfil);
         dadosLeitor = utilizador;
+        //Singleton.getInstance(getContext()).atualizarBDEditarPerfil(getContext(), dadosLeitor, leitorEmail);
     }
 
     @Override
     public void onRefreshEmailUtilizador(String email) {
         tvEmail.setText(email);
         leitorEmail = email;
-        //TODO ERRO AO GUARDAR NA BD PELA SEGUNDA VEZ
-        bdHelper.removerLeitorBD();
-        bdHelper.adicionarLeitorBD(dadosLeitor, email);
+
+        //Singleton.getInstance(getContext()).adicionarDadosLeitorBD(getContext(), dadosLeitor, email);
     }
 
 }

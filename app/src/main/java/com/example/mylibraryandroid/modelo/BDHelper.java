@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.ArrayAdapter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class BDHelper extends SQLiteOpenHelper {
@@ -30,10 +32,25 @@ public class BDHelper extends SQLiteOpenHelper {
     private static final String AUTOR_LIVRO = "id_autor";
 
     private static final String TABLE_NAME_FAV = "favorito";
-    private static final String ID_FAVORITO_FAV = "id_favorito";
     private static final String ID_LIVRO_FAV = "id_livro";
+    private static final String ID_FAVORITO_FAV = "id_favorito";
     private static final String ID_UTILIZADOR_FAV = "id_utilizador";
     private static final String DTA_FAV = "dta_favorito";
+
+    private static final String TABLE_NAME_BIB = "biblioteca";
+    private static final String ID_BIBLIOTECA_BIB = "id_biblioteca";
+    private static final String NOME_BIBLIOTECA = "nome";
+    private static final String COD_POSTAL_BIB = "cod_postal";
+
+    private static final String TABLE_NAME_AUTOR = "autor";
+    private static final String ID_AUTOR = "id_autor";
+    private static final String NOME_AUTOR = "nome_autor";
+    private static final String ID_PAIS_AUTOR = "id_pais";
+
+    private static final String TABLE_NAME_EDITORA = "editora";
+    private static final String ID_EDITORA = "id_editora";
+    private static final String DESIGNACAO_EDITORA = "desginacao";
+    private static final String ID_PAIS_EDITORA = "id_pais";
 
     private static final String TABLE_NAME_UTILIZADOR = "utilizador";
     private static final String ID_UTILIZADOR = "id_utilizador";
@@ -71,6 +88,41 @@ public class BDHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        //SQL da criação da tabela autor
+        String createTableAutor = "CREATE TABLE "+TABLE_NAME_AUTOR+"( " +
+                ID_AUTOR+" INTEGER PRIMARY KEY, " +
+                NOME_AUTOR+" TEXT NOT NULL, " +
+                ID_PAIS_AUTOR+" INTEGER NOT NULL );";
+
+        db.execSQL(createTableAutor);
+
+        // Sql de criação da tabela favorito
+        String createTableFavorito = "CREATE TABLE "+TABLE_NAME_FAV+"( " +
+                ID_FAVORITO_FAV+" INTEGER PRIMARY KEY, " +
+                DTA_FAV+" NUMERIC NOT NULL, " +
+                ID_LIVRO_FAV+" INTEGER NOT NULL, " +
+                ID_UTILIZADOR_FAV+" INTEGER NOT NULL );";
+
+        db.execSQL(createTableFavorito);
+
+        //SQL da criação da tabela editoras
+        String createTableEditora = "CREATE TABLE "+TABLE_NAME_EDITORA+"( " +
+                ID_EDITORA+" INTEGER PRIMARY KEY, " +
+                DESIGNACAO_EDITORA+" TEXT NOT NULL, " +
+                ID_PAIS_EDITORA+" INTEGER NOT NULL );" ;
+
+        db.execSQL(createTableEditora);
+
+
+        //SQL da criação da tabela biblioteca
+        String createTableBiblioteca = "CREATE TABLE "+TABLE_NAME_BIB+"( " +
+                ID_BIBLIOTECA_BIB+" INTEGER PRIMARY KEY, " +
+                NOME_BIBLIOTECA+" TEXT NOT NULL, " +
+                COD_POSTAL_BIB+" TEXT NOT NULL );";
+
+        db.execSQL(createTableBiblioteca);
+
         //SQL de criação da tabela livro
         String createTableLivro = "CREATE TABLE "+TABLE_NAME+"( " +
                 ID_LIVRO+" INTEGER PRIMARY KEY, " +
@@ -85,16 +137,12 @@ public class BDHelper extends SQLiteOpenHelper {
                 SINOPSE_LIVRO+" TEXT NOT NULL, " +
                 EDITORA_LIVRO+" INTEGER NOT NULL, " +
                 BIBLIOTECA_LIVRO+" INTEGER NOT NULL, " +
-                AUTOR_LIVRO+" INTEGER NOT NULL );";
-        db.execSQL(createTableLivro);
+                AUTOR_LIVRO+" INTEGER NOT NULL, " +
+                "FOREIGN KEY("+BIBLIOTECA_LIVRO+") REFERENCES "+TABLE_NAME_BIB+"("+ID_BIBLIOTECA_BIB+"), " +
+                "FOREIGN KEY("+AUTOR_LIVRO+") REFERENCES "+TABLE_NAME_AUTOR+"("+ID_AUTOR+"), " +
+                "FOREIGN KEY("+EDITORA_LIVRO+") REFERENCES "+TABLE_NAME_EDITORA+"("+ID_AUTOR+") );";
 
-        // Sql de criação da tabela favorito
-        String createTableFavorito = "CREATE TABLE "+TABLE_NAME_FAV+"( " +
-                ID_FAVORITO_FAV+" INTEGER PRIMARY KEY, " +
-                ID_LIVRO_FAV+" INTEGER NOT NULL, " +
-                ID_UTILIZADOR_FAV+" INTEGER NOT NULL, " +
-                DTA_FAV+" NUMERIC NOT NULL );";
-        db.execSQL(createTableFavorito);
+        db.execSQL(createTableLivro);
 
 
         //SQL da criação da tabela utilizador
@@ -134,6 +182,15 @@ public class BDHelper extends SQLiteOpenHelper {
 
         String deleteTableFavoritos="DROP TABLE IF EXISTS " + TABLE_NAME_FAV;
         db.execSQL(deleteTableFavoritos);
+
+        String deleteTableBibliotecas="DROP TABLE IF EXISTS " + TABLE_NAME_BIB;
+        db.execSQL(deleteTableBibliotecas);
+
+        String deleteTableAutores="DROP TABLE IF EXISTS " + TABLE_NAME_AUTOR;
+        db.execSQL(deleteTableAutores);
+
+        String deleteTableEditoras="DROP TABLE IF EXISTS " + TABLE_NAME_EDITORA;
+        db.execSQL(deleteTableEditoras);
 
         String deleteTableUtilizador="DROP TABLE IF EXISTS " + TABLE_NAME_UTILIZADOR;
         db.execSQL(deleteTableUtilizador);
@@ -215,11 +272,102 @@ public class BDHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()) {
             do {
                 Favorito auxFavorito = new Favorito(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3));
+                //TODO favoritos.add(auxFavorito);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return favoritos;
     }
+
+    public void adicionarBibliotecaBD(Biblioteca biblioteca){
+        ContentValues values = new ContentValues();
+        values.put(ID_BIBLIOTECA_BIB, biblioteca.getId_biblioteca());
+        values.put(NOME_BIBLIOTECA, biblioteca.getNome());
+        values.put(COD_POSTAL_BIB, biblioteca.getCod_postal());
+
+        this.db.insert(TABLE_NAME_BIB, null, values);
+    }
+
+    public void removerAllBibliotecasDB(){
+        this.db.delete(TABLE_NAME_BIB, null, null);
+    }
+
+    public ArrayList<Biblioteca> getAllBibliotecasBD() {
+        ArrayList<Biblioteca> bibliotecas = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_NAME_BIB, new String[]{ID_BIBLIOTECA_BIB, NOME_BIBLIOTECA, COD_POSTAL_BIB},
+                null, null, null, null, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                Biblioteca auxBiblioteca = new Biblioteca(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+                bibliotecas.add(auxBiblioteca);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return bibliotecas;
+    }
+
+    public void adicionarAutorDB(Autor autor){
+        ContentValues values = new ContentValues();
+        values.put(ID_AUTOR, autor.getId_autor());
+        values.put(NOME_AUTOR, autor.getNome_autor());
+        values.put(ID_PAIS_AUTOR, autor.getId_pais());
+
+        this.db.insert(TABLE_NAME_AUTOR, null, values);
+    }
+
+    public void removerAllAutoresDB(){
+        this.db.delete(TABLE_NAME_AUTOR, null, null);
+    }
+
+    public ArrayList<Autor> getAllAutoresDB() {
+        ArrayList<Autor> autores = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_NAME_AUTOR, new String[]{ID_AUTOR, NOME_AUTOR, ID_PAIS_AUTOR},
+                null, null, null, null, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                Autor auxAutor = new Autor(cursor.getInt(0), cursor.getString(1), cursor.getInt(2));
+                autores.add(auxAutor);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return autores;
+    }
+
+    public void adicionarEditoraDB(Editora editora) {
+        ContentValues values = new ContentValues();
+        values.put(ID_EDITORA, editora.getId_editora());
+        values.put(DESIGNACAO_EDITORA, editora.getDesignacao());
+        values.put(ID_PAIS_EDITORA, editora.getId_pais());
+
+        this.db.insert(TABLE_NAME_EDITORA, null, values);
+    }
+
+    public void removerAllEditorasDB() {
+        this.db.delete(TABLE_NAME_EDITORA, null, null);
+    }
+
+    public ArrayList<Editora> getAllEditorasDB(){
+        ArrayList<Editora> editoras = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_NAME_EDITORA, new String[]{ID_EDITORA, DESIGNACAO_EDITORA, ID_PAIS_EDITORA},
+                null, null, null, null, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                Editora auxEditora = new Editora(cursor.getInt(0), cursor.getString(1), cursor.getInt(2));
+                editoras.add(auxEditora);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return editoras;
+    }
+
+
+
 
     public void adicionarLeitorBD(Utilizador utilizador) {
         ContentValues values = new ContentValues();

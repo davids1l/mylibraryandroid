@@ -11,10 +11,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mylibraryandroid.R;
@@ -25,6 +27,7 @@ import com.example.mylibraryandroid.modelo.Biblioteca;
 import com.example.mylibraryandroid.modelo.Livro;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
+import com.example.mylibraryandroid.utils.CarrinhoJsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -35,7 +38,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
     private ListView lvCarrinhoLivros;
     private ArrayList<Livro> livrosCarrinho;
     private ArrayList<Biblioteca> bibliotecas;
-    private ArrayList<String> adapterList;
+    //private ArrayList<String> adapterList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String token;
 
@@ -62,7 +65,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        Singleton.getInstance(getContext()).setCarrinhoListener(this);
+        //Singleton.getInstance(getContext()).setCarrinhoListener(this);
         livrosCarrinho =  Singleton.getInstance(getContext()).getLivrosCarrinho();
 
         lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
@@ -74,28 +77,32 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-                View viewDialog = getLayoutInflater().inflate(R.layout.dialog_finalizar_requisicao, null);
+                final View viewDialog = getLayoutInflater().inflate(R.layout.dialog_finalizar_requisicao, null);
                 final Spinner spinner = (Spinner) viewDialog.findViewById(R.id.spinnerBibliotecas);
                 Button button = (Button) viewDialog.findViewById(R.id.btnFinalizar);
 
                 bibliotecas = Singleton.getInstance(getContext()).getBibliotecas();
 
-                ArrayAdapter<Biblioteca> adapter = new ArrayAdapter<Biblioteca>(viewDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, bibliotecas);
+                //adapter para mostrar os nomes (toString do modelo Biblioteca) das bibliotecas obtidas pela API no spinner/dropdown
+                final ArrayAdapter<Biblioteca> adapter = new ArrayAdapter<Biblioteca>(viewDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, bibliotecas);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
                 spinner.setAdapter(adapter);
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(spinner.getSelectedItem() != null){
-                            //TODO: Efetuar requisicao - API POST
-                            /**
-                             * 1- get do arrayList dos livros presentes no carrinho
-                             * 2- na API criar um método REST CUSTOM para criar uma requisicao e para cada livro criar uma requisicao_livro
-                             * 3- efetuar post para a url da REST CUSTOM anterior em que deveram ser enviados os livros(id) no carrinho e id bib.
-                             */
-                            Toast.makeText(getContext(), "Button finalizar requisicao clicado!", Toast.LENGTH_LONG).show();
+                            //obter o id_biblioteca (do objeto biblioteca) através da posição do item selecionado no spinner
+                            int position = spinner.getSelectedItemPosition();
+                            int id_bib = bibliotecas.get(position).getId_biblioteca();
+
+                            //obter id_utilizador -> shared preferences
+                            SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+                            String id_utilizador = sharedPreferences.getString(MenuMainActivity.ID,"");
+
+                            //efetuar post para a REST CUSTOM que cria a requisição
+                            Singleton.getInstance(getContext()).adicionarRequisicaoAPI(getContext(), id_bib, Integer.parseInt(id_utilizador));
+
                         } else {
                             Toast.makeText(getContext(), R.string.dialog_spinner_empty_error, Toast.LENGTH_LONG).show();
                         }

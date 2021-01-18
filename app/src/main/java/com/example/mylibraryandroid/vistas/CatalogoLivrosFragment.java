@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.adaptadores.CatalogoAdaptador;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
+import com.example.mylibraryandroid.listeners.EditoraListener;
 import com.example.mylibraryandroid.modelo.Livro;
 import com.example.mylibraryandroid.modelo.Singleton;
 
@@ -66,6 +67,15 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
 
         Singleton.getInstance(getContext()).setCatalogoListener(this);
         Singleton.getInstance(getContext()).getCatalogoAPI(getContext(), token);
+
+        //método GET - API para obter os autores
+        Singleton.getInstance(getContext()).getAutoresAPI(getContext());
+
+        //método GET - API para obter as bibliotecas
+        Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
+
+        //método GET - API para obter as editoras
+        Singleton.getInstance(getContext()).getEditorasAPI(getContext());
 
         lvCatalogoLivros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

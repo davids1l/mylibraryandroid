@@ -36,8 +36,8 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
     private FragmentManager fragmentManager;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private String email = "";
     private TextView tvEmail;
-    private String email = ""; //TODO: substituir por Nome - utilizador
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,7 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
         SharedPreferences sharedPrefInfoUser = getSharedPreferences(PREF_INFO_USER, Context.MODE_PRIVATE);
 
         email = sharedPrefInfoUser.getString(EMAIL, "Sem Email");
+
         View hView = navigationView.getHeaderView(0);
         tvEmail = hView.findViewById(R.id.tvEmail);
         tvEmail.setText(email);

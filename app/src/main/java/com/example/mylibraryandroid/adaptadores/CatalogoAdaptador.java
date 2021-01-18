@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.modelo.Livro;
+import com.example.mylibraryandroid.modelo.Singleton;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,7 @@ public class CatalogoAdaptador extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Livro> catalogo;
+    private String nomeAutor;
 
     public CatalogoAdaptador(Context context, ArrayList<Livro> catalogo){
         this.context = context;
@@ -76,14 +78,16 @@ public class CatalogoAdaptador extends BaseAdapter {
         }
 
         public void update(Livro livro){
+            nomeAutor = Singleton.getInstance(context).getNomeAutor(livro.getId_autor());
+
             tvTitulo.setText(livro.getTitulo());
-            tvAutor.setText(livro.getId_autor()+"");
+            tvAutor.setText(nomeAutor);
             tvIdioma.setText(livro.getIdioma());
             tvFormato.setText(livro.getFormato());
 
             Glide.with(context)
                     .load(livro.getCapa())
-                    .placeholder(R.drawable.logoipl)
+                    .placeholder(R.drawable.loading_capa)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgCapa);
         }

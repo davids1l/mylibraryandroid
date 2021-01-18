@@ -1,11 +1,14 @@
 package com.example.mylibraryandroid.modelo;
 
+import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.AuthFailureError;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -19,16 +22,21 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.listeners.AutorListener;
 import com.example.mylibraryandroid.listeners.BibliotecaListener;
 import com.example.mylibraryandroid.listeners.CarrinhoListener;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
 import com.example.mylibraryandroid.listeners.ComentarioListener;
 import com.example.mylibraryandroid.listeners.EditarPerfilListener;
+import com.example.mylibraryandroid.listeners.EditoraListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
 import com.example.mylibraryandroid.listeners.PerfilListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
+import com.example.mylibraryandroid.utils.AutorJsonParser;
 import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
+import com.example.mylibraryandroid.utils.CarrinhoJsonParser;
+import com.example.mylibraryandroid.utils.EditoraJsonParser;
 import com.example.mylibraryandroid.utils.ComentarioJsonParser;
 import com.example.mylibraryandroid.utils.FavoritoJsonParser;
 import com.example.mylibraryandroid.utils.JsonParser;
@@ -37,7 +45,7 @@ import com.example.mylibraryandroid.vistas.MenuMainActivity;
 
 import org.json.JSONArray;
 
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +62,12 @@ public class Singleton {
     private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/dadosLeitor/";
     private static final String mUrlAPIEditarLeitor = IP + ":8888/backend/web/api/utilizador/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/backend/web/api/biblioteca";
+    private static final String mUrlAPIVerificarRequisicao = IP + ":8888/backend/web/api/requisicao/emrequisicao/";
+    private static final String mUrlAPIRequisicao = IP + ":8888/backend/web/api/requisicao/create";
+    private static final String mUrlAPITotalReq = IP + ":8888/backend/web/api/requisicao/total/";
+    private static final String mUrlAPIAutores = IP + ":8888/backend/web/api/autor";
+    private static final String mUrlAPIEditora = IP + ":8888/backend/web/api/editora";
+    private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
     private static final String mUrlAPIRemoverFavorito =  IP + ":8888/backend/web/api/favorito/";
     private static final String mUrlAPIAdicionarFavorito =  IP + ":8888/backend/web/api/favorito";
     private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/favorito/utilizador/";
@@ -61,9 +75,10 @@ public class Singleton {
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
     private FavoritoListener favoritoListener;
-    private CarrinhoListener carrinhoListener;
+    private AutorListener autorListener;
     private BibliotecaListener bibliotecaListener;
     private ComentarioListener comentarioListener;
+    private EditoraListener editoraListener;
     private PerfilListener perfilListener;
     private EditarPerfilListener editarPerfilListener;
     private BDHelper bdHelper;
@@ -71,6 +86,9 @@ public class Singleton {
     private ArrayList<Favorito> favorito;
     private ArrayList<Integer> carrinho;
     private ArrayList<Biblioteca> bibliotecas;
+    private ArrayList<Autor> autores;
+    private ArrayList<Editora> editoras;
+    private String totalReq;
     private ArrayList<Comentario> comentario;
     private String emailUtilizador;
 
@@ -102,8 +120,8 @@ public class Singleton {
         this.catalogoListener = catalogoListener;
     }
 
-    public void setCarrinhoListener(CarrinhoListener carrinhoListener){
-        this.carrinhoListener = carrinhoListener;
+    public void setAutorListener(AutorListener autorListener){
+        this.autorListener = autorListener;
     }
 
     public void setFavoritoListener(FavoritoListener favoritoListener) {
@@ -118,9 +136,6 @@ public class Singleton {
         this.editarPerfilListener = editarPerfilListener;
     }
 
-    public void setBibliotecaListener(BibliotecaListener bibliotecaListener){
-        this.bibliotecaListener = bibliotecaListener;
-    }
 
     public void setComentarioListener(ComentarioListener comentarioListener) {
         this.comentarioListener = comentarioListener;
@@ -351,6 +366,7 @@ public class Singleton {
                 favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIFavorito + id, null, new Response.Listener<JSONArray>() {
+
                 @Override
                 public void onResponse(JSONArray response) {
                     favorito = FavoritoJsonParser.parserJsonFavorito(response);
@@ -497,17 +513,19 @@ public class Singleton {
         adicionarDadoLeitorBD(utilizador);
     }
 
-    public Boolean adicionarCarrinho (int id_livro){
+    /*public Boolean adicionarCarrinho (int id_livro){
 
         //verifica se o arrayList já contem o id_livro a inserir
-        //se não contem, insere e retorna a true (sucesso na inserção), caso contrário retorna false (já contem)
-        if (!carrinho.contains(id_livro)){
-            carrinho.add(id_livro);
-            return true;
+        //limita tambem o carrinho a apenas 5 livros
+        if (carrinho.size() <= 4) {
+            if (!carrinho.contains(id_livro)) {
+                carrinho.add(id_livro);
+                return true;
+            }
         }
 
         return false;
-    }
+    }*/
 
     public ArrayList<Livro> getLivrosCarrinho(){
         ArrayList<Livro> livrosCarrinho = new ArrayList<>();
@@ -529,17 +547,57 @@ public class Singleton {
         return false;
     }
 
+    public Boolean removerAllCarrinho(){
+        if(carrinho.removeAll(carrinho))
+            return true;
+
+        return false;
+    }
+
+    //Método REST CUSTOM que verifica se o livro está em requisição, se não estiver adiciona ao carrinho
+    public void verificarEmRequisicao(final Context context, final int id) {
+        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPIVerificarRequisicao + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //response = false -> livro não está em requisição
+                if (response.equals("false")){
+                    if (Integer.parseInt(totalReq) + carrinho.size() <= 4) {
+                        //verifica se o arrayList já contem o id_livro a inserir
+                        //limita tambem o carrinho a apenas 5 livros
+                        if (!carrinho.contains(id) && carrinho.size() <= 4) {
+                            carrinho.add(id);
+                            Toast.makeText(context, "Livro adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "O livro já se encontra no seu carrinho", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Atingiu o máximo de 5 livros em requisição", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(context, "Este livro já se encontra em requisição, tente mais tarde", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        volleyQueue.add(req);
+    }
+
     //TODO TOKEN
     public void getBibliotecasAPI(final Context context, final String token){
-        /*if (!LivroJsonParser.isConnectionInternet(context)){
+        if (!LivroJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
-        } else {*/
-        JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIBiblioteca, null, new Response.Listener<JSONArray>() {
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIBiblioteca, null, new Response.Listener<JSONArray>() {
 
-            @Override
-            public void onResponse(JSONArray response) {
-                bibliotecas = BibliotecaJsonParser.parserJsonBibliotecas(response);
-                //adicionarFavoritosBD(favorito);
+                @Override
+                public void onResponse(JSONArray response) {
+                    bibliotecas = BibliotecaJsonParser.parserJsonBibliotecas(response);
+
+                    adicionarBibliotecasBD(bibliotecas);
 
                 if (bibliotecaListener != null)
                     bibliotecaListener.onRefreshBibliotecas(bibliotecas);
@@ -563,6 +621,21 @@ public class Singleton {
         // }
     }
 
+        public ArrayList<Biblioteca> getAllBibliotecasBD() {
+            return bdHelper.getAllBibliotecasBD();
+        }
+
+        public String getNomeBiblioteca(int id_biblioteca) {
+            ArrayList<Biblioteca> auxBib = getAllBibliotecasBD();
+
+            for (Biblioteca b:auxBib){
+                if (b.getId_biblioteca() == id_biblioteca){
+                    return b.getNome();
+                }
+            }
+            return null;
+        }
+
     public ArrayList<Biblioteca> getBibliotecas(){
         ArrayList<Biblioteca> listaBibliotecas = new ArrayList<>();
 
@@ -571,6 +644,107 @@ public class Singleton {
         }
 
         return listaBibliotecas;
+    }
+
+
+    public void adicionarAutorBD(Autor autor) {
+        bdHelper.adicionarAutorDB(autor);
+    }
+
+    public void adicionarAutoresBD(ArrayList<Autor> autores) {
+        bdHelper.removerAllAutoresDB();
+        for (Autor a : autores)
+            adicionarAutorBD(a);
+    }
+
+    public void getAutoresAPI(final Context context){
+        if (!LivroJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIAutores,null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    autores = AutorJsonParser.parserJsonAutores(response);
+                    adicionarAutoresBD(autores);
+
+                    if (autorListener != null)
+                        autorListener.onRefreshAutores(autores);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public ArrayList<Autor> getAllAutoresBD() {
+        autores = bdHelper.getAllAutoresDB();
+        return autores;
+    }
+
+    public String getNomeAutor(int id_autor){
+       ArrayList<Autor> auxAutor = getAllAutoresBD();
+
+       for (Autor a : auxAutor){
+           if(a.id_autor == id_autor){
+               return a.getNome_autor();
+           }
+       }
+
+       return null;
+    }
+
+
+    public void adicionarEditoraBD(Editora editora){
+        bdHelper.adicionarEditoraDB(editora);
+    }
+
+    public void adicionarEditorasBD(ArrayList<Editora> editoras){
+        bdHelper.removerAllEditorasDB();
+        for (Editora e:editoras)
+            adicionarEditoraBD(e);
+    }
+
+    public void getEditorasAPI(final Context context){
+        if (!LivroJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIEditora, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    editoras = EditoraJsonParser.parserJsonEditora(response);
+                    adicionarEditorasBD(editoras);
+
+                    if (editoraListener != null)
+                        editoraListener.onRefreshEditoras(editoras);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public ArrayList<Editora> getAllEditorasBD(){
+        return bdHelper.getAllEditorasDB();
+    }
+
+    public String getDesignacaoEditora(int id_editora){
+        ArrayList<Editora> auxEditora = getAllEditorasBD();
+
+        for (Editora e:auxEditora){
+            if(e.getId_editora() == id_editora){
+                return e.getDesignacao();
+            }
+        }
+
+        return null;
     }
 
     public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String mes, final String ano, final String nif, final String id, final String token){
@@ -605,6 +779,42 @@ public class Singleton {
                 Map<String, String> params = new HashMap<>();
                 params.put("authorization", token);
 
+                return params;
+            }
+        };
+        volleyQueue.add(req);
+    }
+
+
+
+    public void adicionarRequisicaoAPI(final Context context, final int id_biblioteca, final int id_utilizador) {
+        StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIRequisicao, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //CarrinhoJsonParser.parserJsonCarrinho(carrinho);
+
+                //TODO: validar se o limite de livros em requisição foi alcançado
+
+                removerAllCarrinho();
+
+                Toast.makeText(context, "Requisição efetuada com sucesso!", Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id_biblioteca", id_biblioteca+"");
+                params.put("id_utilizador", id_utilizador+"");
+                params.put("carrinho_size", carrinho.size()+"");
+
+                for (int i = 0; i<carrinho.size(); i++){
+                    params.put("id_livro"+i, carrinho.get(i)+"");
+                }
                 return params;
             }
         };

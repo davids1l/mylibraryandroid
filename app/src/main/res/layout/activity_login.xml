@@ -11,13 +11,14 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        app:srcCompat="@drawable/logoipl" />
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/mylibrary_logo" />
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="100dp" />
+        android:layout_height="35dp" />
 
     <EditText
         android:id="@+id/etEmail"

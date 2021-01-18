@@ -42,6 +42,14 @@
     <string name="dialog_tv_finalizar_requisicao">Finalizar Requisição</string>
     <string name="dialog_btn_finalizar_requisicao">Finalizar Requisição</string>
     <string name="dialog_spinner_empty_error">Selecione a biblioteca de levantamento.</string>
+    <string name="detalhes_estatico_isbn">ISBN:</string>
+    <string name="detalhes_estatico_edicao">Edição:</string>
+    <string name="detalhes_estatico_idioma">Idioma:</string>
+    <string name="detalhes_estatico_formato">Formato:</string>
+    <string name="detalhes_editora_estatico">Editora:</string>
+    <string name="detalhes_biblioteca_estatico">Biblioteca:</string>
+    <string name="detalhes_estatico_paginas">Páginas:</string>
+    <string name="detalhes_estatico_sinopse">Sinopse:</string>
     <string name="menuFavorito">Adicionar aos favoritos</string>
     <string name="detalhes_livro_comentarios">Comentário(s)</string>
     <string name="hintAddComentario">Adicione um comentário</string>

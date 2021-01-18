@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -33,10 +35,12 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
     public static final String ID_LIVRO = "ID_LIVRO";
     private Livro livro;
-    private ArrayList<Livro> carrinho;
-    private TextView tvTitulo, tvAutor, tvEdicao, tvPaginas, tvBiblioteca, tvSinopse, tvIsbn, tvGenero, tvIdioma, tvEditora;
+    private TextView tvTitulo, tvAutor, tvEdicao, tvPaginas, tvBiblioteca, tvSinopse, tvIsbn, tvGenero, tvIdioma, tvEditora, tvFormato;
     private ImageView imgCapa;
     StringBuilder stringBuilder = new StringBuilder();
+    private String nomeAutor;
+    private String desigEditora;
+    private String nomeBib;
 
     private int id_livro;
     private String id;
@@ -66,6 +70,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         tvBiblioteca = findViewById(R.id.tvBiblioteca);
         tvEditora = findViewById(R.id.tvEditora);
         tvPaginas = findViewById(R.id.tvPaginas);
+        tvFormato = findViewById(R.id.tvFormato);
         imgCapa = findViewById(R.id.imgCapa);
 
         Singleton.getInstance(getApplicationContext()).setCatalogoListener(this);
@@ -86,7 +91,16 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
             public void onClick(View v) {
                 if(LivroJsonParser.isConnectionInternet(getApplicationContext())) {
 
-                    //Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro);
+                    //obter o id_utilizador armazenado na shared preferences
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+                    String id_utilizador = sharedPreferences.getString(MenuMainActivity.ID,"");
+
+                    //request à API pelo total de livros em requisição
+                    Singleton.getInstance(getApplicationContext()).totalEmRequisicao(getApplicationContext(), Integer.parseInt(id_utilizador));
+
+                    //adicionar livro ao carrinho
+                    //verifica se o livro em questão esta em requisição, limita o total de livros no carrinho e verifica se são ambíguos
+                    Singleton.getInstance(getApplicationContext()).verificarEmRequisicao(getApplicationContext(), id_livro);
 
                     if (Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro) == true){
                         /*carrinho = Singleton.getInstance(getApplicationContext()).getLivrosCarrinho();
@@ -164,16 +178,21 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     }
 
     public void popularDetalhesLivro(){
+        nomeAutor = Singleton.getInstance(getApplicationContext()).getNomeAutor(livro.getId_autor());
+        desigEditora = Singleton.getInstance(getApplicationContext()).getDesignacaoEditora(livro.getId_editora());
+        nomeBib = Singleton.getInstance(getApplicationContext()).getNomeBiblioteca(livro.getId_biblioteca());
+
         tvTitulo.setText(livro.getTitulo());
-        tvAutor.setText(livro.getId_autor()+"");
+        tvAutor.setText(nomeAutor);
         tvIsbn.setText(livro.getIsbn()+"");
         tvEdicao.setText(livro.getAno()+"");
         tvGenero.setText(livro.getGenero());
         tvIdioma.setText(livro.getIdioma());
         tvSinopse.setText(livro.getSinopse());
-        tvBiblioteca.setText(livro.getId_biblioteca()+"");
+        tvFormato.setText(livro.getFormato());
+        tvBiblioteca.setText(nomeBib);
         tvPaginas.setText(livro.getPaginas()+"");
-        tvEditora.setText(livro.getId_editora()+"");
+        tvEditora.setText(desigEditora);
 
         Glide.with(this)
                 .load(livro.getCapa())

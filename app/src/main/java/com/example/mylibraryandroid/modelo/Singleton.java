@@ -1,5 +1,6 @@
 package com.example.mylibraryandroid.modelo;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -52,6 +53,7 @@ public class Singleton {
     private static final String mUrlAPIBiblioteca = IP + ":8888/web/api/biblioteca";
     private static final String mUrlAPIVerificarRequisicao = IP + ":8888/web/api/requisicao/emrequisicao/";
     private static final String mUrlAPIRequisicao = IP + ":8888/web/api/requisicao/create";
+    private static final String mUrlAPITotalReq = IP + ":8888/web/api/requisicao/total/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -65,6 +67,7 @@ public class Singleton {
     private ArrayList<Favorito> favorito;
     private ArrayList<Integer> carrinho;
     private ArrayList<Biblioteca> bibliotecas;
+    private String totalReq;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -330,7 +333,7 @@ public class Singleton {
         volleyQueue.add(req);
     }
 
-    public Boolean adicionarCarrinho (int id_livro){
+    /*public Boolean adicionarCarrinho (int id_livro){
 
         //verifica se o arrayList já contem o id_livro a inserir
         //limita tambem o carrinho a apenas 5 livros
@@ -342,7 +345,7 @@ public class Singleton {
         }
 
         return false;
-    }
+    }*/
 
     public ArrayList<Livro> getLivrosCarrinho(){
         ArrayList<Livro> livrosCarrinho = new ArrayList<>();
@@ -371,22 +374,46 @@ public class Singleton {
         return false;
     }
 
+    //Método REST CUSTOM que verifica se o livro está em requisição, se não estiver adiciona ao carrinho
     public void verificarEmRequisicao(final Context context, final int id) {
         StringRequest req = new StringRequest(Request.Method.GET, mUrlAPIVerificarRequisicao + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                //response = false -> livro não está em requisição
                 if (response.equals("false")){
-                    if (!carrinho.contains(id) && carrinho.size() <= 4) {
-                        carrinho.add(id);
-                        Toast.makeText(context, "Livro adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+                    if (Integer.parseInt(totalReq) + carrinho.size() <= 4) {
+                        //verifica se o arrayList já contem o id_livro a inserir
+                        //limita tambem o carrinho a apenas 5 livros
+                        if (!carrinho.contains(id) && carrinho.size() <= 4) {
+                            carrinho.add(id);
+                            Toast.makeText(context, "Livro adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "O livro já se encontra no seu carrinho", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(context, "O livro já se encontra no seu carrinho", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Atingiu o máximo de 5 livros em requisição", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(context, "O livro já se encontra em requisição", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Este livro já se encontra em requisição, tente mais tarde", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        volleyQueue.add(req);
+    }
+
+    public void totalEmRequisicao(final Context context, final int id){
+        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPITotalReq + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                totalReq = response;
+            }
+        }, new Response.ErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -466,6 +493,8 @@ public class Singleton {
             @Override
             public void onResponse(String response) {
                 //CarrinhoJsonParser.parserJsonCarrinho(carrinho);
+
+                //TODO: validar se o limite de livros em requisição foi alcançado
 
                 removerAllCarrinho();
 

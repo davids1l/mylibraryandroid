@@ -96,15 +96,16 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                              * 5- efetuar post para a url da REST CUSTOM anterior em que deverão ser enviados os livros(ids) no carrinho e id_bib.
                              */
 
-                            /**2 -> obter id bib */
+                            //2 -> obter id bib
                             //obter o id_biblioteca (do objeto biblioteca) através da posição do item selecionado no spinner
                             int position = spinner.getSelectedItemPosition();
                             int id_bib = bibliotecas.get(position).getId_biblioteca();
 
-                            /**3 -> obter id_utilizador */
+                            //3 -> obter id_utilizador
                             SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
                             String id_utilizador = sharedPreferences.getString(MenuMainActivity.ID,"");
 
+                            //5 -> efetuar post para a REST CUSTOM
                             Singleton.getInstance(getContext()).adicionarRequisicaoAPI(getContext(), id_bib, Integer.parseInt(id_utilizador));
 
                         } else {

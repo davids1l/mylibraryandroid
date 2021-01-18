@@ -2,6 +2,8 @@ package com.example.mylibraryandroid.vistas;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +26,6 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
     public static final String ID_LIVRO = "ID_LIVRO";
     private Livro livro;
-    private ArrayList<Livro> carrinho;
     private TextView tvTitulo, tvAutor, tvEdicao, tvPaginas, tvBiblioteca, tvSinopse, tvIsbn, tvGenero, tvIdioma, tvEditora;
     private ImageView imgCapa;
     StringBuilder stringBuilder = new StringBuilder();
@@ -62,19 +63,15 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
             public void onClick(View v) {
                 if(LivroJsonParser.isConnectionInternet(getApplicationContext())) {
 
-                    /*if (Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro) == true){
-                        /*carrinho = Singleton.getInstance(getApplicationContext()).getLivrosCarrinho();
-                        for (int i=0; i<carrinho.size(); i++){
-                            //stringBuilder.append(carrinho.get(i) + "\n");
-                            //carrinho.get(i);
-                            stringBuilder.append(carrinho.get(i).getTitulo() + "\n");
-                        }
-                        tvPaginas.setText(stringBuilder); ------
-                        Toast.makeText(getApplicationContext(), "Livro adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "O livro já se encontra no seu carrinho", Toast.LENGTH_SHORT).show();
-                    }*/
+                    //obter o id_utilizador armazenado na shared preferences
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+                    String id_utilizador = sharedPreferences.getString(MenuMainActivity.ID,"");
 
+                    //request à API pelo total de livros em requisição
+                    Singleton.getInstance(getApplicationContext()).totalEmRequisicao(getApplicationContext(), Integer.parseInt(id_utilizador));
+
+                    //adicionar livro ao carrinho
+                    //verifica se o livro em questão esta em requisição, limita o total de livros no carrinho e verifica se são ambíguos
                     Singleton.getInstance(getApplicationContext()).verificarEmRequisicao(getApplicationContext(), id_livro);
 
                 } else {

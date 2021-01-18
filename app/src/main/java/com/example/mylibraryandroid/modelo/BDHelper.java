@@ -38,7 +38,7 @@ public class BDHelper extends SQLiteOpenHelper {
     private static final String DTA_FAV = "dta_favorito";
 
     private static final String TABLE_NAME_BIB = "biblioteca";
-    private static final String ID_BIBLIOTECA = "id_biblioteca";
+    private static final String ID_BIBLIOTECA_BIB = "id_biblioteca";
     private static final String NOME_BIBLIOTECA = "nome";
     private static final String COD_POSTAL_BIB = "cod_postal";
 
@@ -117,7 +117,7 @@ public class BDHelper extends SQLiteOpenHelper {
 
         //SQL da criação da tabela biblioteca
         String createTableBiblioteca = "CREATE TABLE "+TABLE_NAME_BIB+"( " +
-                ID_BIBLIOTECA+" INTEGER PRIMARY KEY, " +
+                ID_BIBLIOTECA_BIB+" INTEGER PRIMARY KEY, " +
                 NOME_BIBLIOTECA+" TEXT NOT NULL, " +
                 COD_POSTAL_BIB+" TEXT NOT NULL );";
 
@@ -138,19 +138,11 @@ public class BDHelper extends SQLiteOpenHelper {
                 EDITORA_LIVRO+" INTEGER NOT NULL, " +
                 BIBLIOTECA_LIVRO+" INTEGER NOT NULL, " +
                 AUTOR_LIVRO+" INTEGER NOT NULL, " +
-                "FOREIGN KEY("+BIBLIOTECA_LIVRO+") REFERENCES "+TABLE_NAME_BIB+"("+ID_BIBLIOTECA+"), " +
+                "FOREIGN KEY("+BIBLIOTECA_LIVRO+") REFERENCES "+TABLE_NAME_BIB+"("+ID_BIBLIOTECA_BIB+"), " +
                 "FOREIGN KEY("+AUTOR_LIVRO+") REFERENCES "+TABLE_NAME_AUTOR+"("+ID_AUTOR+"), " +
                 "FOREIGN KEY("+EDITORA_LIVRO+") REFERENCES "+TABLE_NAME_EDITORA+"("+ID_AUTOR+") );";
 
         db.execSQL(createTableLivro);
-
-        // Sql de criação da tabela favorito
-        String createTableFavorito = "CREATE TABLE "+TABLE_NAME_FAV+"( " +
-                ID_FAVORITO_FAV+" INTEGER PRIMARY KEY, " +
-                ID_LIVRO_FAV+" INTEGER NOT NULL, " +
-                ID_UTILIZADOR_FAV+" INTEGER NOT NULL, " +
-                DTA_FAV+" NUMERIC NOT NULL );";
-        db.execSQL(createTableFavorito);
 
 
         //SQL da criação da tabela utilizador
@@ -289,7 +281,7 @@ public class BDHelper extends SQLiteOpenHelper {
 
     public void adicionarBibliotecaBD(Biblioteca biblioteca){
         ContentValues values = new ContentValues();
-        values.put(ID_BIBLIOTECA, biblioteca.getId_biblioteca());
+        values.put(ID_BIBLIOTECA_BIB, biblioteca.getId_biblioteca());
         values.put(NOME_BIBLIOTECA, biblioteca.getNome());
         values.put(COD_POSTAL_BIB, biblioteca.getCod_postal());
 
@@ -303,7 +295,7 @@ public class BDHelper extends SQLiteOpenHelper {
     public ArrayList<Biblioteca> getAllBibliotecasBD() {
         ArrayList<Biblioteca> bibliotecas = new ArrayList<>();
 
-        Cursor cursor = this.db.query(TABLE_NAME_BIB, new String[]{ID_BIBLIOTECA, NOME_BIBLIOTECA, COD_POSTAL_BIB},
+        Cursor cursor = this.db.query(TABLE_NAME_BIB, new String[]{ID_BIBLIOTECA_BIB, NOME_BIBLIOTECA, COD_POSTAL_BIB},
                 null, null, null, null, null);
 
         if (cursor.moveToFirst()){

@@ -52,29 +52,22 @@ import java.util.Map;
 
 public class Singleton {
 
-    public static final String IP = "http://192.168.1.77";
+    public static final String IP = "http://192.168.1.100";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = IP + ":8888/web/api/utilizador/login";
-    private static final String mUrlAPIRegistar = IP + ":8888/web/api/utilizador/create";
-    private static final String mUrlAPICatalogo = IP + ":8888/web/api/livro";
-    private static final String mUrlAPIFavorito =  IP + ":8888/web/api/favorito/utilizador/";
-    private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
-    private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
-    private static final String mUrlAPIBiblioteca = IP + ":8888/web/api/biblioteca";
-    private static final String mUrlAPIVerificarRequisicao = IP + ":8888/web/api/requisicao/emrequisicao/";
-    private static final String mUrlAPIRequisicao = IP + ":8888/web/api/requisicao/create";
-    private static final String mUrlAPITotalReq = IP + ":8888/web/api/requisicao/total/";
-    private static final String mUrlAPIAutores = IP + ":8888/web/api/autor";
-    private static final String mUrlAPIEditora = IP + ":8888/web/api/editora";
     private static final String mUrlAPILogin = IP + ":8888/backend/web/api/utilizador/login";
     private static final String mUrlAPIRegistar = IP + ":8888/backend/web/api/utilizador/create";
     private static final String mUrlAPICatalogo = IP + ":8888/backend/web/api/livro";
     private static final String mUrlAPIFavorito =  IP + ":8888/backend/web/api/favorito/utilizador/";
-    private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/dadosLeitor/";
+    private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/";
     private static final String mUrlAPIEditarLeitor = IP + ":8888/backend/web/api/utilizador/";
-    private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/backend/web/api/biblioteca";
+    private static final String mUrlAPIVerificarRequisicao = IP + ":8888/backend/web/api/requisicao/emrequisicao/";
+    private static final String mUrlAPIRequisicao = IP + ":8888/backend/web/api/requisicao/create";
+    private static final String mUrlAPITotalReq = IP + ":8888/backend/web/api/requisicao/total/";
+    private static final String mUrlAPIAutores = IP + ":8888/backend/web/api/autor";
+    private static final String mUrlAPIEditora = IP + ":8888/backend/web/api/editora";
+    private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
     private static final String mUrlAPIRemoverFavorito =  IP + ":8888/backend/web/api/favorito/";
     private static final String mUrlAPIAdicionarFavorito =  IP + ":8888/backend/web/api/favorito";
     private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/favorito/utilizador/";

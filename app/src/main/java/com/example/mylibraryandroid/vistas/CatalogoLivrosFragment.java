@@ -3,7 +3,9 @@ package com.example.mylibraryandroid.vistas;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.adaptadores.CatalogoAdaptador;
@@ -35,9 +38,7 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
     private ListView lvCatalogoLivros;
     private ArrayList<Livro> catalogoLivros;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    //TODO: searchView e swipeRefresh
-
+    private SearchView searchView;
 
     public CatalogoLivrosFragment() {
         //Required empty public constructor
@@ -50,6 +51,11 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
 
         View view = inflater.inflate(R.layout.catalogo_livros_fragment, container, false);
         lvCatalogoLivros = view.findViewById(R.id.lvCatalogoLivros);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        String idUtilizador = sharedPreferences.getString(MenuMainActivity.ID, "");
+
+        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), idUtilizador);
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -105,15 +111,13 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
-        /*inflater.inflate(R.menu.menu_pesquisa, menu); //Injetar layout do menu nesta activity
+        inflater.inflate(R.menu.menu_pesquisa, menu);
 
         MenuItem itemPesquisa = menu.findItem(R.id.itemPesquisa);
         searchView = (SearchView) itemPesquisa.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+            public boolean onQueryTextSubmit(String query) { return true; }
 
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -126,11 +130,11 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
 
                 lvCatalogoLivros.setAdapter(new CatalogoAdaptador(getContext(), tempLivros));
 
-                return true;
+                return false;
             }
         });
 
-        super.onCreateOptionsMenu(menu, inflater);*/
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 

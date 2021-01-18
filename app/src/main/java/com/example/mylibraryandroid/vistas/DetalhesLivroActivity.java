@@ -101,19 +101,6 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
                     //adicionar livro ao carrinho
                     //verifica se o livro em questão esta em requisição, limita o total de livros no carrinho e verifica se são ambíguos
                     Singleton.getInstance(getApplicationContext()).verificarEmRequisicao(getApplicationContext(), id_livro);
-
-                    if (Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro) == true){
-                        /*carrinho = Singleton.getInstance(getApplicationContext()).getLivrosCarrinho();
-                        for (int i=0; i<carrinho.size(); i++){
-                            //stringBuilder.append(carrinho.get(i) + "\n");
-                            //carrinho.get(i);
-                            stringBuilder.append(carrinho.get(i).getTitulo() + "\n");
-                        }
-                        tvPaginas.setText(stringBuilder);*/
-                        Toast.makeText(getApplicationContext(), R.string.livroAdicionado, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.livroNoCarrinho, Toast.LENGTH_SHORT).show();
-                    }
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }

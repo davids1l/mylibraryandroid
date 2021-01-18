@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.AuthFailureError;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -58,7 +59,7 @@ public class Singleton {
     private static final String mUrlAPILogin = IP + ":8888/backend/web/api/utilizador/login";
     private static final String mUrlAPIRegistar = IP + ":8888/backend/web/api/utilizador/create";
     private static final String mUrlAPICatalogo = IP + ":8888/backend/web/api/livro";
-    private static final String mUrlAPIFavorito =  IP + ":8888/backend/web/api/favorito/utilizador/";
+    private static final String mUrlAPIFavorito = IP + ":8888/backend/web/api/favorito/utilizador/";
     private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/dadosLeitor/";
     private static final String mUrlAPIEditarLeitor = IP + ":8888/backend/web/api/utilizador/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/backend/web/api/biblioteca";
@@ -68,8 +69,8 @@ public class Singleton {
     private static final String mUrlAPIAutores = IP + ":8888/backend/web/api/autor";
     private static final String mUrlAPIEditora = IP + ":8888/backend/web/api/editora";
     private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
-    private static final String mUrlAPIRemoverFavorito =  IP + ":8888/backend/web/api/favorito/";
-    private static final String mUrlAPIAdicionarFavorito =  IP + ":8888/backend/web/api/favorito";
+    private static final String mUrlAPIRemoverFavorito = IP + ":8888/backend/web/api/favorito/";
+    private static final String mUrlAPIAdicionarFavorito = IP + ":8888/backend/web/api/favorito";
     private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/favorito/utilizador/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
@@ -120,7 +121,7 @@ public class Singleton {
         this.catalogoListener = catalogoListener;
     }
 
-    public void setAutorListener(AutorListener autorListener){
+    public void setAutorListener(AutorListener autorListener) {
         this.autorListener = autorListener;
     }
 
@@ -132,7 +133,7 @@ public class Singleton {
         this.perfilListener = perfilListener;
     }
 
-    public void setEditarPerfilListener(EditarPerfilListener editarPerfilListener){
+    public void setEditarPerfilListener(EditarPerfilListener editarPerfilListener) {
         this.editarPerfilListener = editarPerfilListener;
     }
 
@@ -211,15 +212,15 @@ public class Singleton {
         bdHelper.adicionarLivroBD(livro);
     }
 
-    public void adicionarLivrosBD(ArrayList<Livro> livros){
+    public void adicionarLivrosBD(ArrayList<Livro> livros) {
         bdHelper.removerAllLivroBD();
-        for (Livro l:livros)
+        for (Livro l : livros)
             adicionarLivroBD(l);
     }
 
-    public Livro getLivro(int id_livro){
-        for (Livro l: catalogo){
-            if (l.getId_livro() == id_livro){
+    public Livro getLivro(int id_livro) {
+        for (Livro l : catalogo) {
+            if (l.getId_livro() == id_livro) {
                 return l;
             }
         }
@@ -236,16 +237,16 @@ public class Singleton {
         bdHelper.adicionarFavoritoBD(favorito);
     }
 
-    public void adicionarFavoritosBD(ArrayList<Favorito> favoritos){
+    public void adicionarFavoritosBD(ArrayList<Favorito> favoritos) {
         bdHelper.removerAllFavoritoBD();
-        for (Favorito f: favoritos) {
+        for (Favorito f : favoritos) {
             adicionarFavoritoBD(f);
         }
     }
 
-    public Favorito getFavorito(int id_favorito){
-        for (Favorito f: favorito){
-            if (f.getId_favorito() == id_favorito){
+    public Favorito getFavorito(int id_favorito) {
+        for (Favorito f : favorito) {
+            if (f.getId_favorito() == id_favorito) {
                 return f;
             }
         }
@@ -254,24 +255,26 @@ public class Singleton {
 
     public ArrayList<Livro> getLivrosFavoritosBD() {
         ArrayList<Livro> livrosFav = new ArrayList<>();
-        for (Favorito f: favorito){
+        for (Favorito f : favorito) {
             livrosFav.add(getLivro(f.getId_livro()));
         }
         return livrosFav;
     }
 
-    /** Acesso aos livros pela API **/
+    /**
+     * Acesso aos livros pela API
+     **/
     public void removerFavoritoBD(int id) {
         Favorito f = getFavorito(id);
 
-        if(f != null) {
+        if (f != null) {
             bdHelper.removerFavoritoBD(id);
         }
     }
 
     public String findFavoritoByIDS(int id_livro, int id_utilizador) {
-        for (Favorito f: favorito) {
-            if(f.getId_livro() == id_livro && f.getId_utilizador() == id_utilizador) {
+        for (Favorito f : favorito) {
+            if (f.getId_livro() == id_livro && f.getId_utilizador() == id_utilizador) {
                 return f.getId_favorito() + "";
             }
         }
@@ -289,14 +292,14 @@ public class Singleton {
 
     public void adicionarComentariosBD(ArrayList<Comentario> comentarios) {
         bdHelper.removerAllComentarioBD();
-        for (Comentario c: comentarios) {
+        for (Comentario c : comentarios) {
             adicionarComentarioBD(c);
         }
     }
 
     public Comentario getComentario(int id_comentario) {
-        for(Comentario c: comentario) {
-            if(c.getId_comentario() == id_comentario) {
+        for (Comentario c : comentario) {
+            if (c.getId_comentario() == id_comentario) {
                 return c;
             }
         }
@@ -306,14 +309,14 @@ public class Singleton {
     public void removerComentarioBD(int id) {
         Comentario c = getComentario(id);
 
-        if(c != null) {
+        if (c != null) {
             bdHelper.removerComentarioBD(id);
         }
     }
 
     public String findComentariosByIDS(int id_livro, int id_utilizador) {
-        for(Comentario c: comentario) {
-            if(c.getId_livro() == id_livro && c.getId_utilizador() == id_utilizador) {
+        for (Comentario c : comentario) {
+            if (c.getId_livro() == id_livro && c.getId_utilizador() == id_utilizador) {
                 return c.getId_comentario() + "";
             }
         }
@@ -370,7 +373,7 @@ public class Singleton {
                 @Override
                 public void onResponse(JSONArray response) {
                     favorito = FavoritoJsonParser.parserJsonFavorito(response);
-                    if(!favorito.isEmpty()) {
+                    if (!favorito.isEmpty()) {
                         adicionarFavoritosBD(favorito);
                     }
 
@@ -382,7 +385,7 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            }){
+            }) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
@@ -399,9 +402,9 @@ public class Singleton {
             @Override
             public void onResponse(String response) {
                 Favorito f = FavoritoJsonParser.parserJsonFav(response);
-                getFavoritoAPI(context, id_utilizador+"", token);
+                getFavoritoAPI(context, id_utilizador + "", token);
 
-                if(favoritoListener != null){
+                if (favoritoListener != null) {
                     favoritoListener.onRefreshDetalhes();
                 }
             }
@@ -414,8 +417,8 @@ public class Singleton {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("id_livro", id_livro+"");
-                params.put("id_utilizador", id_utilizador+"");
+                params.put("id_livro", id_livro + "");
+                params.put("id_utilizador", id_utilizador + "");
                 return params;
             }
 
@@ -437,9 +440,9 @@ public class Singleton {
                 Favorito f = FavoritoJsonParser.parserJsonFav(response);
                 int id = Integer.parseInt(id_favorito);
                 removerFavoritoBD(id);
-                getFavoritoAPI(context, id_utilizador+"", token);
+                getFavoritoAPI(context, id_utilizador + "", token);
 
-                if (favoritoListener != null){
+                if (favoritoListener != null) {
                     favoritoListener.onRefreshDetalhes();
                     //favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());
                 }
@@ -504,11 +507,11 @@ public class Singleton {
     }
 
 
-    public void adicionarDadoLeitorBD(Utilizador utilizador){
+    public void adicionarDadoLeitorBD(Utilizador utilizador) {
         bdHelper.adicionarLeitorBD(utilizador);
     }
 
-    public void adicionarDadosLeitorBD(Context context, Utilizador utilizador){
+    public void adicionarDadosLeitorBD(Context context, Utilizador utilizador) {
         bdHelper.removerLeitorBD();
         adicionarDadoLeitorBD(utilizador);
     }
@@ -527,19 +530,19 @@ public class Singleton {
         return false;
     }*/
 
-    public ArrayList<Livro> getLivrosCarrinho(){
+    public ArrayList<Livro> getLivrosCarrinho() {
         ArrayList<Livro> livrosCarrinho = new ArrayList<>();
 
-        for(int i = 0; i< carrinho.size(); i++) {
+        for (int i = 0; i < carrinho.size(); i++) {
             livrosCarrinho.add(getLivro(carrinho.get(i)));
         }
 
         return livrosCarrinho;
     }
 
-    public Boolean removerCarrinho(int id_livro){
-        for (int i=0; i<carrinho.size(); i++){
-            if (carrinho.get(i) == id_livro){
+    public Boolean removerCarrinho(int id_livro) {
+        for (int i = 0; i < carrinho.size(); i++) {
+            if (carrinho.get(i) == id_livro) {
                 carrinho.remove(i);
                 return true;
             }
@@ -547,8 +550,8 @@ public class Singleton {
         return false;
     }
 
-    public Boolean removerAllCarrinho(){
-        if(carrinho.removeAll(carrinho))
+    public Boolean removerAllCarrinho() {
+        if (carrinho.removeAll(carrinho))
             return true;
 
         return false;
@@ -560,7 +563,7 @@ public class Singleton {
             @Override
             public void onResponse(String response) {
                 //response = false -> livro não está em requisição
-                if (response.equals("false")){
+                if (response.equals("false")) {
                     if (Integer.parseInt(totalReq) + carrinho.size() <= 4) {
                         //verifica se o arrayList já contem o id_livro a inserir
                         //limita tambem o carrinho a apenas 5 livros
@@ -587,8 +590,8 @@ public class Singleton {
     }
 
     //TODO TOKEN
-    public void getBibliotecasAPI(final Context context, final String token){
-        if (!LivroJsonParser.isConnectionInternet(context)){
+    public void getBibliotecasAPI(final Context context) {
+        if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIBiblioteca, null, new Response.Listener<JSONArray>() {
@@ -599,8 +602,27 @@ public class Singleton {
 
                     adicionarBibliotecasBD(bibliotecas);
 
-                if (bibliotecaListener != null)
-                    bibliotecaListener.onRefreshBibliotecas(bibliotecas);
+                    if (bibliotecaListener != null) {
+                        bibliotecaListener.onRefreshBibliotecas(bibliotecas);
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public void totalEmRequisicao(final Context context, final int id){
+        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPITotalReq + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                totalReq = response;
             }
         }, new Response.ErrorListener() {
 
@@ -608,38 +630,39 @@ public class Singleton {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("authorization", token);
-
-                return params;
-            }
-        };
+        });
         volleyQueue.add(req);
-        // }
     }
 
-        public ArrayList<Biblioteca> getAllBibliotecasBD() {
-            return bdHelper.getAllBibliotecasBD();
-        }
+    public void adicionarBibliotecaBD(Biblioteca biblioteca){
+        bdHelper.adicionarBibliotecaBD(biblioteca);
+    }
 
-        public String getNomeBiblioteca(int id_biblioteca) {
-            ArrayList<Biblioteca> auxBib = getAllBibliotecasBD();
+    public void adicionarBibliotecasBD(ArrayList<Biblioteca> bibliotecas){
+        bdHelper.removerAllBibliotecasDB();
+        for (Biblioteca b:bibliotecas)
+            adicionarBibliotecaBD(b);
+    }
 
-            for (Biblioteca b:auxBib){
-                if (b.getId_biblioteca() == id_biblioteca){
-                    return b.getNome();
-                }
+    public ArrayList<Biblioteca> getAllBibliotecasBD() {
+        return bdHelper.getAllBibliotecasBD();
+    }
+
+    public String getNomeBiblioteca(int id_biblioteca) {
+        ArrayList<Biblioteca> auxBib = getAllBibliotecasBD();
+
+        for (Biblioteca b : auxBib) {
+            if (b.getId_biblioteca() == id_biblioteca) {
+                return b.getNome();
             }
-            return null;
         }
+        return null;
+    }
 
-    public ArrayList<Biblioteca> getBibliotecas(){
+    public ArrayList<Biblioteca> getBibliotecas() {
         ArrayList<Biblioteca> listaBibliotecas = new ArrayList<>();
 
-        for (int i = 0; i<bibliotecas.size(); i++){
+        for (int i = 0; i < bibliotecas.size(); i++) {
             listaBibliotecas.add(bibliotecas.get(i));
         }
 
@@ -657,11 +680,12 @@ public class Singleton {
             adicionarAutorBD(a);
     }
 
-    public void getAutoresAPI(final Context context){
-        if (!LivroJsonParser.isConnectionInternet(context)){
+    //
+    public void getAutoresAPI(final Context context) {
+        if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
         } else {
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIAutores,null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIAutores, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     autores = AutorJsonParser.parserJsonAutores(response);
@@ -685,31 +709,31 @@ public class Singleton {
         return autores;
     }
 
-    public String getNomeAutor(int id_autor){
-       ArrayList<Autor> auxAutor = getAllAutoresBD();
+    public String getNomeAutor(int id_autor) {
+        ArrayList<Autor> auxAutor = getAllAutoresBD();
 
-       for (Autor a : auxAutor){
-           if(a.id_autor == id_autor){
-               return a.getNome_autor();
-           }
-       }
+        for (Autor a : auxAutor) {
+            if (a.id_autor == id_autor) {
+                return a.getNome_autor();
+            }
+        }
 
-       return null;
+        return null;
     }
 
 
-    public void adicionarEditoraBD(Editora editora){
+    public void adicionarEditoraBD(Editora editora) {
         bdHelper.adicionarEditoraDB(editora);
     }
 
-    public void adicionarEditorasBD(ArrayList<Editora> editoras){
+    public void adicionarEditorasBD(ArrayList<Editora> editoras) {
         bdHelper.removerAllEditorasDB();
-        for (Editora e:editoras)
+        for (Editora e : editoras)
             adicionarEditoraBD(e);
     }
 
-    public void getEditorasAPI(final Context context){
-        if (!LivroJsonParser.isConnectionInternet(context)){
+    public void getEditorasAPI(final Context context) {
+        if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIEditora, null, new Response.Listener<JSONArray>() {
@@ -731,15 +755,15 @@ public class Singleton {
         }
     }
 
-    public ArrayList<Editora> getAllEditorasBD(){
+    public ArrayList<Editora> getAllEditorasBD() {
         return bdHelper.getAllEditorasDB();
     }
 
-    public String getDesignacaoEditora(int id_editora){
+    public String getDesignacaoEditora(int id_editora) {
         ArrayList<Editora> auxEditora = getAllEditorasBD();
 
-        for (Editora e:auxEditora){
-            if(e.getId_editora() == id_editora){
+        for (Editora e : auxEditora) {
+            if (e.getId_editora() == id_editora) {
                 return e.getDesignacao();
             }
         }
@@ -747,7 +771,7 @@ public class Singleton {
         return null;
     }
 
-    public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String mes, final String ano, final String nif, final String id, final String token){
+    public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String mes, final String ano, final String nif, final String id, final String token) {
         StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIEditarLeitor + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -786,7 +810,6 @@ public class Singleton {
     }
 
 
-
     public void adicionarRequisicaoAPI(final Context context, final int id_biblioteca, final int id_utilizador) {
         StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIRequisicao, new Response.Listener<String>() {
             @Override
@@ -808,12 +831,12 @@ public class Singleton {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("id_biblioteca", id_biblioteca+"");
-                params.put("id_utilizador", id_utilizador+"");
-                params.put("carrinho_size", carrinho.size()+"");
+                params.put("id_biblioteca", id_biblioteca + "");
+                params.put("id_utilizador", id_utilizador + "");
+                params.put("carrinho_size", carrinho.size() + "");
 
-                for (int i = 0; i<carrinho.size(); i++){
-                    params.put("id_livro"+i, carrinho.get(i)+"");
+                for (int i = 0; i < carrinho.size(); i++) {
+                    params.put("id_livro" + i, carrinho.get(i) + "");
                 }
                 return params;
             }
@@ -836,7 +859,7 @@ public class Singleton {
                 @Override
                 public void onResponse(JSONArray response) {
                     comentario = ComentarioJsonParser.parserJsonComentario(response);
-                    if(!comentario.isEmpty()) {
+                    if (!comentario.isEmpty()) {
                         adicionarComentariosBD(comentario);
                     }
 

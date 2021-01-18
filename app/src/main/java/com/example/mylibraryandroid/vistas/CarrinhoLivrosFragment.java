@@ -70,7 +70,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
         lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
 
-        Singleton.getInstance(getContext()).getBibliotecasAPI(getContext(), token);
+        Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
 
         FloatingActionButton fab =  view.findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -53,7 +53,7 @@ import java.util.Map;
 
 public class Singleton {
 
-    public static final String IP = "http://192.168.1.77";
+    public static final String IP = "http://192.168.1.100";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = IP + ":8888/backend/web/api/utilizador/login";
@@ -470,7 +470,6 @@ public class Singleton {
         if (!JsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 
-            //TODO IR BUSCAR OS DADOS À BD
             /*if (perfilListener != null){
                 perfilListener.onRefreshUtilizador(bdHelper.getUtilizadorBD());
             }*/
@@ -589,7 +588,6 @@ public class Singleton {
         volleyQueue.add(req);
     }
 
-    //TODO TOKEN
     public void getBibliotecasAPI(final Context context) {
         if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
@@ -816,8 +814,6 @@ public class Singleton {
             public void onResponse(String response) {
                 //CarrinhoJsonParser.parserJsonCarrinho(carrinho);
 
-                //TODO: validar se o limite de livros em requisição foi alcançado
-
                 removerAllCarrinho();
 
                 Toast.makeText(context, "Requisição efetuada com sucesso!", Toast.LENGTH_LONG).show();
@@ -847,7 +843,7 @@ public class Singleton {
     /**
      * Acesso aos comentarios pela API
      **/
-    //TODO TOKEN
+
     public void getComentarioAPI(final Context context, final String id) {
         if (!ComentarioJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();

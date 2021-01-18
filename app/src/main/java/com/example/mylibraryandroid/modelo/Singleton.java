@@ -433,8 +433,6 @@ public class Singleton {
     /**
      * Acesso aos dados leitor através da API
      **/
-
-
     public void getDadosLeitorAPI(final Context context, final String id, final String token) {
         if (!JsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
@@ -475,79 +473,6 @@ public class Singleton {
         }
     }
 
-
-    /*public void getDadosLeitorAPI(final Context context, final String id, final String token) {
-        if (!JsonParser.isConnectionInternet(context)) {
-            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
-
-            //TODO IR BUSCAR OS DADOS À BD
-            /*if (perfilListener != null){
-                perfilListener.onRefreshUtilizador(bdHelper.getUtilizadorBD());
-            }*/
-        /*} else {
-            StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitor + id, new Response.Listener<String>() {
-
-                @Override
-                public void onResponse(String response) {
-                    Utilizador utilizador = JsonParser.parserJsonPerfil(response);
-
-                    adicionarDadoLeitorBD(utilizador, emailUtilizador);
-
-                    if (perfilListener != null) {
-                        perfilListener.onRefreshUtilizador(utilizador);
-                    }
-                }
-
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("authorization", token);
-
-                    return params;
-                }
-            };
-            volleyQueue.add(req);
-        }
-    }*/
-
-
-    public void getLeitorEmailAPI(final Context context, final String id, final String token) {
-        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitorEmail + id, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                String email = JsonParser.parserJsonPerfilEmail(response);
-
-                emailUtilizador = email;
-
-
-                if (perfilListener != null) {
-                    perfilListener.onRefreshEmailUtilizador(email);
-                }
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError{
-                Map<String, String> params = new HashMap<>();
-                params.put("authorization", token);
-
-                return params;
-            }
-        };
-        volleyQueue.add(req);
-    }
 
     public void adicionarDadoLeitorBD(Utilizador utilizador){
         bdHelper.adicionarLeitorBD(utilizador);
@@ -630,9 +555,7 @@ public class Singleton {
             @Override
             public void onResponse(String response) {
                 Utilizador utilizador = JsonParser.parserJsonEditarPerfil(response);
-
-                //adicionarDadosLeitorBD(context, utilizador);
-
+                
                 if (editarPerfilListener != null) {
                     editarPerfilListener.onRefreshPerfil();
                 }

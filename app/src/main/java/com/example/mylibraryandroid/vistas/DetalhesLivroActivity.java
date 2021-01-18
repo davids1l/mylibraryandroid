@@ -96,9 +96,9 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
                             stringBuilder.append(carrinho.get(i).getTitulo() + "\n");
                         }
                         tvPaginas.setText(stringBuilder);*/
-                        Toast.makeText(getApplicationContext(), "Livro adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.livroAdicionado, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "O livro já se encontra no seu carrinho", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.livroNoCarrinho, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();

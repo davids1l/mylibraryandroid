@@ -105,7 +105,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
             /*fab.setClickable(false);
             fab.setEnabled(false);*/
             fab.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "O carrinho está vazio", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.carrinhoVazio, Toast.LENGTH_LONG).show();
         }
 
 

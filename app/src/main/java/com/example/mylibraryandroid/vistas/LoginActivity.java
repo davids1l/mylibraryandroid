@@ -29,8 +29,6 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
-        etEmail.setText("admin@admin.com");
-        etPassword.setText("123123123");
 
         Singleton.getInstance(getApplicationContext()).setLoginListener(this);
     }
@@ -83,11 +81,11 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                 startActivity(intent);
                 finish();
             }else {
-                Toast.makeText(getApplicationContext(), "A conta encontra-se bloqueada!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.contaBloqueada, Toast.LENGTH_LONG).show();
                 etPassword.setText("");
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Login inválido", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.loginInvalido, Toast.LENGTH_LONG).show();
             etPassword.setText("");
         }
     }

@@ -23,6 +23,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO CASO EXISTA TOKEN, EXECUTA INTENT MAIN_ACTIVITY
         setContentView(R.layout.activity_login);
         setTitle(getString(R.string.actLogin));
 

@@ -113,20 +113,6 @@ public class JsonParser {
         return utilizador;
     }
 
-    public static String[] parserJsonEditarEmail(String response){
-        String[] auxEmail = new String[2];
-
-        try {
-            JSONObject dados = new JSONObject(response);
-
-            auxEmail[0] = dados.getString("email");
-            auxEmail[1] = dados.getString("token");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return auxEmail;
-    }
 
     public static boolean isConnectionInternet(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

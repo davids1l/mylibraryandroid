@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class Singleton {
 
-    public static final String IP = "http://192.168.0.101";
+    public static final String IP = "http://192.168.0.100";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = IP + ":8888/backend/web/api/utilizador/login";
@@ -48,8 +48,8 @@ public class Singleton {
     private static final String mUrlAPIFavorito =  IP + ":8888/backend/web/api/favorito/utilizador/";
     private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/";
     private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
-    private static final String mUrlAPIEditarLeitorEmail = IP + ":8888/backend/web/api/user/email/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/backend/web/api/biblioteca";
+    private static final String mUrlAPIRemoverFavorito =  IP + ":8888/backend/web/api/favorito/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -345,32 +345,41 @@ public class Singleton {
      * Acesso aos dados leitor através da API
      **/
     public void getDadosLeitorAPI(final Context context, final String id, final String token) {
-        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitor + id, new Response.Listener<String>() {
+        if (!JsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 
-            @Override
-            public void onResponse(String response) {
-                Utilizador utilizador = JsonParser.parserJsonPerfil(response);
+            //TODO IR BUSCAR OS DADOS À BD
+            /*if (perfilListener != null){
+                perfilListener.onRefreshUtilizador(bdHelper.getUtilizadorBD());
+            }*/
+        } else {
+            StringRequest req = new StringRequest(Request.Method.GET, mUrlAPILeitor + id, new Response.Listener<String>() {
 
-                if (perfilListener != null) {
-                    perfilListener.onRefreshUtilizador(utilizador);
+                @Override
+                public void onResponse(String response) {
+                    Utilizador utilizador = JsonParser.parserJsonPerfil(response);
+
+                    if (perfilListener != null) {
+                        perfilListener.onRefreshUtilizador(utilizador);
+                    }
                 }
-            }
 
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError{
-                Map<String, String> params = new HashMap<>();
-                params.put("authorization", token);
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("authorization", token);
 
-                return params;
-            }
-        };
-        volleyQueue.add(req);
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
     }
 
     public void getLeitorEmailAPI(final Context context, final String id, final String token) {
@@ -500,40 +509,6 @@ public class Singleton {
                 Map<String, String> params = new HashMap<>();
                 params.put("authorization", token);
 
-                return params;
-            }
-        };
-        volleyQueue.add(req);
-    }
-
-
-    public void atualizarEmailLeitorAPI(final Context context, final String email, final String id, final String token, final String password){
-        StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIEditarLeitorEmail + id, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                String[] email = JsonParser.parserJsonEditarEmail(response);
-                if (editarPerfilListener != null) {
-                    editarPerfilListener.onRefreshPerfilEmail(email[0], email[1]);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("password", password);
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("authorization", token);
                 return params;
             }
         };

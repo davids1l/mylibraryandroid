@@ -24,6 +24,7 @@ import com.example.mylibraryandroid.listeners.PerfilListener;
 import com.example.mylibraryandroid.modelo.BDHelper;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.modelo.Utilizador;
+import com.example.mylibraryandroid.utils.JsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
@@ -67,14 +68,17 @@ public class PerfilFragment extends Fragment implements PerfilListener {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), EditarPerfilActivity.class);
-                intent.putExtra(EditarPerfilActivity.NOME, dadosLeitor.getPrimeiroNome());
-                intent.putExtra(EditarPerfilActivity.APELIDO, dadosLeitor.getUltimoNome());
-                intent.putExtra(EditarPerfilActivity.EMAIL, leitorEmail);
-                intent.putExtra(EditarPerfilActivity.NUM_TELEMOVEL, dadosLeitor.getNumTelemovel());
-                intent.putExtra(EditarPerfilActivity.DATA_NASCIMENTO, dadosLeitor.getDtaNascimento());
-                intent.putExtra(EditarPerfilActivity.NIF, dadosLeitor.getNif());
-                startActivityForResult(intent, 1);
+                if(JsonParser.isConnectionInternet(getContext())){
+                    Intent intent = new Intent(getContext(), EditarPerfilActivity.class);
+                    intent.putExtra(EditarPerfilActivity.NOME, dadosLeitor.getPrimeiroNome());
+                    intent.putExtra(EditarPerfilActivity.APELIDO, dadosLeitor.getUltimoNome());
+                    intent.putExtra(EditarPerfilActivity.NUM_TELEMOVEL, dadosLeitor.getNumTelemovel());
+                    intent.putExtra(EditarPerfilActivity.DATA_NASCIMENTO, dadosLeitor.getDtaNascimento());
+                    intent.putExtra(EditarPerfilActivity.NIF, dadosLeitor.getNif());
+                    startActivityForResult(intent, 1);
+                }else {
+                    Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -120,8 +124,9 @@ public class PerfilFragment extends Fragment implements PerfilListener {
     public void onRefreshEmailUtilizador(String email) {
         tvEmail.setText(email);
         leitorEmail = email;
-        //TODO COLOCAR A GUARDAR NA BD
-        //bdHelper.adicionarLeitorBD(dadosLeitor, email);
+        //TODO ERRO AO GUARDAR NA BD PELA SEGUNDA VEZ
+        bdHelper.removerLeitorBD();
+        bdHelper.adicionarLeitorBD(dadosLeitor, email);
     }
 
 }

@@ -24,8 +24,7 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
     public static final String NUM_TELEMOVEL = "NUM_TELEMOVEL";
     public static final String DATA_NASCIMENTO = "DATA_NASCIMENTO";
     public static final String NIF = "NIF";
-    public static final String EMAIL = "EMAIL";
-    private EditText etNome, etApelido, etEmail, etTelemovel, etDia, etMes, etAno, etNIF, etPassword;
+    private EditText etNome, etApelido, etTelemovel, etDia, etMes, etAno, etNIF;
 
 
     @Override
@@ -40,7 +39,6 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         final String numTelemovel = getIntent().getStringExtra(NUM_TELEMOVEL);
         final String dataNascimento = getIntent().getStringExtra(DATA_NASCIMENTO);
         final String nif = getIntent().getStringExtra(NIF);
-        final String email = getIntent().getStringExtra(EMAIL);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         final String id = sharedPreferences.getString(MenuMainActivity.ID,"");
@@ -49,17 +47,14 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         etNome = findViewById(R.id.etNome);
         etApelido = findViewById(R.id.etApelido);
         etTelemovel = findViewById(R.id.etTelemovel);
-        etEmail = findViewById(R.id.etEmail);
         etDia = findViewById(R.id.etDia);
         etMes = findViewById(R.id.etMes);
         etAno = findViewById(R.id.etAno);
         etNIF = findViewById(R.id.etNIF);
-        etPassword = findViewById(R.id.etPassword);
 
         etNome.setText(nome);
         etApelido.setText(apelido);
         etTelemovel.setText(numTelemovel);
-        etEmail.setText(email);
         etDia.setText(dataNascimento.substring(8,10));
         etMes.setText(dataNascimento.substring(5,7));
         etAno.setText(dataNascimento.substring(0,4));
@@ -77,8 +72,6 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                         String mes = etMes.getText().toString();
                         String ano = etAno.getText().toString();
                         String nif = etNIF.getText().toString();
-                        String email = etEmail.getText().toString();
-                        String password = etPassword.getText().toString();
 
                     if (!isNomeValid(nome)) {
                         etNome.setError("Campo em branco!");
@@ -140,13 +133,7 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                         return;
                     }
 
-                    if (!isEmailValid(email)) {
-                        etEmail.setError(getString(R.string.etEmailInválido));
-                        return;
-                    }
-
                     Singleton.getInstance(getApplicationContext()).atualizarDadosLeitorAPI(getApplicationContext(), nome, apelido, telemovel, dia, mes, ano, nif, id, token);
-                    Singleton.getInstance(getApplicationContext()).atualizarEmailLeitorAPI(getApplicationContext(), email, id, token, password);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }
@@ -259,10 +246,4 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         }
         return true;
     }
-
-    private boolean isEmailValid(String email){
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-
 }

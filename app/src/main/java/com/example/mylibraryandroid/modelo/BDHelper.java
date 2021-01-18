@@ -215,4 +215,17 @@ public class BDHelper extends SQLiteOpenHelper {
         this.db.insert(TABLE_NAME_UTILIZADOR, null, values);
     }
 
+    public void removerLeitorBD(){
+        this.db.delete(TABLE_NAME_UTILIZADOR, null, null);
+    }
+
+    public Utilizador getUtilizadorBD(){
+        Utilizador utilizador = null;
+
+        //TODO IR BUSCAR OS DADOS À BD
+        Cursor cursor = this.db.query(TABLE_NAME_UTILIZADOR, new String[]{ID_UTILIZADOR,NOME,APELIDO,NUMERO_LEITOR,EMAIL,DATA_NASCIMENTO,NIF,NUM_TELEMOVEL,FOTO_PERFIL}
+        ,null,null, null, null,null);
+        return utilizador;
+    }
+
 }

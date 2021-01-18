@@ -26,9 +26,12 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
     public static final String ID_LIVRO = "ID_LIVRO";
     private Livro livro;
-    private TextView tvTitulo, tvAutor, tvEdicao, tvPaginas, tvBiblioteca, tvSinopse, tvIsbn, tvGenero, tvIdioma, tvEditora;
+    private TextView tvTitulo, tvAutor, tvEdicao, tvPaginas, tvBiblioteca, tvSinopse, tvIsbn, tvGenero, tvIdioma, tvEditora, tvFormato;
     private ImageView imgCapa;
     StringBuilder stringBuilder = new StringBuilder();
+    private String nomeAutor;
+    private String desigEditora;
+    private String nomeBib;
 
 
     @Override
@@ -52,6 +55,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         tvBiblioteca = findViewById(R.id.tvBiblioteca);
         tvEditora = findViewById(R.id.tvEditora);
         tvPaginas = findViewById(R.id.tvPaginas);
+        tvFormato = findViewById(R.id.tvFormato);
         imgCapa = findViewById(R.id.imgCapa);
 
         Singleton.getInstance(getApplicationContext()).setCatalogoListener(this);
@@ -88,16 +92,21 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     }
 
     public void popularDetalhesLivro(){
+        nomeAutor = Singleton.getInstance(getApplicationContext()).getNomeAutor(livro.getId_autor());
+        desigEditora = Singleton.getInstance(getApplicationContext()).getDesignacaoEditora(livro.getId_editora());
+        nomeBib = Singleton.getInstance(getApplicationContext()).getNomeBiblioteca(livro.getId_biblioteca());
+
         tvTitulo.setText(livro.getTitulo());
-        tvAutor.setText(livro.getId_autor()+"");
+        tvAutor.setText(nomeAutor);
         tvIsbn.setText(livro.getIsbn()+"");
         tvEdicao.setText(livro.getAno()+"");
         tvGenero.setText(livro.getGenero());
         tvIdioma.setText(livro.getIdioma());
         tvSinopse.setText(livro.getSinopse());
-        tvBiblioteca.setText(livro.getId_biblioteca()+"");
+        tvFormato.setText(livro.getFormato());
+        tvBiblioteca.setText(nomeBib);
         tvPaginas.setText(livro.getPaginas()+"");
-        tvEditora.setText(livro.getId_editora()+"");
+        tvEditora.setText(desigEditora);
 
         Glide.with(this)
                 .load(livro.getCapa())

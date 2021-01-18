@@ -30,7 +30,7 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
     private FragmentManager fragmentManager;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private String email = ""; //TODO: substituir por Nome - utilizador
+    private String email = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

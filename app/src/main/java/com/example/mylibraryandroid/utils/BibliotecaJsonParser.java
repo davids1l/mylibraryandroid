@@ -1,7 +1,5 @@
 package com.example.mylibraryandroid.utils;
 
-import android.widget.ArrayAdapter;
-
 import com.example.mylibraryandroid.modelo.Biblioteca;
 
 import org.json.JSONArray;
@@ -9,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class BibliotecaJsonParser {
 

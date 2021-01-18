@@ -60,7 +60,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        Singleton.getInstance(getContext()).setCarrinhoListener(this);
+        //Singleton.getInstance(getContext()).setCarrinhoListener(this);
         livrosCarrinho =  Singleton.getInstance(getContext()).getLivrosCarrinho();
 
         lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));

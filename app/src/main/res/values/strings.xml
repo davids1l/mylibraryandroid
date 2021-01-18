@@ -33,7 +33,7 @@
 
     <string name="menu_catalogo">Catálogo</string>
     <string name="detalhes_autor_estatico">de </string>
-    <string name="detalhes_genero_estatico">Gênero:</string>
+    <string name="detalhes_genero_estatico">Género:</string>
     <string name="detalhes_livro_detalhes">Detalhes:</string>
     <string name="menuPesquisa">Pesquisar Livro</string>
     <string name="nav_carrinho">Carrinho</string>
@@ -42,4 +42,12 @@
     <string name="dialog_tv_finalizar_requisicao">Finalizar Requisição</string>
     <string name="dialog_btn_finalizar_requisicao">Finalizar Requisição</string>
     <string name="dialog_spinner_empty_error">Selecione a biblioteca de levantamento.</string>
+    <string name="detalhes_estatico_isbn">ISBN:</string>
+    <string name="detalhes_estatico_edicao">Edição:</string>
+    <string name="detalhes_estatico_idioma">Idioma:</string>
+    <string name="detalhes_estatico_formato">Formato:</string>
+    <string name="detalhes_editora_estatico">Editora:</string>
+    <string name="detalhes_biblioteca_estatico">Biblioteca:</string>
+    <string name="detalhes_estatico_paginas">Páginas:</string>
+    <string name="detalhes_estatico_sinopse">Sinopse:</string>
 </resources>

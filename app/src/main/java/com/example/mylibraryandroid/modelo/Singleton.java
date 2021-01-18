@@ -1,6 +1,7 @@
 package com.example.mylibraryandroid.modelo;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -17,16 +18,20 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.listeners.AutorListener;
 import com.example.mylibraryandroid.listeners.BibliotecaListener;
 import com.example.mylibraryandroid.listeners.CarrinhoListener;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
 import com.example.mylibraryandroid.listeners.EditarPerfilListener;
+import com.example.mylibraryandroid.listeners.EditoraListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
 import com.example.mylibraryandroid.listeners.PerfilListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
+import com.example.mylibraryandroid.utils.AutorJsonParser;
 import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
 import com.example.mylibraryandroid.utils.CarrinhoJsonParser;
+import com.example.mylibraryandroid.utils.EditoraJsonParser;
 import com.example.mylibraryandroid.utils.FavoritoJsonParser;
 import com.example.mylibraryandroid.utils.JsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
@@ -34,7 +39,7 @@ import com.example.mylibraryandroid.vistas.MenuMainActivity;
 
 import org.json.JSONArray;
 
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,12 +59,15 @@ public class Singleton {
     private static final String mUrlAPIVerificarRequisicao = IP + ":8888/web/api/requisicao/emrequisicao/";
     private static final String mUrlAPIRequisicao = IP + ":8888/web/api/requisicao/create";
     private static final String mUrlAPITotalReq = IP + ":8888/web/api/requisicao/total/";
+    private static final String mUrlAPIAutores = IP + ":8888/web/api/autor";
+    private static final String mUrlAPIEditora = IP + ":8888/web/api/editora";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
     private FavoritoListener favoritoListener;
-    private CarrinhoListener carrinhoListener;
+    private AutorListener autorListener;
     private BibliotecaListener bibliotecaListener;
+    private EditoraListener editoraListener;
     private PerfilListener perfilListener;
     private EditarPerfilListener editarPerfilListener;
     private BDHelper bdHelper;
@@ -67,6 +75,8 @@ public class Singleton {
     private ArrayList<Favorito> favorito;
     private ArrayList<Integer> carrinho;
     private ArrayList<Biblioteca> bibliotecas;
+    private ArrayList<Autor> autores;
+    private ArrayList<Editora> editoras;
     private String totalReq;
 
     public static synchronized Singleton getInstance(Context context) {
@@ -97,8 +107,8 @@ public class Singleton {
         this.catalogoListener = catalogoListener;
     }
 
-    public void setCarrinhoListener(CarrinhoListener carrinhoListener){
-        this.carrinhoListener = carrinhoListener;
+    public void setAutorListener(AutorListener autorListener){
+        this.autorListener = autorListener;
     }
 
     public void setFavoritoListener(FavoritoListener favoritoListener) {
@@ -422,16 +432,27 @@ public class Singleton {
         volleyQueue.add(req);
     }
 
+    public void adicionarBibliotecaBD(Biblioteca biblioteca){
+        bdHelper.adicionarBibliotecaBD(biblioteca);
+    }
+
+    public void adicionarBibliotecasBD(ArrayList<Biblioteca> bibliotecas){
+        bdHelper.removerAllBibliotecasDB();
+        for (Biblioteca b:bibliotecas)
+            adicionarBibliotecaBD(b);
+    }
+
     public void getBibliotecasAPI(final Context context){
-        /*if (!LivroJsonParser.isConnectionInternet(context)){
+        if (!LivroJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
-        } else {*/
+        } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIBiblioteca, null, new Response.Listener<JSONArray>() {
 
                 @Override
                 public void onResponse(JSONArray response) {
                     bibliotecas = BibliotecaJsonParser.parserJsonBibliotecas(response);
-                    //adicionarFavoritosBD(favorito);
+
+                    adicionarBibliotecasBD(bibliotecas);
 
                     if (bibliotecaListener != null)
                         bibliotecaListener.onRefreshBibliotecas(bibliotecas);
@@ -444,7 +465,22 @@ public class Singleton {
                 }
             });
             volleyQueue.add(req);
-       // }
+        }
+    }
+
+    public ArrayList<Biblioteca> getAllBibliotecasBD() {
+        return bdHelper.getAllBibliotecasBD();
+    }
+
+    public String getNomeBiblioteca(int id_biblioteca) {
+        ArrayList<Biblioteca> auxBib = getAllBibliotecasBD();
+
+        for (Biblioteca b:auxBib){
+            if (b.getId_biblioteca() == id_biblioteca){
+                return b.getNome();
+            }
+        }
+        return null;
     }
 
     public ArrayList<Biblioteca> getBibliotecas(){
@@ -455,6 +491,107 @@ public class Singleton {
         }
 
         return listaBibliotecas;
+    }
+
+
+    public void adicionarAutorBD(Autor autor) {
+        bdHelper.adicionarAutorDB(autor);
+    }
+
+    public void adicionarAutoresBD(ArrayList<Autor> autores) {
+        bdHelper.removerAllAutoresDB();
+        for (Autor a : autores)
+            adicionarAutorBD(a);
+    }
+
+    public void getAutoresAPI(final Context context){
+        if (!LivroJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIAutores,null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    autores = AutorJsonParser.parserJsonAutores(response);
+                    adicionarAutoresBD(autores);
+
+                    if (autorListener != null)
+                        autorListener.onRefreshAutores(autores);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public ArrayList<Autor> getAllAutoresBD() {
+        autores = bdHelper.getAllAutoresDB();
+        return autores;
+    }
+
+    public String getNomeAutor(int id_autor){
+       ArrayList<Autor> auxAutor = getAllAutoresBD();
+
+       for (Autor a : auxAutor){
+           if(a.id_autor == id_autor){
+               return a.getNome_autor();
+           }
+       }
+
+       return null;
+    }
+
+
+    public void adicionarEditoraBD(Editora editora){
+        bdHelper.adicionarEditoraDB(editora);
+    }
+
+    public void adicionarEditorasBD(ArrayList<Editora> editoras){
+        bdHelper.removerAllEditorasDB();
+        for (Editora e:editoras)
+            adicionarEditoraBD(e);
+    }
+
+    public void getEditorasAPI(final Context context){
+        if (!LivroJsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIEditora, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    editoras = EditoraJsonParser.parserJsonEditora(response);
+                    adicionarEditorasBD(editoras);
+
+                    if (editoraListener != null)
+                        editoraListener.onRefreshEditoras(editoras);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    public ArrayList<Editora> getAllEditorasBD(){
+        return bdHelper.getAllEditorasDB();
+    }
+
+    public String getDesignacaoEditora(int id_editora){
+        ArrayList<Editora> auxEditora = getAllEditorasBD();
+
+        for (Editora e:auxEditora){
+            if(e.getId_editora() == id_editora){
+                return e.getDesignacao();
+            }
+        }
+
+        return null;
     }
 
     public void atualizarDadosLeitorAPI(final Context context, final String nome, final String apelido, final String telemovel, final String dia, final String nif, final String id){

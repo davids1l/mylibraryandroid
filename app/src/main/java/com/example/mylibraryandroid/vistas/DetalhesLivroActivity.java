@@ -2,6 +2,7 @@ package com.example.mylibraryandroid.vistas;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     private ImageView imgCapa;
     private int id_livro;
     private String id;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,15 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         imgCapa = findViewById(R.id.imgCapa);
 
         Singleton.getInstance(getApplicationContext()).setCatalogoListener(this);
+
+        LinearLayout layoutComentarios = (LinearLayout) findViewById(R.id.ll_comentarios);
+        layoutComentarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getApplicationContext(), "Teste :)", Toast.LENGTH_SHORT).show();
+                carregarFragmentoComentario();
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener(){
@@ -99,6 +111,11 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
             popularDetalhesLivro();
         }
 
+    }
+
+    private void carregarFragmentoComentario() {
+        Fragment fragment = new ComentarioLivrosFragment();
+        fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
     }
 
     @Override

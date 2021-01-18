@@ -19,11 +19,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
+import com.example.mylibraryandroid.listeners.ComentarioListener;
 import com.example.mylibraryandroid.listeners.EditarPerfilListener;
 import com.example.mylibraryandroid.listeners.FavoritoListener;
 import com.example.mylibraryandroid.listeners.LoginListener;
 import com.example.mylibraryandroid.listeners.PerfilListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
+import com.example.mylibraryandroid.utils.ComentarioJsonParser;
 import com.example.mylibraryandroid.utils.FavoritoJsonParser;
 import com.example.mylibraryandroid.utils.JsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
@@ -49,15 +51,18 @@ public class Singleton {
     private static final String mUrlAPIAdicionarFavorito =  IP + ":8888/web/api/favorito";
     private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
     private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
+    private static final String mUrlAPIComentario = IP + ":8888/web/api/favorito/utilizador/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
     private FavoritoListener favoritoListener;
+    private ComentarioListener comentarioListener;
     private PerfilListener perfilListener;
     private EditarPerfilListener editarPerfilListener;
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
     private ArrayList<Favorito> favorito;
+    private ArrayList<Comentario> comentario;
     private ArrayList<Livro> carrinho;
 
     public static synchronized Singleton getInstance(Context context) {
@@ -98,6 +103,10 @@ public class Singleton {
 
     public void setEditarPerfilListener(EditarPerfilListener editarPerfilListener){
         this.editarPerfilListener = editarPerfilListener;
+    }
+
+    public void setComentarioListener(ComentarioListener comentarioListener) {
+        this.comentarioListener = comentarioListener;
     }
 
     public void loginAPI(final String email, final String password, final Context context) {
@@ -236,6 +245,48 @@ public class Singleton {
         return null;
     }
 
+    public ArrayList<Comentario> getComentariosBD() {
+        comentario = bdHelper.getAllComentariosDB();
+        return comentario;
+    }
+
+    public void adicionarComentarioBD(Comentario comentario) {
+        bdHelper.adicionarComentarioBD(comentario);
+    }
+
+    public void adicionarComentariosBD(ArrayList<Comentario> comentarios) {
+        bdHelper.removerAllComentarioBD();
+        for (Comentario c: comentarios) {
+            adicionarComentarioBD(c);
+        }
+    }
+
+    public Comentario getComentario(int id_comentario) {
+        for(Comentario c: comentario) {
+            if(c.getId_comentario() == id_comentario) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public void removerComentarioBD(int id) {
+        Comentario c = getComentario(id);
+
+        if(c != null) {
+            bdHelper.removerComentarioBD(id);
+        }
+    }
+
+    public String findComentariosByIDS(int id_livro, int id_utilizador) {
+        for(Comentario c: comentario) {
+            if(c.getId_livro() == id_livro && c.getId_utilizador() == id_utilizador) {
+                return c.getId_comentario() + "";
+            }
+        }
+        return null;
+    }
+
     /**
      * Acesso aos livros pela API
      **/
@@ -273,6 +324,9 @@ public class Singleton {
         }
     }
 
+    /**
+     * Acesso aos favoritos pela API
+     **/
     public void getFavoritoAPI(final Context context, final String id) {
         if (!FavoritoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
@@ -438,5 +492,43 @@ public class Singleton {
             }
         };
         volleyQueue.add(req);
+    }
+
+    /**
+     * Acesso aos comentarios pela API
+     **/
+    public void getComentarioAPI(final Context context, final String id) {
+        if (!ComentarioJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+
+            if (comentarioListener != null)
+                comentarioListener.onRefreshComentarios(getComentariosBD());
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIComentario + id, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    comentario = ComentarioJsonParser.parserJsonComentario(response);
+                    if(!comentario.isEmpty()) {
+                        adicionarComentariosBD(comentario);
+                    }
+
+                    if (comentarioListener != null)
+                        comentarioListener.onRefreshComentarios(getComentariosBD());
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });/*{
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("token", token);
+                    return params;
+                }
+            };*/
+            volleyQueue.add(req);
+        }
     }
 }

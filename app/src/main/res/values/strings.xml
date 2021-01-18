@@ -33,8 +33,11 @@
 
     <string name="menu_catalogo">Catálogo</string>
     <string name="detalhes_autor_estatico">de </string>
-    <string name="detalhes_genero_estatico">Gênero:</string>
+    <string name="detalhes_genero_estatico">Género:</string>
     <string name="detalhes_livro_detalhes">Detalhes:</string>
     <string name="menuPesquisa">Pesquisar Livro</string>
     <string name="menuFavorito">Adicionar aos favoritos</string>
+    <string name="detalhes_livro_comentarios">Comentário(s)</string>
+    <string name="hintAddComentario">Adicione um comentário</string>
+    <string name="menu_comentarios">Comentários</string>
 </resources>

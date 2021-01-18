@@ -6,9 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.modelo.Comentario;
+import com.example.mylibraryandroid.modelo.Livro;
 import com.example.mylibraryandroid.vistas.MenuMainActivity;
 
 import java.util.ArrayList;
@@ -48,14 +53,14 @@ public class ComentarioAdaptador extends BaseAdapter {
         }
 
         if(convertView == null){
-            convertView = inflater.inflate(R.layout.item_favorito_fragment, null);
+            convertView = inflater.inflate(R.layout.item_comentario_fragment, null);
 
-            FavoritoAdaptador.ViewHolderLista viewHolder = (FavoritoAdaptador.ViewHolderLista) convertView.getTag();
+            ComentarioAdaptador.ViewHolderLista viewHolder = (ComentarioAdaptador.ViewHolderLista) convertView.getTag();
             if(viewHolder == null){
-                viewHolder = new FavoritoAdaptador.ViewHolderLista(convertView);
+                viewHolder = new ComentarioAdaptador.ViewHolderLista(convertView);
                 convertView.setTag(viewHolder);
             }
-            viewHolder.update(livros.get(position));
+            viewHolder.update(comentarios.get(position));
         }
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
@@ -63,4 +68,29 @@ public class ComentarioAdaptador extends BaseAdapter {
 
         return convertView;
     }
+
+    private class ViewHolderLista {
+        private TextView tvUtilizadorCom, tvComentario, tvDtaCom;
+        private ImageView imgPerfil;
+
+        public ViewHolderLista(View view) {
+            tvUtilizadorCom = view.findViewById(R.id.tvUtilizadorCom);
+            tvComentario = view.findViewById(R.id.tvComentario);
+            tvDtaCom = view.findViewById(R.id.tvDtaCom);
+            imgPerfil = view.findViewById(R.id.imgPerfil);
+        }
+
+        public void update(Comentario comentario) {
+            tvUtilizadorCom.setText(comentario.getId_utilizador());
+            tvComentario.setText(comentario.getComentario());
+            tvDtaCom.setText(comentario.getDta_comentario());
+
+            Glide.with(context)
+                    .load(comentario.getId_utilizador())
+                    .placeholder(R.drawable.logoipl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgPerfil);
+        }
+    }
+
 }

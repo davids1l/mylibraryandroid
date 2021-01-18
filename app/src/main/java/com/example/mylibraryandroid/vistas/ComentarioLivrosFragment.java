@@ -14,6 +14,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.adaptadores.CatalogoAdaptador;
+import com.example.mylibraryandroid.adaptadores.ComentarioAdaptador;
+import com.example.mylibraryandroid.adaptadores.FavoritoAdaptador;
 import com.example.mylibraryandroid.listeners.ComentarioListener;
 import com.example.mylibraryandroid.modelo.Comentario;
 import com.example.mylibraryandroid.modelo.Livro;
@@ -68,7 +71,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
     @Override
     public void onRefreshComentarios(ArrayList<Comentario> comentarios) {
         if(comentarios != null) {
-            // adapter comentários
+            lvComentarios.setAdapter(new ComentarioAdaptador(getContext(), comentarios));
         }
     }
 }

@@ -38,7 +38,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
     private ListView lvCarrinhoLivros;
     private ArrayList<Livro> livrosCarrinho;
     private ArrayList<Biblioteca> bibliotecas;
-    private ArrayList<String> adapterList;
+    //private ArrayList<String> adapterList;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public CarrinhoLivrosFragment() {
@@ -87,25 +87,15 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                     @Override
                     public void onClick(View v) {
                         if(spinner.getSelectedItem() != null){
-                            //TODO: Efetuar requisicao - API POST
-                            /**
-                             * 1- get do arrayList dos livros presentes no carrinho
-                             * 2- get selectedItemPosition. id-biblioteca -> spinner
-                             * 3- obter o id_utilizador (do utilizador em questão) -> sharedPreferences
-                             * 4- na API criar um método REST CUSTOM para criar uma requisicao e para cada livro criar uma requisicao_livro
-                             * 5- efetuar post para a url da REST CUSTOM anterior em que deverão ser enviados os livros(ids) no carrinho e id_bib.
-                             */
-
-                            //2 -> obter id bib
                             //obter o id_biblioteca (do objeto biblioteca) através da posição do item selecionado no spinner
                             int position = spinner.getSelectedItemPosition();
                             int id_bib = bibliotecas.get(position).getId_biblioteca();
 
-                            //3 -> obter id_utilizador
+                            //obter id_utilizador -> shared preferences
                             SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
                             String id_utilizador = sharedPreferences.getString(MenuMainActivity.ID,"");
 
-                            //5 -> efetuar post para a REST CUSTOM
+                            //efetuar post para a REST CUSTOM que cria a requisição
                             Singleton.getInstance(getContext()).adicionarRequisicaoAPI(getContext(), id_bib, Integer.parseInt(id_utilizador));
 
                         } else {

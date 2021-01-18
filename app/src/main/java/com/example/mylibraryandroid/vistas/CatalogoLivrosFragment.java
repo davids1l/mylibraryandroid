@@ -58,13 +58,14 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
         Singleton.getInstance(getContext()).setCatalogoListener(this);
         Singleton.getInstance(getContext()).getCatalogoAPI(getContext());
 
+        //método GET - API para obter os autores
         Singleton.getInstance(getContext()).getAutoresAPI(getContext());
 
+        //método GET - API para obter as bibliotecas
         Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
 
+        //método GET - API para obter as editoras
         Singleton.getInstance(getContext()).getEditorasAPI(getContext());
-
-        //TODO - request à API para os autores, bibliotecas e editoras
 
         lvCatalogoLivros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

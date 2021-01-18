@@ -50,6 +50,7 @@ public class Singleton {
     private static final String mUrlAPILeitor = IP + ":8888/web/api/utilizador/";
     private static final String mUrlAPIEditarLeitor = IP + ":8888/web/api/utilizador/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/web/api/biblioteca";
+    private static final String mUrlAPIVerificarRequisicao = IP + ":8888/web/api/requisicao/emrequisicao/";
     private static final String mUrlAPIRequisicao = IP + ":8888/web/api/requisicao/create";
     private LoginListener loginListener;
     private RegistarListener registarListener;
@@ -332,10 +333,12 @@ public class Singleton {
     public Boolean adicionarCarrinho (int id_livro){
 
         //verifica se o arrayList já contem o id_livro a inserir
-        //se não contem, insere e retorna a true (sucesso na inserção), caso contrário retorna false (já contem)
-        if (!carrinho.contains(id_livro)){
-            carrinho.add(id_livro);
-            return true;
+        //limita tambem o carrinho a apenas 5 livros
+        if (carrinho.size() <= 4) {
+            if (!carrinho.contains(id_livro)) {
+                carrinho.add(id_livro);
+                return true;
+            }
         }
 
         return false;
@@ -362,7 +365,34 @@ public class Singleton {
     }
 
     public Boolean removerAllCarrinho(){
-        
+        if(carrinho.removeAll(carrinho))
+            return true;
+
+        return false;
+    }
+
+    public void verificarEmRequisicao(final Context context, final int id) {
+        StringRequest req = new StringRequest(Request.Method.GET, mUrlAPIVerificarRequisicao + id, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response.equals("false")){
+                    if (!carrinho.contains(id) && carrinho.size() <= 4) {
+                        carrinho.add(id);
+                        Toast.makeText(context, "Livro adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "O livro já se encontra no seu carrinho", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(context, "O livro já se encontra em requisição", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        volleyQueue.add(req);
     }
 
     public void getBibliotecasAPI(final Context context){
@@ -436,6 +466,10 @@ public class Singleton {
             @Override
             public void onResponse(String response) {
                 //CarrinhoJsonParser.parserJsonCarrinho(carrinho);
+
+                removerAllCarrinho();
+
+                Toast.makeText(context, "Requisição efetuada com sucesso!", Toast.LENGTH_LONG).show();
             }
         }, new Response.ErrorListener() {
             @Override

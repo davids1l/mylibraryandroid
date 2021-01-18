@@ -96,9 +96,6 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                              * 5- efetuar post para a url da REST CUSTOM anterior em que deverão ser enviados os livros(ids) no carrinho e id_bib.
                              */
 
-                            /**1 -> lvCarrinho */
-
-
                             /**2 -> obter id bib */
                             //obter o id_biblioteca (do objeto biblioteca) através da posição do item selecionado no spinner
                             int position = spinner.getSelectedItemPosition();
@@ -110,7 +107,6 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
                             Singleton.getInstance(getContext()).adicionarRequisicaoAPI(getContext(), id_bib, Integer.parseInt(id_utilizador));
 
-                            //Toast.makeText(getContext(), ), Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(getContext(), R.string.dialog_spinner_empty_error, Toast.LENGTH_LONG).show();
                         }

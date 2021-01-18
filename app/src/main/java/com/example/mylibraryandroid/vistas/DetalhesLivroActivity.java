@@ -62,20 +62,21 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
             public void onClick(View v) {
                 if(LivroJsonParser.isConnectionInternet(getApplicationContext())) {
 
-                    //Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro);
-
-                    if (Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro) == true){
+                    /*if (Singleton.getInstance(getApplicationContext()).adicionarCarrinho(id_livro) == true){
                         /*carrinho = Singleton.getInstance(getApplicationContext()).getLivrosCarrinho();
                         for (int i=0; i<carrinho.size(); i++){
                             //stringBuilder.append(carrinho.get(i) + "\n");
                             //carrinho.get(i);
                             stringBuilder.append(carrinho.get(i).getTitulo() + "\n");
                         }
-                        tvPaginas.setText(stringBuilder);*/
+                        tvPaginas.setText(stringBuilder); ------
                         Toast.makeText(getApplicationContext(), "Livro adicionado ao carrinho!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "O livro já se encontra no seu carrinho", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
+
+                    Singleton.getInstance(getApplicationContext()).verificarEmRequisicao(getApplicationContext(), id_livro);
+
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }

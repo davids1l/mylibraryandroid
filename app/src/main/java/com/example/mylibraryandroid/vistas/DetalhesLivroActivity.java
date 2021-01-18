@@ -1,12 +1,21 @@
 package com.example.mylibraryandroid.vistas;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +42,9 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     private String desigEditora;
     private String nomeBib;
 
+    private int id_livro;
+    private String id;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +54,10 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         //seta de go back
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final int id_livro = getIntent().getIntExtra(ID_LIVRO, -1);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        id = sharedPreferences.getString(MenuMainActivity.ID, "");
+
+        id_livro = getIntent().getIntExtra(ID_LIVRO, -1);
         livro = Singleton.getInstance(this).getLivro(id_livro);
 
         tvTitulo = findViewById(R.id.tvTitulo);
@@ -59,6 +74,15 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         imgCapa = findViewById(R.id.imgCapa);
 
         Singleton.getInstance(getApplicationContext()).setCatalogoListener(this);
+
+        LinearLayout layoutComentarios = (LinearLayout) findViewById(R.id.ll_comentarios);
+        layoutComentarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getApplicationContext(), "Teste :)", Toast.LENGTH_SHORT).show();
+                carregarFragmentoComentario();
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener(){
@@ -89,6 +113,54 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
             popularDetalhesLivro();
         }
 
+    }
+
+    private void carregarFragmentoComentario() {
+        Fragment fragment = new ComentarioLivrosFragment();
+        fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(livro != null){
+            // MenuItem item = menu.findItem(R.id.bedSwitch);
+            int id_utilizador = Integer.parseInt(id);
+            String favId = Singleton.getInstance(getApplicationContext()).findFavoritoByIDS(id_livro, id_utilizador);
+            if(favId != null) {
+                MenuInflater menuInflater = getMenuInflater();
+                menuInflater.inflate(R.menu.menu_favorito_livro, menu);
+                MenuItem item = menu.findItem(R.id.itemFavorito);
+                item.setIcon(R.drawable.ic_favorito);
+                item.setEnabled(false);
+                return super.onCreateOptionsMenu(menu);
+            } else {
+                MenuInflater menuInflater = getMenuInflater();
+                menuInflater.inflate(R.menu.menu_favorito_livro, menu);
+                return super.onCreateOptionsMenu(menu);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(LivroJsonParser.isConnectionInternet(getApplicationContext())) {
+            switch (item.getItemId()) {
+                case R.id.itemFavorito:
+                    int id_utilizador = Integer.parseInt(id);
+                    Singleton.getInstance(getApplicationContext()).adicionarFavoritoAPI(getApplicationContext(), id_utilizador, id_livro);
+                    item.setIcon(R.drawable.ic_favorito);
+                    item.setEnabled(false);
+                    return true;
+                case android.R.id.home:
+                    finish();
+                    return true;
+            }
+        }else {
+            Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void popularDetalhesLivro(){

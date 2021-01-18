@@ -21,18 +21,40 @@ public class FavoritoJsonParser {
         try{
             for (int i = 0; i < response.length(); i++){
                 JSONObject favorito = (JSONObject) response.get(i);
-                int id_favorito = favorito.getInt("id_favorito");
-                int id_livro = favorito.getInt("id_livro");
-                int id_utilizador = favorito.getInt("id_utilizador");
-                String dta_favorito = favorito.getString("dta_favorito");
+                if(favorito.getString("id_favorito").equals("false")) {
+                    return favoritos;
+                } else {
+                    int id_favorito = favorito.getInt("id_favorito");
+                    int id_livro = favorito.getInt("id_livro");
+                    int id_utilizador = favorito.getInt("id_utilizador");
+                    String dta_favorito = favorito.getString("dta_favorito");
 
-                Favorito auxFavorito = new Favorito(id_favorito, id_livro, id_utilizador, dta_favorito);
-                favoritos.add(auxFavorito);
+                    Favorito auxFavorito = new Favorito(id_favorito, id_livro, id_utilizador, dta_favorito);
+                    favoritos.add(auxFavorito);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return favoritos;
+    }
+
+    public static Favorito parserJsonFav(String response){
+        Favorito auxFavorito = null;
+
+        try{
+            JSONObject favorito = new JSONObject(response);
+            int id_favorito = favorito.getInt("id_favorito");
+            int id_livro = favorito.getInt("id_livro");
+            int id_utilizador = favorito.getInt("id_utilizador");
+            String dta_favorito = favorito.getString("dta_favorito");
+
+            auxFavorito = new Favorito(id_favorito, id_livro, id_utilizador, dta_favorito);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return auxFavorito;
     }
 
     public static boolean isConnectionInternet(Context context) {

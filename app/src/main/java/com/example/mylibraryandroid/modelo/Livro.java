@@ -4,8 +4,8 @@ public class Livro {
 
     private int id_livro, ano, paginas, id_editora, id_biblioteca, id_autor, isbn;
     private String titulo, genero, idioma, formato, capa, sinopse;
-    private static final String IP = "http://192.168.1.100";
-    private String urlCapas = IP + ":8888/web/imgs/capas/";
+    private static final String IP = "http://192.168.1.77";
+    private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     public Livro(int id_livro, String titulo, int isbn, int ano, int paginas, String genero, String idioma, String formato, String capa, String sinopse, int id_editora, int id_biblioteca, int id_autor) {
         this.id_livro = id_livro;

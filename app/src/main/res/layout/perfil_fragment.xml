@@ -15,7 +15,17 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="350dp" />
+            android:layout_height="50dp" />
+
+        <ImageView
+            android:id="@+id/ivImagemPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/logoipl" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,9 +43,8 @@
                 android:id="@+id/tvNumLeitor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Space
@@ -59,9 +68,8 @@
                 android:id="@+id/tvNome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Space
@@ -84,9 +92,8 @@
                 android:id="@+id/tvEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Space
@@ -110,9 +117,8 @@
                 android:id="@+id/tvNumTelemovel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Space
@@ -136,9 +142,8 @@
                 android:id="@+id/tvDataNascimento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Space
@@ -161,7 +166,6 @@
                 android:id="@+id/tvNIF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>

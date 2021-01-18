@@ -50,4 +50,8 @@
     <string name="detalhes_biblioteca_estatico">Biblioteca:</string>
     <string name="detalhes_estatico_paginas">Páginas:</string>
     <string name="detalhes_estatico_sinopse">Sinopse:</string>
+    <string name="menuFavorito">Adicionar aos favoritos</string>
+    <string name="detalhes_livro_comentarios">Comentário(s)</string>
+    <string name="hintAddComentario">Adicione um comentário</string>
+    <string name="menu_comentarios">Comentários</string>
 </resources>

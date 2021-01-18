@@ -1,5 +1,6 @@
 package com.example.mylibraryandroid.vistas;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +19,10 @@ import androidx.fragment.app.FragmentManager;
 
 
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.listeners.PerfilListener;
+import com.example.mylibraryandroid.modelo.BDHelper;
+import com.example.mylibraryandroid.modelo.Singleton;
+import com.example.mylibraryandroid.modelo.Utilizador;
 import com.google.android.material.navigation.NavigationView;
 
 public class MenuMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,6 +36,7 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private String email = "";
+    private TextView tvEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,6 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
 
         fragmentManager = getSupportFragmentManager();
 
-
-
         carregarCabecalho();
         carregarFragmentoInicial();
 
@@ -63,7 +67,7 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
         email = sharedPrefInfoUser.getString(EMAIL, "Sem Email");
 
         View hView = navigationView.getHeaderView(0);
-        TextView tvEmail = hView.findViewById(R.id.tvEmail);
+        tvEmail = hView.findViewById(R.id.tvEmail);
         tvEmail.setText(email);
     }
 

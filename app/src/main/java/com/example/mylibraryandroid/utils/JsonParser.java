@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.example.mylibraryandroid.modelo.Utilizador;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,7 +49,9 @@ public class JsonParser {
         Utilizador utilizador = null;
 
         try {
-            JSONObject perfil = new JSONObject(response);
+            JSONObject dadosLeitor = new JSONObject(response);
+
+            JSONObject perfil = dadosLeitor.getJSONObject("utilizador");
 
             int id_utilizador = perfil.getInt("id_utilizador");
             String primeiro_nome = perfil.getString("primeiro_nome");
@@ -62,14 +65,30 @@ public class JsonParser {
             String dta_registo = perfil.getString("dta_registo");
             String foto_perfil = perfil.getString("foto_perfil");
             //int id_biblioteca = perfil.getInt("id_biblioteca");
+            String email = dadosLeitor.getString("email");
 
-            utilizador = new Utilizador(id_utilizador, 0, nif, num_telemovel, primeiro_nome, ultimo_nome,
+            utilizador = new Utilizador(id_utilizador, 0, nif, email, num_telemovel, primeiro_nome, ultimo_nome,
                     numero, dta_bloqueado, dta_nascimento, dta_registo, foto_perfil, 0);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return utilizador;
+    }
+
+
+    public static String parserJsonPerfilEmail(String response) {
+        String email = null;
+
+        try {
+            JSONObject dados = new JSONObject(response);
+
+            email = dados.getString("email");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return email;
     }
 
     public static Utilizador parserJsonEditarPerfil(String response){
@@ -90,13 +109,16 @@ public class JsonParser {
             String dataRegisto = dados.getString("dta_registo");
             String fotoPerfil = dados.getString("foto_perfil");
             int idBiblioteca = dados.getInt("id_biblioteca");
+            //TODO CORRIGIR ISTO
+            String email = null;
 
-            utilizador = new Utilizador(id, bloqueado, nif, numTelemovel, nome, apelido, numero, dataBloqueado, dataNascimento, dataRegisto, fotoPerfil, idBiblioteca);
+            utilizador = new Utilizador(id, bloqueado, nif, email, numTelemovel, nome, apelido, numero, dataBloqueado, dataNascimento, dataRegisto, fotoPerfil, idBiblioteca);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return utilizador;
     }
+
 
     public static boolean isConnectionInternet(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

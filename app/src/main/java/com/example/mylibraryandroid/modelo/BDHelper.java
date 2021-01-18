@@ -52,6 +52,28 @@ public class BDHelper extends SQLiteOpenHelper {
     private static final String DESIGNACAO_EDITORA = "desginacao";
     private static final String ID_PAIS_EDITORA = "id_pais";
 
+    private static final String TABLE_NAME_UTILIZADOR = "utilizador";
+    private static final String ID_UTILIZADOR = "id_utilizador";
+    private static final String NOME = "nome";
+    private static final String APELIDO = "apelido";
+    private static final String NUMERO_LEITOR = "numero_leitor";
+    private static final String EMAIL = "email";
+    private static final String BLOQUEADO = "bloqueado";
+    private static final String DATA_BLOQUEADO = "data_bloqueado";
+    private static final String DATA_NASCIMENTO = "data_nascimento";
+    private static final String NIF = "nif";
+    private static final String NUM_TELEMOVEL = "num_telemovel";
+    private static final String DATA_REGISTO = "data_registo";
+    private static final String FOTO_PERFIL = "foto_perfil";
+    private static final String ID_BIBLIOTECA = "id_biblioteca";
+
+    private static final String TABLE_NAME_COM = "comentario";
+    private static final String ID_COMENTARIO_COM = "id_comentario";
+    private static final String ID_LIVRO_COM = "id_livro";
+    private static final String ID_UTILIZADOR_COM = "id_utilizador";
+    private static final String COMENTARIO_COM = "comentario";
+    private static final String DTA_COM = "dta_comentario";
+
 
     private final SQLiteDatabase db;
 
@@ -121,6 +143,43 @@ public class BDHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY("+EDITORA_LIVRO+") REFERENCES "+TABLE_NAME_EDITORA+"("+ID_AUTOR+") );";
 
         db.execSQL(createTableLivro);
+
+        // Sql de criação da tabela favorito
+        String createTableFavorito = "CREATE TABLE "+TABLE_NAME_FAV+"( " +
+                ID_FAVORITO_FAV+" INTEGER PRIMARY KEY, " +
+                ID_LIVRO_FAV+" INTEGER NOT NULL, " +
+                ID_UTILIZADOR_FAV+" INTEGER NOT NULL, " +
+                DTA_FAV+" NUMERIC NOT NULL );";
+        db.execSQL(createTableFavorito);
+
+
+        //SQL da criação da tabela utilizador
+        String createTableUtilizador = "CREATE TABLE "+TABLE_NAME_UTILIZADOR+"( " +
+                ID_UTILIZADOR+" INTEGER PRIMARY KEY, " +
+                NOME+" TEXT NOT NULL, " +
+                APELIDO+" TEXT NOT NULL, " +
+                NUMERO_LEITOR+" TEXT NOT NULL, " +
+                EMAIL+" TEXT NOT NULL, " +
+                //BLOQUEADO + " INTEGER, " +
+                //DATA_BLOQUEADO + " TEXT, " +
+                DATA_NASCIMENTO+" TEXT NOT NULL, " +
+                NIF+" INTEGER NOT NULL, " +
+                NUM_TELEMOVEL+" INTEGER NOT NULL, " +
+                //DATA_REGISTO + " TEXT NOT NULL, " +
+                FOTO_PERFIL+" TEXT NOT NULL);";
+                //ID_BIBLIOTECA + " INTEGER);";
+
+        db.execSQL(createTableUtilizador);
+
+        // Sql de criação da tabela comentario
+        String createTableComentario = "CREATE TABLE "+TABLE_NAME_COM+"( " +
+                ID_COMENTARIO_COM+" INTEGER PRIMARY KEY, " +
+                ID_LIVRO_COM+" INTEGER NOT NULL, " +
+                ID_UTILIZADOR_COM+" INTEGER NOT NULL, " +
+                COMENTARIO_COM+" TEXT NOT NULL, " +
+                DTA_COM+" NUMERIC NOT NULL );";
+        db.execSQL(createTableComentario);
+
     }
 
     @Override
@@ -140,6 +199,12 @@ public class BDHelper extends SQLiteOpenHelper {
 
         String deleteTableEditoras="DROP TABLE IF EXISTS " + TABLE_NAME_EDITORA;
         db.execSQL(deleteTableEditoras);
+
+        String deleteTableUtilizador="DROP TABLE IF EXISTS " + TABLE_NAME_UTILIZADOR;
+        db.execSQL(deleteTableUtilizador);
+
+        String deleteTableComentarios="DROP TABLE IF EXISTS " + TABLE_NAME_COM;
+        db.execSQL(deleteTableComentarios);
 
         //criar a BD novamente
         this.onCreate(db);
@@ -197,6 +262,11 @@ public class BDHelper extends SQLiteOpenHelper {
         this.db.insert(TABLE_NAME_FAV, null, values);
     }
 
+    public boolean removerFavoritoBD(int id) {
+        int nRows = this.db.delete(TABLE_NAME_FAV, ID_FAVORITO_FAV+" = ?", new String[]{id + ""});
+        return (nRows > 0);
+    }
+
     public void removerAllFavoritoBD(){
         this.db.delete(TABLE_NAME_FAV, null, null);
     }
@@ -204,13 +274,13 @@ public class BDHelper extends SQLiteOpenHelper {
     public ArrayList<Favorito> getAllFavoritosDB() {
         ArrayList<Favorito> favoritos = new ArrayList<>();
 
-        Cursor cursor = this.db.query(TABLE_NAME_FAV, new String[]{ID_FAVORITO_FAV, DTA_FAV,ID_LIVRO_FAV, ID_UTILIZADOR_FAV},
+        Cursor cursor = this.db.query(TABLE_NAME_FAV, new String[]{ID_FAVORITO_FAV,ID_LIVRO_FAV, ID_UTILIZADOR_FAV, DTA_FAV},
                 null, null, null, null, null);
 
         if(cursor.moveToFirst()) {
             do {
                 Favorito auxFavorito = new Favorito(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3));
-                favoritos.add(auxFavorito);
+                //TODO favoritos.add(auxFavorito);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -306,4 +376,70 @@ public class BDHelper extends SQLiteOpenHelper {
 
 
 
+
+    public void adicionarLeitorBD(Utilizador utilizador) {
+        ContentValues values = new ContentValues();
+        values.put(ID_UTILIZADOR, utilizador.getId());
+        values.put(NOME, utilizador.getPrimeiroNome());
+        values.put(APELIDO, utilizador.getUltimoNome());
+        values.put(NUMERO_LEITOR, utilizador.getNumero());
+        values.put(EMAIL, utilizador.getEmail());
+        values.put(DATA_NASCIMENTO, utilizador.getDtaNascimento());
+        values.put(NIF, utilizador.getNif());
+        values.put(NUM_TELEMOVEL, utilizador.getNumTelemovel());
+        values.put(FOTO_PERFIL, utilizador.getFoto_perfil());
+
+        this.db.insert(TABLE_NAME_UTILIZADOR, null, values);
+    }
+
+    public void removerLeitorBD(){
+        this.db.delete(TABLE_NAME_UTILIZADOR, null, null);
+    }
+
+    public Utilizador getUtilizadorBD(){
+        Utilizador utilizador = null;
+
+        //TODO IR BUSCAR OS DADOS À BD
+        Cursor cursor = this.db.query(TABLE_NAME_UTILIZADOR, new String[]{ID_UTILIZADOR,NOME,APELIDO,NUMERO_LEITOR,EMAIL,DATA_NASCIMENTO,NIF,NUM_TELEMOVEL,FOTO_PERFIL}
+        ,null,null, null, null,null);
+        return utilizador;
+    }
+
+
+    public void adicionarComentarioBD(Comentario comentario) {
+        ContentValues values = new ContentValues();
+        values.put(ID_COMENTARIO_COM, comentario.getId_comentario());
+        values.put(ID_LIVRO_COM, comentario.getId_livro());
+        values.put(ID_UTILIZADOR_COM, comentario.getId_utilizador());
+        values.put(COMENTARIO_COM, comentario.getComentario());
+        values.put(DTA_COM, comentario.getDta_comentario());
+
+        this.db.insert(TABLE_NAME_COM, null, values);
+    }
+
+    public boolean removerComentarioBD(int id) {
+        int nRows = this.db.delete(TABLE_NAME_COM, ID_COMENTARIO_COM+" = ?", new String[]{id + ""});
+        return (nRows > 0);
+    }
+
+    public void removerAllComentarioBD(){
+        this.db.delete(TABLE_NAME_COM, null, null);
+    }
+
+    public ArrayList<Comentario> getAllComentariosDB() {
+        ArrayList<Comentario> comentarios = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_NAME_COM, new String[]{ID_COMENTARIO_COM,ID_LIVRO_COM, ID_UTILIZADOR_COM, COMENTARIO_COM, DTA_COM},
+                null, null, null, null, null);
+
+        if(cursor.moveToFirst()) {
+            do {
+                Comentario auxComentario = new Comentario(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return comentarios;
+    }
+
+    //Query to get the autor by it's id
 }

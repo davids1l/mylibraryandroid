@@ -38,6 +38,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
     private SearchView searchView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String id;
+    private String token;
 
     public FavoritoLivrosFragment() {
         // Required empty public constructor
@@ -49,6 +50,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         id = sharedPreferences.getString(MenuMainActivity.ID, "");
+        token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
 
         View view = inflater.inflate(R.layout.favorito_livros_fragment, container, false);
         lvFavoritoLivros = view.findViewById(R.id.lvFavoritoLivros);
@@ -57,7 +59,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
         swipeRefreshLayout.setOnRefreshListener(this);
 
         Singleton.getInstance(getContext()).setFavoritoListener(this);
-        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id);
+        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id, token);
 
         favoritoLivros = Singleton.getInstance(getContext()).getLivrosFavoritosBD();
         if(favoritoLivros.isEmpty()){
@@ -108,7 +110,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
 
     @Override
     public void onRefresh() {
-        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id);
+        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id, token);
         swipeRefreshLayout.setRefreshing(false);
         if(favoritoLivros.isEmpty()){
             Toast.makeText(getContext(), R.string.semFavoritos, Toast.LENGTH_SHORT).show();

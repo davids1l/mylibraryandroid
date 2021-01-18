@@ -85,6 +85,8 @@ public class FavoritoAdaptador extends BaseAdapter {
     }
 
     private void dialogRemover(final int id_utilizador, final Livro itemPos) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        final String token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("Remover Livro")
@@ -92,7 +94,7 @@ public class FavoritoAdaptador extends BaseAdapter {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Singleton.getInstance(context).removerFavoritoAPI(context, id_utilizador, itemPos.getId_livro());
+                        Singleton.getInstance(context).removerFavoritoAPI(context, id_utilizador, itemPos.getId_livro(), token);
                         Toast.makeText(context,"Livro removido dos favoritos!", Toast.LENGTH_SHORT).show();
                     }
                 })

@@ -53,7 +53,6 @@ public class Singleton {
     private static final String mUrlAPIFavorito =  IP + ":8888/backend/web/api/favorito/utilizador/";
     private static final String mUrlAPILeitor = IP + ":8888/backend/web/api/utilizador/dadosLeitor/";
     private static final String mUrlAPIEditarLeitor = IP + ":8888/backend/web/api/utilizador/";
-    private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/backend/web/api/biblioteca";
     private static final String mUrlAPIRemoverFavorito =  IP + ":8888/backend/web/api/favorito/";
     private static final String mUrlAPIAdicionarFavorito =  IP + ":8888/backend/web/api/favorito";
@@ -306,7 +305,8 @@ public class Singleton {
         return null;
     }
 
-    public void getCatalogoAPI(final Context context) {
+
+    public void getCatalogoAPI(final Context context, final String token) {
         if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 
@@ -328,14 +328,14 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });/*{
+            }) {
                 @Override
-                protected Map<String, String> getParams() {
+                public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
-                    params.put("token", token);
+                    params.put("authorization", token);
                     return params;
                 }
-            };*/
+            };
             volleyQueue.add(req);
         }
     }
@@ -343,7 +343,7 @@ public class Singleton {
     /**
      * Acesso aos favoritos pela API
      **/
-    public void getFavoritoAPI(final Context context, final String id) {
+    public void getFavoritoAPI(final Context context, final String id, final String token) {
         if (!FavoritoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 
@@ -366,24 +366,24 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });/*{
+            }){
                 @Override
-                protected Map<String, String> getParams() {
+                public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
-                    params.put("token", token);
+                    params.put("authorization", token);
                     return params;
                 }
-            };*/
+            };
             volleyQueue.add(req);
         }
     }
 
-    public void adicionarFavoritoAPI(final Context context, final int id_utilizador, final int id_livro) {
+    public void adicionarFavoritoAPI(final Context context, final int id_utilizador, final int id_livro, final String token) {
         StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIAdicionarFavorito, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Favorito f = FavoritoJsonParser.parserJsonFav(response);
-                getFavoritoAPI(context, id_utilizador+"");
+                getFavoritoAPI(context, id_utilizador+"", token);
 
                 if(favoritoListener != null){
                     favoritoListener.onRefreshDetalhes();
@@ -402,11 +402,18 @@ public class Singleton {
                 params.put("id_utilizador", id_utilizador+"");
                 return params;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("authorization", token);
+                return params;
+            }
         };
         volleyQueue.add(req);
     }
 
-    public void removerFavoritoAPI(final Context context, final int id_utilizador, int id_livro) {
+    public void removerFavoritoAPI(final Context context, final int id_utilizador, int id_livro, final String token) {
         final String id_favorito = findFavoritoByIDS(id_livro, id_utilizador);
         StringRequest req = new StringRequest(Request.Method.DELETE, mUrlAPIRemoverFavorito + id_favorito, new Response.Listener<String>() {
             @Override
@@ -414,7 +421,7 @@ public class Singleton {
                 Favorito f = FavoritoJsonParser.parserJsonFav(response);
                 int id = Integer.parseInt(id_favorito);
                 removerFavoritoBD(id);
-                getFavoritoAPI(context, id_utilizador+"");
+                getFavoritoAPI(context, id_utilizador+"", token);
 
                 if (favoritoListener != null){
                     favoritoListener.onRefreshDetalhes();
@@ -426,7 +433,14 @@ public class Singleton {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("authorization", token);
+                return params;
+            }
+        };
         volleyQueue.add(req);
     }
 
@@ -515,7 +529,8 @@ public class Singleton {
         return false;
     }
 
-    public void getBibliotecasAPI(final Context context){
+    //TODO TOKEN
+    public void getBibliotecasAPI(final Context context, final String token){
         /*if (!LivroJsonParser.isConnectionInternet(context)){
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
         } else {*/
@@ -535,7 +550,15 @@ public class Singleton {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("authorization", token);
+
+                return params;
+            }
+        };
         volleyQueue.add(req);
         // }
     }
@@ -555,7 +578,7 @@ public class Singleton {
             @Override
             public void onResponse(String response) {
                 Utilizador utilizador = JsonParser.parserJsonEditarPerfil(response);
-                
+
                 if (editarPerfilListener != null) {
                     editarPerfilListener.onRefreshPerfil();
                 }
@@ -591,6 +614,7 @@ public class Singleton {
     /**
      * Acesso aos comentarios pela API
      **/
+    //TODO TOKEN
     public void getComentarioAPI(final Context context, final String id) {
         if (!ComentarioJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();

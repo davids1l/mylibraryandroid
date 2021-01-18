@@ -109,7 +109,6 @@ public class JsonParser {
             String dataRegisto = dados.getString("dta_registo");
             String fotoPerfil = dados.getString("foto_perfil");
             int idBiblioteca = dados.getInt("id_biblioteca");
-            //TODO CORRIGIR ISTO
             String email = null;
 
             utilizador = new Utilizador(id, bloqueado, nif, email, numTelemovel, nome, apelido, numero, dataBloqueado, dataNascimento, dataRegisto, fotoPerfil, idBiblioteca);

@@ -23,7 +23,16 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO CASO EXISTA TOKEN, EXECUTA INTENT MAIN_ACTIVITY
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
+
+        if(!token.equals("")){
+            Intent intent = new Intent(this, MenuMainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         setContentView(R.layout.activity_login);
         setTitle(getString(R.string.actLogin));
 

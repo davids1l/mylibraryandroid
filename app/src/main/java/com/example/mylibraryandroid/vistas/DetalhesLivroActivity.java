@@ -144,10 +144,12 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(LivroJsonParser.isConnectionInternet(getApplicationContext())) {
+            SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+            String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
             switch (item.getItemId()) {
                 case R.id.itemFavorito:
                     int id_utilizador = Integer.parseInt(id);
-                    Singleton.getInstance(getApplicationContext()).adicionarFavoritoAPI(getApplicationContext(), id_utilizador, id_livro);
+                    Singleton.getInstance(getApplicationContext()).adicionarFavoritoAPI(getApplicationContext(), id_utilizador, id_livro, token);
                     item.setIcon(R.drawable.ic_favorito);
                     item.setEnabled(false);
                     return true;

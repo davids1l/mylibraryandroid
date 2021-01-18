@@ -2,6 +2,7 @@ package com.example.mylibraryandroid.vistas;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -97,6 +98,9 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
                 fragment = new PerfilFragment();
                 setTitle(item.getTitle());
                 break;
+            case R.id.nav_logout:
+                logout();
+                break;
         }
 
         if (fragment != null)
@@ -104,5 +108,15 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout(){
+        SharedPreferences sharedPrefUser = getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefUser.edit();
+        editor.clear();
+        editor.apply();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

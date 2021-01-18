@@ -29,6 +29,7 @@ import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class DetalhesLivroActivity extends AppCompatActivity implements CatalogoListener {
 
@@ -53,6 +54,8 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
         //seta de go back
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        fragmentManager = getSupportFragmentManager();
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         id = sharedPreferences.getString(MenuMainActivity.ID, "");
@@ -80,7 +83,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "Teste :)", Toast.LENGTH_SHORT).show();
-                carregarFragmentoComentario();
+                //carregarFragmentoComentario();
             }
         });
 
@@ -115,6 +118,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     }
 
     private void carregarFragmentoComentario() {
+        //View view = Inflater.inflate(R.id.contentFragment);
         Fragment fragment = new ComentarioLivrosFragment();
         fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
     }

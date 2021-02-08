@@ -40,6 +40,7 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
     private ArrayList<Livro> catalogoLivros;
     private SwipeRefreshLayout swipeRefreshLayout;
     private SearchView searchView;
+    private String token;
 
     public CatalogoLivrosFragment() {
         //Required empty public constructor
@@ -55,14 +56,17 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         String idUtilizador = sharedPreferences.getString(MenuMainActivity.ID, "");
+        String tokenLeitor = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
+        token = tokenLeitor;
 
-        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), idUtilizador);
+
+        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), idUtilizador, token);
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         Singleton.getInstance(getContext()).setCatalogoListener(this);
-        Singleton.getInstance(getContext()).getCatalogoAPI(getContext());
+        Singleton.getInstance(getContext()).getCatalogoAPI(getContext(), token);
 
         //método GET - API para obter os autores
         Singleton.getInstance(getContext()).getAutoresAPI(getContext());
@@ -150,7 +154,7 @@ public class CatalogoLivrosFragment extends Fragment implements CatalogoListener
 
     @Override
     public void onRefresh() {
-        Singleton.getInstance(getContext()).getCatalogoAPI(getContext());
+        Singleton.getInstance(getContext()).getCatalogoAPI(getContext(), token);
         swipeRefreshLayout.setRefreshing(false);
     }
 }

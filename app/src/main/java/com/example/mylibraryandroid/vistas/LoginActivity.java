@@ -23,14 +23,21 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO CASO EXISTA TOKEN, EXECUTA INTENT MAIN_ACTIVITY
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
+
+        if(!token.equals("")){
+            Intent intent = new Intent(this, MenuMainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         setContentView(R.layout.activity_login);
         setTitle(getString(R.string.actLogin));
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
-        etEmail.setText("admin@admin.com");
-        etPassword.setText("123123123");
 
         Singleton.getInstance(getApplicationContext()).setLoginListener(this);
     }
@@ -83,11 +90,11 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                 startActivity(intent);
                 finish();
             }else {
-                Toast.makeText(getApplicationContext(), "A conta encontra-se bloqueada!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.contaBloqueada, Toast.LENGTH_LONG).show();
                 etPassword.setText("");
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Login inválido", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.loginInvalido, Toast.LENGTH_LONG).show();
             etPassword.setText("");
         }
     }

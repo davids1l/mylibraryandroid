@@ -74,62 +74,62 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                         String nif = etNIF.getText().toString();
 
                     if (!isNomeValid(nome)) {
-                        etNome.setError("Campo em branco!");
+                        etNome.setError(getString(R.string.campoBranco));
                         return;
                     }
 
                     if (!isApelidoValid(apelido)) {
-                        etApelido.setError("Campo em branco!");
+                        etApelido.setError(getString(R.string.campoBranco));
                         return;
                     }
 
                     if (isNumTelemovelValid(telemovel) == 1) {
-                        etTelemovel.setError("Nº de telemóvel inválido. Tem de conter 9 dígitos.");
+                        etTelemovel.setError(getString(R.string.telemovelInvalido));
                         return;
                     } else {
                         if (isNumTelemovelValid(telemovel) == 2) {
-                            etTelemovel.setError("Nº de telemóvel tem de começar por 9");
+                            etTelemovel.setError(getString(R.string.telemovelErroComecar));
                             return;
                         }
                     }
 
                     if (!isDiaBlank(dia)) {
-                        etDia.setError("Campo em branco!");
+                        etDia.setError(getString(R.string.campoBranco));
                         return;
                     }else {
                         if(!isDiaValid(Integer.parseInt(dia))){
-                            etDia.setError("Dia inválido. Insira um valor entre 1 e 31");
+                            etDia.setError(getString(R.string.diaInvalido));
                             return;
                         }
                     }
 
                     if (!isMesBlank(mes)) {
-                        etMes.setError("Campo em branco!");
+                        etMes.setError(getString(R.string.campoBranco));
                         return;
                     }else {
                         if (!isMesValid(Integer.parseInt(mes))){
-                            etMes.setError("Mês inválido. Insira um valor entre 1 e 12.");
+                            etMes.setError(getString(R.string.mesInvalido));
                             return;
                         }
                     }
 
                     if (isAnoBlank(ano) == 1) {
-                        etAno.setError("Campo em branco!");
+                        etAno.setError(getString(R.string.campoBranco));
                         return;
                     }else {
                         if(isAnoBlank(ano) == 2){
-                            etAno.setError("Ano inválido. Tem de conter 4 dígitos.");
+                            etAno.setError(getString(R.string.anoTerQuatroDigitos));
                             return;
                         }
                     }
 
                     if(!isAnoValid(Integer.parseInt(ano))){
-                        etAno.setError("Ano inválido.");
+                        etAno.setError(getString(R.string.anoInvalido));
                         return;
                     }
 
                     if (!isNIFValid(nif)) {
-                        etNIF.setError("NIF inválido. Tem de conter 9 dígitos.");
+                        etNIF.setError(getString(R.string.nifInvalido));
                         return;
                     }
 

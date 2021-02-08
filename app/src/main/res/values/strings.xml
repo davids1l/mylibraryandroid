@@ -54,4 +54,25 @@
     <string name="detalhes_livro_comentarios">Comentário(s)</string>
     <string name="hintAddComentario">Adicione um comentário</string>
     <string name="menu_comentarios">Comentários</string>
+    <string name="campoBranco">Campo em branco!</string>
+    <string name="telemovelInvalido">Nº de telemóvel inválido. Tem de conter 9 dígitos.</string>
+    <string name="telemovelErroComecar">Nº de telemóvel tem de começar por 9</string>
+    <string name="diaInvalido">Dia inválido. Insira um valor entre 1 e 31</string>
+    <string name="mesInvalido">Mês inválido. Insira um valor entre 1 e 12.</string>
+    <string name="anoInvalido">Ano inválido.</string>
+    <string name="anoTerQuatroDigitos">Ano inválido. Tem de conter 4 dígitos.</string>
+    <string name="nifInvalido">NIF inválido. Tem de conter 9 dígitos.</string>
+    <string name="tituloRegistar">Registar</string>
+    <string name="passOitoCaracteres">A palavra-passe tem de conter pelo menos 8 caracteres.</string>
+    <string name="confirmPassError">Confirmação diferente da palavra-passe inserida.</string>
+    <string name="loginInvalido">Login inválido</string>
+    <string name="contaBloqueada">A conta encontra-se bloqueada!</string>
+    <string name="registoInvalido">Registo inválido</string>
+    <string name="registoSucesso">Registo realizado com sucesso!</string>
+    <string name="editarDadosSucesso">Dados alterados com sucesso!</string>
+    <string name="semFavoritos">Não existem favoritos!</string>
+    <string name="livroAdicionado">Livro adicionado ao carrinho!</string>
+    <string name="livroNoCarrinho">O livro já se encontra no seu carrinho</string>
+    <string name="semComentarios">Não existem comentários!</string>
+    <string name="carrinhoVazio">O carrinho está vazio</string>
 </resources>

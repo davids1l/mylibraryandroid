@@ -40,6 +40,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
     private ArrayList<Biblioteca> bibliotecas;
     //private ArrayList<String> adapterList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private String token;
 
     public CarrinhoLivrosFragment() {
         // Required empty public constructor
@@ -53,6 +54,10 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        String tokenLeitor = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
+        token = tokenLeitor;
 
         final View view = inflater.inflate(R.layout.carrinho_livros_fragment, container, false);
         lvCarrinhoLivros = view.findViewById(R.id.lvCarrinhoLivros);
@@ -114,7 +119,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
             /*fab.setClickable(false);
             fab.setEnabled(false);*/
             fab.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "O carrinho está vazio", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.carrinhoVazio, Toast.LENGTH_LONG).show();
         }
 
 

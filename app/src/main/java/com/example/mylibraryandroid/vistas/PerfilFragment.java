@@ -94,7 +94,7 @@ public class PerfilFragment extends Fragment implements PerfilListener {
         if(resultCode == Activity.RESULT_OK){
             Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
             //Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id, token);
-            Toast.makeText(getContext(), "Dados alterados com sucesso!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.editarDadosSucesso, Toast.LENGTH_SHORT).show();
         }
     }
 

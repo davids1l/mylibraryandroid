@@ -22,7 +22,7 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registar);
-        setTitle("Registar");
+        setTitle(getString(R.string.tituloRegistar));
 
         etPrimeiroNome = findViewById(R.id.etPrimeiroNome);
         etApelido = findViewById(R.id.etApelido);
@@ -61,12 +61,12 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
 
 
             if (!isNomeValid(primeiro_nome)) {
-                etPrimeiroNome.setError("Campo em branco!");
+                etPrimeiroNome.setError(getString(R.string.campoBranco));
                 return;
             }
 
             if (!isApelidoValid(ultimo_nome)) {
-                etApelido.setError("Campo em branco!");
+                etApelido.setError(getString(R.string.campoBranco));
                 return;
             }
 
@@ -77,65 +77,65 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
 
 
             if (!isDiaBlank(dia)){
-                etDia.setError("Campo em branco!");
+                etDia.setError(getString(R.string.campoBranco));
                 return;
             }else {
                 if(!isDiaValid(Integer.parseInt(dia))){
-                    etDia.setError("Dia inválido. Insira um valor entre 1 e 31");
+                    etDia.setError(getString(R.string.diaInvalido));
                     return;
                 }
             }
 
             if(!isMesBlank(mes)){
-                etMes.setError("Campo em branco!");
+                etMes.setError(getString(R.string.campoBranco));
                 return;
             }else {
                 if (!isMesValid(Integer.parseInt(mes))){
-                    etMes.setError("Mês inválido. Insira um valor entre 1 e 12.");
+                    etMes.setError(getString(R.string.mesInvalido));
                     return;
                 }
             }
 
 
             if (isAnoBlank(ano) == 1){
-                etAno.setError("Campo em branco!");
+                etAno.setError(getString(R.string.campoBranco));
                 return;
             }else {
                 if(isAnoBlank(ano) == 2){
-                    etAno.setError("Ano inválido. Tem de conter 4 dígitos.");
+                    etAno.setError(getString(R.string.anoTerQuatroDigitos));
                     return;
                 }
             }
 
             if(!isAnoValid(Integer.parseInt(ano))){
-                etAno.setError("Ano inválido.");
+                etAno.setError(getString(R.string.anoInvalido));
                 return;
             }
 
 
 
             if (!isNifValid(nif)) {
-                etNif.setError("NIF inválido. Tem de conter 9 dígitos.");
+                etNif.setError(getString(R.string.nifInvalido));
                 return;
             }
 
             if (isNumTelemovelValid(num_telemovel) == 1) {
-                etTelefone.setError("Nº de telemóvel inválido. Tem de conter 9 dígitos.");
+                etTelefone.setError(getString(R.string.telemovelInvalido));
                 return;
             } else {
                 if (isNumTelemovelValid(num_telemovel) == 2) {
-                    etTelefone.setError("Nº de telemóvel tem de começar por 9");
+                    etTelefone.setError(getString(R.string.telemovelErroComecar));
                     return;
                 }
             }
 
             if (!isPasswordValid(password)) {
-                etPassword.setError("A palavra-passe tem de conter pelo menos 8 caracteres.");
+                etPassword.setError(getString(R.string.passOitoCaracteres));
                 return;
             }
 
             if (!isConfPasswordValid(confPassword, password)) {
-                etConfPassword.setError("Confirmação diferente da palavra-passe inserida.");
+                etConfPassword.setError(getString(R.string.confirmPassError));
                 return;
             }
 
@@ -149,12 +149,12 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
     @Override
     public void onValidateRegisto(String result) {
         if (result != null) {
-            Toast.makeText(getApplicationContext(), "Registo realizado com sucesso!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.registoSucesso, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(getApplicationContext(), "Registo inválido", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.registoInvalido, Toast.LENGTH_SHORT).show();
         }
     }
 

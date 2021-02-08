@@ -29,6 +29,7 @@ import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class DetalhesLivroActivity extends AppCompatActivity implements CatalogoListener {
 
@@ -53,6 +54,8 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
         //seta de go back
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        fragmentManager = getSupportFragmentManager();
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         id = sharedPreferences.getString(MenuMainActivity.ID, "");
@@ -80,7 +83,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), "Teste :)", Toast.LENGTH_SHORT).show();
-                carregarFragmentoComentario();
+                //carregarFragmentoComentario();
             }
         });
 
@@ -101,7 +104,6 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
                     //adicionar livro ao carrinho
                     //verifica se o livro em questão esta em requisição, limita o total de livros no carrinho e verifica se são ambíguos
                     Singleton.getInstance(getApplicationContext()).verificarEmRequisicao(getApplicationContext(), id_livro);
-
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }
@@ -116,6 +118,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     }
 
     private void carregarFragmentoComentario() {
+        //View view = Inflater.inflate(R.id.contentFragment);
         Fragment fragment = new ComentarioLivrosFragment();
         fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
     }
@@ -146,10 +149,12 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(LivroJsonParser.isConnectionInternet(getApplicationContext())) {
+            SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+            String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
             switch (item.getItemId()) {
                 case R.id.itemFavorito:
                     int id_utilizador = Integer.parseInt(id);
-                    Singleton.getInstance(getApplicationContext()).adicionarFavoritoAPI(getApplicationContext(), id_utilizador, id_livro);
+                    Singleton.getInstance(getApplicationContext()).adicionarFavoritoAPI(getApplicationContext(), id_utilizador, id_livro, token);
                     item.setIcon(R.drawable.ic_favorito);
                     item.setEnabled(false);
                     return true;

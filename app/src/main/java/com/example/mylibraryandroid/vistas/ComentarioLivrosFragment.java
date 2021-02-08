@@ -14,6 +14,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.adaptadores.CatalogoAdaptador;
+import com.example.mylibraryandroid.adaptadores.ComentarioAdaptador;
+import com.example.mylibraryandroid.adaptadores.FavoritoAdaptador;
 import com.example.mylibraryandroid.listeners.ComentarioListener;
 import com.example.mylibraryandroid.modelo.Comentario;
 import com.example.mylibraryandroid.modelo.Livro;
@@ -50,7 +53,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
 
         comentarios = Singleton.getInstance(getContext()).getComentariosBD();
         if(comentarios.isEmpty()) {
-            Toast.makeText(getContext(), "Não existem comentários!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.semComentarios, Toast.LENGTH_SHORT).show();
         }
 
         return view;
@@ -61,14 +64,14 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
         Singleton.getInstance(getContext()).getComentarioAPI(getContext(), id);
         swipeRefreshLayout.setRefreshing(false);
         if(comentarios.isEmpty()) {
-            Toast.makeText(getContext(), "Não existem comentários!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.semComentarios, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onRefreshComentarios(ArrayList<Comentario> comentarios) {
         if(comentarios != null) {
-            // adapter comentários
+            lvComentarios.setAdapter(new ComentarioAdaptador(getContext(), comentarios));
         }
     }
 }

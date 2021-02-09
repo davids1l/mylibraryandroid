@@ -7,36 +7,38 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.modelo.Requisicao;
+import com.example.mylibraryandroid.modelo.Singleton;
 
 import java.util.ArrayList;
 
 public class RequisicoesAdaptador extends BaseAdapter {
+
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Requisicao> requisicoes;
+    private String nomeBib;
 
-    public void RequisicoesAdaptador(Context context, ArrayList<Requisicao> requisicoes) {
+    public RequisicoesAdaptador(Context context, ArrayList<Requisicao> requisicoes) {
         this.context = context;
         this.requisicoes = requisicoes;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return requisicoes.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return requisicoes.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return requisicoes.get(position).getId_requisicao();
     }
 
 
@@ -55,6 +57,7 @@ public class RequisicoesAdaptador extends BaseAdapter {
                 viewHolder = new ViewHolderLista(convertView);
                 convertView.setTag(viewHolder);
             }
+
             viewHolder.update(requisicoes.get(position));
         }
         return convertView;
@@ -71,8 +74,12 @@ public class RequisicoesAdaptador extends BaseAdapter {
         }
 
         public void update(Requisicao requisicao) {
-            tvNumReq.setText("#"+requisicao.getId_bib_levantamento());
-            tvTotalLivros.setText(requisicao.get);
+            nomeBib = Singleton.getInstance(context).getNomeBiblioteca(requisicao.getId_bib_levantamento());
+
+            tvNumReq.setText("#"+requisicao.getId_requisicao());
+            tvTotalLivros.setText(""+requisicao.getId_bib_levantamento());
+            tvEstadoReq.setText(requisicao.getEstado());
+            tvBibReq.setText(nomeBib);
         }
     }
 

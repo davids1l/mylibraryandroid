@@ -74,6 +74,20 @@ public class BDHelper extends SQLiteOpenHelper {
     private static final String COMENTARIO_COM = "comentario";
     private static final String DTA_COM = "dta_comentario";
 
+    //requisicao
+    private static final String TABLE_NAME_REQ = "requisicao";
+    private static final String ID_REQUISICAO_REQ = "id_requisicao";
+    private static final String DTA_LEVANTAMENTO_REQ = "dta_levantamento";
+    private static final String DTA_ENTREGA_REQ = "dta_entrega";
+    private static final String ESTADO_REQ = "estado";
+    private static final String ID_UTILIZADOR_REQ = "id_utilizador";
+    private static final String ID_BIB_LEVANTAMENTO_REQ = "id_bib_levantamento";
+
+
+    //requisicao livro
+    private static final String TABLE_NAME_REQ_LIVRO = "requisicao_livro";
+    private static final String ID_LIVRO_REQ_LIVRO = "id_livro";
+    private static final String ID_REQUISICAO_REQ_LIVRO = "id_requisicao";
 
     private final SQLiteDatabase db;
 
@@ -172,6 +186,22 @@ public class BDHelper extends SQLiteOpenHelper {
                 DTA_COM+" NUMERIC NOT NULL );";
         db.execSQL(createTableComentario);
 
+        //SQL de criação da tabela requisicao
+        String createTableRequisicao = "CREATE TABLE "+TABLE_NAME_REQ+"( " +
+                ID_REQUISICAO_REQ+" INTEGER PRIMARY KEY, " +
+                DTA_LEVANTAMENTO_REQ+" TEXT NOT NULL, " +
+                DTA_ENTREGA_REQ+" TEXT NOT NULL, " +
+                ESTADO_REQ+" TEXT NOT NULL, " +
+                ID_UTILIZADOR_REQ+" INTEGER NOT NULL, " +
+                ID_BIB_LEVANTAMENTO_REQ+" INTEGER NOT NULL );";
+        db.execSQL(createTableRequisicao);
+
+        //SQL de criação da tabela requisicao_livro
+        String createTableRequisicaoLivro = "CREATE TABLE "+TABLE_NAME_REQ_LIVRO+"( " +
+                ID_LIVRO_REQ_LIVRO+" INTEGER NOT NULL, " +
+                ID_REQUISICAO_REQ_LIVRO+" INTEGER NOT NULL );";
+        db.execSQL(createTableRequisicaoLivro);
+
     }
 
     @Override
@@ -197,6 +227,12 @@ public class BDHelper extends SQLiteOpenHelper {
 
         String deleteTableComentarios="DROP TABLE IF EXISTS " + TABLE_NAME_COM;
         db.execSQL(deleteTableComentarios);
+
+        String deleteTableRequisicao="DROP TABLE IF EXISTS " + TABLE_NAME_REQ;
+        db.execSQL(deleteTableRequisicao);
+
+        String deleteTableRequisicaoLivro="DROP TABLE IF EXISTS " + TABLE_NAME_REQ_LIVRO;
+        db.execSQL(deleteTableRequisicaoLivro);
 
         //criar a BD novamente
         this.onCreate(db);
@@ -368,7 +404,6 @@ public class BDHelper extends SQLiteOpenHelper {
 
 
 
-
     public void adicionarLeitorBD(Utilizador utilizador) {
         ContentValues values = new ContentValues();
         values.put(ID_UTILIZADOR, utilizador.getId());
@@ -427,11 +462,72 @@ public class BDHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()) {
             do {
                 Comentario auxComentario = new Comentario(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4));
+                comentarios.add(auxComentario);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return comentarios;
     }
 
-    //Query to get the autor by it's id
+    public void adicionarRequisicaoBD(Requisicao requisicao) {
+        ContentValues values = new ContentValues();
+        values.put(ID_REQUISICAO_REQ, requisicao.getId_requisicao());
+        values.put(DTA_LEVANTAMENTO_REQ, requisicao.getDta_levantamento());
+        values.put(DTA_ENTREGA_REQ,requisicao.getDta_entrega());
+        values.put(ESTADO_REQ,requisicao.getEstado());
+        values.put(ID_UTILIZADOR_REQ, requisicao.getId_utilizador());
+        values.put(ID_BIB_LEVANTAMENTO_REQ, requisicao.getId_bib_levantamento());
+
+        this.db.insert(TABLE_NAME_REQ, null, values);
+    }
+
+    public void removerAllRequisicoesBD(){
+        this.db.delete(TABLE_NAME_REQ, null, null);
+    }
+
+    public ArrayList<Requisicao> getAllRequisicoesBD() {
+        ArrayList<Requisicao> requisicoes = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_NAME_REQ, new String[]{ID_REQUISICAO_REQ, DTA_LEVANTAMENTO_REQ, DTA_ENTREGA_REQ, ESTADO_REQ, ID_UTILIZADOR_REQ, ID_BIB_LEVANTAMENTO_REQ},
+                null, null, null, null, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                Requisicao auxRequisicao = new Requisicao(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                        cursor.getInt(4), cursor.getInt(5));
+                requisicoes.add(auxRequisicao);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return requisicoes;
+    }
+
+
+    public void adicionarRequisicaoLivroBD(RequisicaoLivro requisicaoLivro){
+        ContentValues values = new ContentValues();
+        values.put(ID_LIVRO_REQ_LIVRO, requisicaoLivro.getId_livro());
+        values.put(ID_REQUISICAO_REQ_LIVRO, requisicaoLivro.getId_requisicao());
+
+        this.db.insert(TABLE_NAME_REQ_LIVRO, null, values);
+    }
+
+    public void removerAllRequisicoesLivroBD() {
+        this.db.delete(TABLE_NAME_REQ_LIVRO, null, null);
+    }
+
+    public ArrayList<RequisicaoLivro> getAllRequisicoesLivroBD() {
+        ArrayList<RequisicaoLivro> requisicoesLivro = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_NAME_REQ_LIVRO, new String[]{ID_LIVRO_REQ_LIVRO, ID_REQUISICAO_REQ_LIVRO}, null, null, null, null, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                RequisicaoLivro aux = new RequisicaoLivro(cursor.getInt(0), cursor.getInt(1));
+                requisicoesLivro.add(aux);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return requisicoesLivro;
+    }
+
 }

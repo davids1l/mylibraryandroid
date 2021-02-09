@@ -75,4 +75,10 @@
     <string name="livroNoCarrinho">O livro já se encontra no seu carrinho</string>
     <string name="semComentarios">Não existem comentários!</string>
     <string name="carrinhoVazio">O carrinho está vazio</string>
+    <string name="item_livro_detalhes_req_autor_estatico">de </string>
+    <string name="detalhes_requisicao_num_req">Requisição</string>
+    <string name="detalhes_requisicao_estado">Estado:</string>
+    <string name="detalhes_requisicao_bib_levantamento">Biblioteca de levantamento:</string>
+    <string name="detalhes_requisicao_dta_levantamento">Data levantamento:</string>
+    <string name="detalhes_requisicao_dta_entrega">Data entrega:</string>
 </resources>

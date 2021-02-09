@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".vistas.DetalhesRequisicaoActivity"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp" >
+    tools:context=".vistas.DetalhesRequisicaoActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,7 +13,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" >
 
             <Space
                 android:layout_width="match_parent"
@@ -40,7 +40,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <Space
@@ -159,11 +160,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp" />
 
-            <fragment
-                android:id="@+id/fragment"
-                android:name="com.example.mylibraryandroid.vistas.LivrosRequisicaoFragment"
+            <FrameLayout
+                android:id="@+id/fragment_livros_req"
                 android:layout_width="match_parent"
-                android:layout_height="510dp" />
+                android:layout_height="450dp">
+
+            </FrameLayout>
 
         </LinearLayout>
     </ScrollView>

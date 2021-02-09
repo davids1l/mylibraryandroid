@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".vistas.EditarPerfilActivity"></activity>
+        <activity android:name=".vistas.DetalhesRequisicaoActivity"></activity>
+        <activity android:name=".vistas.EditarPerfilActivity" />
         <activity android:name=".vistas.DetalhesLivroActivity" />
         <activity
             android:name=".vistas.MenuMainActivity"

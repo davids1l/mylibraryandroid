@@ -17,6 +17,7 @@ import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.RequisicaoListener;
 import com.example.mylibraryandroid.modelo.Requisicao;
 import com.example.mylibraryandroid.modelo.Singleton;
+import com.example.mylibraryandroid.utils.JsonParser;
 
 import java.util.ArrayList;
 
@@ -37,15 +38,10 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        String tokenLeitor = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
-        String idLeitor = sharedPreferences.getString(MenuMainActivity.ID, "");
 
         int id_requisicao = getIntent().getIntExtra(ID_REQUISICAO, -1);
         requisicao = Singleton.getInstance(this).getRequisicao(id_requisicao);
 
-
-        //Singleton.getInstance(this).getRequisicaoLivrosAPI(this, tokenLeitor, String.valueOf(id_requisicao));
 
         LivrosRequisicaoFragment requisicaoLivrosFragment = new LivrosRequisicaoFragment();
 
@@ -60,8 +56,6 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
         tvDataLevantamento = findViewById(R.id.tvDataLevantamento);
         tvDataEntrega = findViewById(R.id.tvDataEntrega);
         tvBibLevantamento = findViewById(R.id.tvBibLevantamento);
-
-        //Singleton.getInstance(getApplicationContext()).setRequisicaoListener(this);
 
 
         if(requisicao!=null){
@@ -92,7 +86,12 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //return super.onOptionsItemSelected(item);
+
+        //TODO: VERIFICAR ESTADO("A aguardar tratamento" ou "Pronto a levantar") DA REQUISICAO E SE UTILIZADOR = UTILIZADOR DA REQ*/
+
+        if(JsonParser.isConnectionInternet(getApplicationContext())){
+
+        }
 
         finish();
         return true;

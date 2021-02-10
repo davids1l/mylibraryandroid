@@ -44,6 +44,8 @@ public class RequisicoesAdaptador extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolderLista viewHolder = null;
+
         if (inflater == null){
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -51,15 +53,20 @@ public class RequisicoesAdaptador extends BaseAdapter {
         if (convertView == null){
             convertView = inflater.inflate(R.layout.item_requisicao_fragment, null);
 
-            ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
+            viewHolder = (ViewHolderLista) convertView.getTag();
 
             if(viewHolder == null){
                 viewHolder = new ViewHolderLista(convertView);
                 convertView.setTag(viewHolder);
             }
 
-            viewHolder.update(requisicoes.get(position));
+            //viewHolder.update(requisicoes.get(position));
+        } else {
+            viewHolder = (ViewHolderLista) convertView.getTag();
         }
+
+        viewHolder.update(requisicoes.get(position));
+
         return convertView;
     }
 

@@ -46,6 +46,8 @@ public class CatalogoAdaptador extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolderLista viewHolder = null;
+
         if(inflater == null){
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -53,15 +55,18 @@ public class CatalogoAdaptador extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_catalogo_fragment, null);
 
-            ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
+            viewHolder = (ViewHolderLista) convertView.getTag();
 
             if(viewHolder == null){
                 viewHolder = new ViewHolderLista(convertView);
                 convertView.setTag(viewHolder);
             }
 
-            viewHolder.update(catalogo.get(position));
+        } else {
+            viewHolder = (ViewHolderLista) convertView.getTag();
         }
+
+        viewHolder.update(catalogo.get(position));
         return convertView;
     }
 

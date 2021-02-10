@@ -81,4 +81,5 @@
     <string name="detalhes_requisicao_bib_levantamento">Biblioteca de levantamento:</string>
     <string name="detalhes_requisicao_dta_levantamento">Data levantamento:</string>
     <string name="detalhes_requisicao_dta_entrega">Data entrega:</string>
+    <string name="cancelar_requisicao_nav_reqs">Cancelar Requisição</string>
 </resources>

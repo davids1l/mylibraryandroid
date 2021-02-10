@@ -42,28 +42,8 @@ public class ItemRequisicaoDetalhes extends Fragment {
         tvTitulo = view.findViewById(R.id.tvTitulo);
         tvAutor = view.findViewById(R.id.tvAutor);
         imgCapaDetalhesReq = view.findViewById(R.id.imgCapaDetalhesReq);
-        //carregarLivroReq();
 
         return view;
-    }
-
-    private void carregarLivroReq() {
-        ArrayList<Livro> livrosReq = Singleton.getInstance(getContext()).obterLivrosRequisicao();
-
-        if (livrosReq.size() > 0){
-
-            Livro l = livrosReq.get(0);
-            String nomeAutor = Singleton.getInstance(getContext()).getNomeAutor(l.getId_autor());
-
-            tvTitulo.setText(l.getTitulo());
-            tvAutor.setText(nomeAutor);
-
-            Glide.with(this)
-                    .load(l.getCapa())
-                    .placeholder(R.drawable.ic_loading_capa)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(imgCapaDetalhesReq);
-        }
     }
 
 }

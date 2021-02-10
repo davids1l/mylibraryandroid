@@ -97,6 +97,7 @@ public class Singleton {
     public String totalLivrosReq;
     private ArrayList<Comentario> comentario;
     private String emailUtilizador;
+    private ArrayList<Livro> livrosDetalhesReq;
 
     public static synchronized Singleton getInstance(Context context) {
         if (instance == null) {
@@ -1006,19 +1007,47 @@ public class Singleton {
     }
 
 
-    public ArrayList<Livro> obterLivrosRequisicao(/*ArrayList<RequisicaoLivro> livrosRequisicao*/){
+    public /*ArrayList<Livro>*/ void obterLivrosRequisicao(int id_requisicao){
         ArrayList<Livro> livrosObjectRequisicao = new ArrayList<>();
 
-        ArrayList<RequisicaoLivro> reqLivro = livrosRequisicao;
+        //ArrayList<RequisicaoLivro> reqLivro = livrosRequisicao;
+        livrosDetalhesReq = null;
 
-        if(reqLivro != null){
-            for (int i = 0; i < reqLivro.size(); i++){
-                Livro aux = getLivro(reqLivro.get(i).getId_livro());
-                livrosObjectRequisicao.add(aux);
+        if(livrosRequisicao != null){
+            for (int i = 0; i < livrosRequisicao.size(); i++){
+                if (livrosRequisicao.get(i).getId_requisicao() == id_requisicao){
+                    Livro aux = getLivro(livrosRequisicao.get(i).getId_livro());
+                    livrosObjectRequisicao.add(aux);
+                    //livrosDetalhesReq.add(aux);
+                }
             }
         }
 
-        return livrosObjectRequisicao;
+        livrosDetalhesReq = livrosObjectRequisicao;
+        //return livrosObjectRequisicao;
+    }
+
+    public ArrayList<Livro> getLivrosDetalhesReq() {
+        return livrosDetalhesReq;
+    }
+
+    public int getTotalLivrosPorReq(int id_requisicao) {
+
+        Integer totalLivros = 0;
+
+        if(livrosRequisicao != null){
+            for (RequisicaoLivro r : livrosRequisicao) {
+               /* if (livrosRequisicao.get(r).getId_requisicao() == id_requisicao){
+                    totalLivros++;
+                }*/
+
+                if (r.getId_requisicao() == id_requisicao){
+                    totalLivros += 1;
+                }
+            }
+        }
+
+        return totalLivros;
     }
 
     public void totalLivrosReq(final Context context, final int id){

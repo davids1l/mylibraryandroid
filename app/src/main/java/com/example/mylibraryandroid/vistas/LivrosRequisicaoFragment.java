@@ -1,5 +1,6 @@
 package com.example.mylibraryandroid.vistas;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,20 +42,23 @@ public class LivrosRequisicaoFragment extends Fragment implements LivrosDetalhes
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.livros_requisicao_fragment, container, false);
         lvLivrosRequisicao = view.findViewById(R.id.lvLivrosRequisicao);
 
-
-        /*int id_requisicao = getIntent().getIntExtra(ID_REQUISICAO, -1);
-        requisicao = Singleton.getInstance(this).getRequisicao(id_requisicao);
-
-        Singleton.getInstance(this).getRequisicaoLivrosAPI(this, tokenLeitor, String.valueOf(id_requisicao));*/
-
-
-        livrosDetalhesRequisicao = Singleton.getInstance(getContext()).obterLivrosRequisicao();
+        livrosDetalhesRequisicao = Singleton.getInstance(getContext()).getLivrosDetalhesReq();
 
         lvLivrosRequisicao.setAdapter(new LivrosDetalhesReqAdaptador(getContext(), livrosDetalhesRequisicao));
+
+
+        lvLivrosRequisicao.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), DetalhesLivroActivity.class);
+                intent.putExtra(DetalhesLivroActivity.ID_LIVRO, (int) id);
+                startActivityForResult(intent, 1);
+            }
+        });
 
 
         return view;

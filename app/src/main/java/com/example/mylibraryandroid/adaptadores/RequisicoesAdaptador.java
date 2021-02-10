@@ -76,8 +76,10 @@ public class RequisicoesAdaptador extends BaseAdapter {
         public void update(Requisicao requisicao) {
             nomeBib = Singleton.getInstance(context).getNomeBiblioteca(requisicao.getId_bib_levantamento());
 
+            Integer totalLivrosReq = Singleton.getInstance(context).getTotalLivrosPorReq(requisicao.getId_requisicao());
+
             tvNumReq.setText("#"+requisicao.getId_requisicao());
-            tvTotalLivros.setText(""+requisicao.getId_bib_levantamento());
+            tvTotalLivros.setText(""+totalLivrosReq);
             tvEstadoReq.setText(requisicao.getEstado());
             tvBibReq.setText(nomeBib);
         }

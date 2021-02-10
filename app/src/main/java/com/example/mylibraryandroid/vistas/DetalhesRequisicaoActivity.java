@@ -39,6 +39,7 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
 
         SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         String tokenLeitor = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
+        String idLeitor = sharedPreferences.getString(MenuMainActivity.ID, "");
 
         int id_requisicao = getIntent().getIntExtra(ID_REQUISICAO, -1);
         requisicao = Singleton.getInstance(this).getRequisicao(id_requisicao);
@@ -64,9 +65,7 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
 
 
         if(requisicao!=null){
-            //setTitle("Requisição #"+requisicao.getId_requisicao());
-
-            setTitle("Detalhes Requisição");
+            setTitle("Requisição #"+requisicao.getId_requisicao());
             popularDetalhesRequisicao();
         }
     }

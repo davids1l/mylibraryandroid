@@ -1,23 +1,28 @@
 package com.example.mylibraryandroid.vistas;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.RequisicaoListener;
 import com.example.mylibraryandroid.modelo.Requisicao;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.utils.JsonParser;
+import com.example.mylibraryandroid.utils.LivroJsonParser;
 
 import java.util.ArrayList;
 
@@ -67,7 +72,7 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
     public void popularDetalhesRequisicao(){
         nomeBib = Singleton.getInstance(getApplicationContext()).getNomeBiblioteca(requisicao.getId_bib_levantamento());
 
-        tvNumReq.setText("# "+requisicao.getId_requisicao());
+        //tvNumReq.setText("# "+requisicao.getId_requisicao());
         tvEstadoReq.setText(requisicao.getEstado());
         if(requisicao.getDta_levantamento() == null && requisicao.getDta_entrega() == null){
             tvDataLevantamento.setText(requisicao.getDta_levantamento());
@@ -81,21 +86,52 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if(LivroJsonParser.isConnectionInternet(getApplicationContext())){
+            if (requisicao.getEstado().equals("A aguardar tratamento") || requisicao.getEstado().equals("Pronta a levantar")){
+                MenuInflater menuInflater = getMenuInflater();
+                menuInflater.inflate(R.menu.menu_cancelar_requisicao, menu);
+                MenuItem item = menu.findItem(R.id.itemCancelarReq);
+                item.setIcon(R.drawable.ic_cancelar_requisicao);
+                //item.setEnabled(false);
+            }
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
 
-        //TODO: VERIFICAR ESTADO("A aguardar tratamento" ou "Pronto a levantar") DA REQUISICAO E SE UTILIZADOR = UTILIZADOR DA REQ*/
-
-        if(JsonParser.isConnectionInternet(getApplicationContext())){
-
+        switch (item.getItemId()) {
+            case R.id.itemCancelarReq:
+                this.confirmDialog(token, requisicao.getId_requisicao());
+                //Singleton.getInstance(getApplicationContext()).cancelarRequisicaoAPI(getApplicationContext(), token, requisicao.getId_requisicao());
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        finish();
-        return true;
     }
+
+    public void confirmDialog(final String token, int id) {
+        new AlertDialog.Builder(this)
+                .setTitle("Cancelar Requisição")
+                .setMessage("Tem a certeza que pretende cancelar a requisição?")
+                .setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Singleton.getInstance(getApplicationContext()).cancelarRequisicaoAPI(getApplicationContext(), token, requisicao.getId_requisicao());
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .show();
+    }
+
 
     @Override
     public void onRefreshRequisicao(ArrayList<Requisicao> requisicoes) {

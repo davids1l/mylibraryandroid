@@ -60,11 +60,12 @@ public class Singleton {
     private static final String mUrlAPIEditarLeitor = IP + ":8888/backend/web/api/utilizador/";
     private static final String mUrlAPIBiblioteca = IP + ":8888/backend/web/api/biblioteca";
     private static final String mUrlAPIVerificarRequisicao = IP + ":8888/backend/web/api/requisicao/emrequisicao/";
-    //private static final String mUrlAPIRequisicao = IP + ":8888/backend/web/api/requisicao/create";
+    private static final String mUrlAPIRequisicao = IP + ":8888/backend/web/api/requisicao/create";
     private static final String mUrlAPITotalReq = IP + ":8888/backend/web/api/requisicao/total/";
-    private static final String mUrlAPIRequisicao = IP + ":8888/backend/web/api/requisicao/utilizador/";
+    private static final String mUrlAPIRequisicoesUtilizador = IP + ":8888/backend/web/api/requisicao/utilizador/";
     private static final String mUrlAPIRequisicaoTotalLivros = IP + ":8888/backend/web/api/requisicao/livrosreq/";
     private static final String mUrlAPILivrosRequisicao = IP + ":8888/backend/web/api/requisicao/livros/";
+    private static final String mUrlAPIDeleteRequisicao = IP + ":8888/backend/web/api/requisicao/";
     private static final String mUrlAPIAutores = IP + ":8888/backend/web/api/autor";
     private static final String mUrlAPIEditora = IP + ":8888/backend/web/api/editora";
     private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
@@ -93,7 +94,7 @@ public class Singleton {
     private ArrayList<Editora> editoras;
     private ArrayList<Requisicao> requisicoes;
     private ArrayList<RequisicaoLivro> livrosRequisicao;
-    private String totalReq;
+    private Integer totalReq;
     public String totalLivrosReq;
     private ArrayList<Comentario> comentario;
     private String emailUtilizador;
@@ -581,7 +582,7 @@ public class Singleton {
             public void onResponse(String response) {
                 //response = false -> livro não está em requisição
                 if (response.equals("false")) {
-                    if (Integer.parseInt(totalReq) + carrinho.size() <= 4) {
+                    if (totalReq + carrinho.size() <= 4) {
                         //verifica se o arrayList já contem o id_livro a inserir
                         //limita tambem o carrinho a apenas 5 livros
                         if (!carrinho.contains(id) && carrinho.size() <= 4) {
@@ -638,7 +639,7 @@ public class Singleton {
         StringRequest req = new StringRequest(Request.Method.GET, mUrlAPITotalReq + id, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                totalReq = response;
+                totalReq = Integer.parseInt(response) ;
             }
         }, new Response.ErrorListener() {
 
@@ -939,7 +940,7 @@ public class Singleton {
                 requisicaoListener.onRefreshRequisicao(bdHelper.getAllRequisicoesBD());
             }
         } else {
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIRequisicao + id, null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIRequisicoesUtilizador + id, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     requisicoes = RequisicaoJsonParser.parserJsonRequisicoes(response);
@@ -1007,10 +1008,9 @@ public class Singleton {
     }
 
 
-    public /*ArrayList<Livro>*/ void obterLivrosRequisicao(int id_requisicao){
+    public void obterLivrosRequisicao(int id_requisicao){
         ArrayList<Livro> livrosObjectRequisicao = new ArrayList<>();
 
-        //ArrayList<RequisicaoLivro> reqLivro = livrosRequisicao;
         livrosDetalhesReq = null;
 
         if(livrosRequisicao != null){
@@ -1018,13 +1018,11 @@ public class Singleton {
                 if (livrosRequisicao.get(i).getId_requisicao() == id_requisicao){
                     Livro aux = getLivro(livrosRequisicao.get(i).getId_livro());
                     livrosObjectRequisicao.add(aux);
-                    //livrosDetalhesReq.add(aux);
                 }
             }
         }
 
         livrosDetalhesReq = livrosObjectRequisicao;
-        //return livrosObjectRequisicao;
     }
 
     public ArrayList<Livro> getLivrosDetalhesReq() {
@@ -1037,10 +1035,6 @@ public class Singleton {
 
         if(livrosRequisicao != null){
             for (RequisicaoLivro r : livrosRequisicao) {
-               /* if (livrosRequisicao.get(r).getId_requisicao() == id_requisicao){
-                    totalLivros++;
-                }*/
-
                 if (r.getId_requisicao() == id_requisicao){
                     totalLivros += 1;
                 }
@@ -1048,6 +1042,35 @@ public class Singleton {
         }
 
         return totalLivros;
+    }
+
+    public void cancelarRequisicaoAPI(final Context context, final String token, int id){
+        if (!JsonParser.isConnectionInternet(context)){
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_SHORT).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.DELETE, mUrlAPIDeleteRequisicao + id, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Toast.makeText(context, "A requisição foi cancelada com sucesso", Toast.LENGTH_SHORT).show();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("authorization", token);
+
+                    return params;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+
     }
 
     public void totalLivrosReq(final Context context, final int id){

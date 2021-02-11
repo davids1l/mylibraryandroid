@@ -582,7 +582,7 @@ public class Singleton {
             public void onResponse(String response) {
                 //response = false -> livro não está em requisição
                 if (response.equals("false")) {
-                    if (totalReq + carrinho.size() <= 4) {
+                    if ((totalReq + carrinho.size()) <= 4) {
                         //verifica se o arrayList já contem o id_livro a inserir
                         //limita tambem o carrinho a apenas 5 livros
                         if (!carrinho.contains(id) && carrinho.size() <= 4) {

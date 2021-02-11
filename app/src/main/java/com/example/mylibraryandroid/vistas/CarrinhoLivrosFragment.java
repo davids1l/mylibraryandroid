@@ -1,11 +1,18 @@
 package com.example.mylibraryandroid.vistas;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
@@ -19,6 +26,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.adaptadores.CarrinhoAdaptador;
 import com.example.mylibraryandroid.adaptadores.CatalogoAdaptador;
@@ -29,13 +40,16 @@ import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
 import com.example.mylibraryandroid.utils.CarrinhoJsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
+import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private ListView lvCarrinhoLivros;
+    //private ListView lvCarrinhoLivros;
+    private SwipeMenuListView lvCarrinhoLivros;
     private ArrayList<Livro> livrosCarrinho;
     private ArrayList<Biblioteca> bibliotecas;
     //private ArrayList<String> adapterList;
@@ -60,7 +74,51 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         token = tokenLeitor;
 
         final View view = inflater.inflate(R.layout.carrinho_livros_fragment, container, false);
-        lvCarrinhoLivros = view.findViewById(R.id.lvCarrinhoLivros);
+
+         lvCarrinhoLivros = (SwipeMenuListView) view.findViewById(R.id.lvCarrinhoLivros);
+        //lvCarrinhoLivros = view.findViewById(R.id.lvCarrinhoLivros);
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(170);
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_cancelar_requisicao);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        // set creator
+        lvCarrinhoLivros.setMenuCreator(creator);
+
+        lvCarrinhoLivros.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        // delete
+                        if (!livrosCarrinho.isEmpty()){
+                            Livro livro = livrosCarrinho.get(position);
+                            Singleton.getInstance(getContext()).removerCarrinho(livro.getId_livro());
+                        }
+
+                        onRefresh();
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
+
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -76,7 +134,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
                 final View viewDialog = getLayoutInflater().inflate(R.layout.dialog_finalizar_requisicao, null);
                 final Spinner spinner = (Spinner) viewDialog.findViewById(R.id.spinnerBibliotecas);
                 Button button = (Button) viewDialog.findViewById(R.id.btnFinalizar);
@@ -87,6 +145,10 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                 final ArrayAdapter<Biblioteca> adapter = new ArrayAdapter<Biblioteca>(viewDialog.getContext(), android.R.layout.simple_spinner_dropdown_item, bibliotecas);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
+
+                dialogBuilder.setView(viewDialog);
+                final AlertDialog dialog = dialogBuilder.create();
+                dialogBuilder.create();
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -103,14 +165,19 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                             //efetuar post para a REST CUSTOM que cria a requisição
                             Singleton.getInstance(getContext()).adicionarRequisicaoAPI(getContext(), id_bib, Integer.parseInt(id_utilizador));
 
+                            dialog.dismiss();
+                            //onRefreshCarrinhoLivros(livrosCarrinho);
+                            onRefresh();
+
                         } else {
                             Toast.makeText(getContext(), R.string.dialog_spinner_empty_error, Toast.LENGTH_LONG).show();
                         }
                     }
                 });
 
-                dialogBuilder.setView(viewDialog);
+                /*dialogBuilder.setView(viewDialog);
                 AlertDialog dialog = dialogBuilder.create();
+                dialogBuilder.create();*/
                 dialog.show();
             }
         });
@@ -125,6 +192,12 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
 
         //TODO: Fazer o listner onItemClick para mostrar os detalhes do livro
+        lvCarrinhoLivros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
 
 
@@ -133,7 +206,15 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
     @Override
     public void onRefresh() {
-        Singleton.getInstance(getContext()).getLivrosCarrinho();
+        //Singleton.getInstance(getContext()).getLivrosCarrinho();
+        livrosCarrinho =  Singleton.getInstance(getContext()).getLivrosCarrinho();
+        if (!livrosCarrinho.isEmpty()){
+            lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
+        } else {
+            lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
+            Toast.makeText(getContext(), R.string.carrinhoVazio, Toast.LENGTH_SHORT).show();
+        }
+
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -142,4 +223,5 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         if(carrinho != null)
             lvCarrinhoLivros.setAdapter(new CarrinhoAdaptador(getContext(), carrinho));
     }
+
 }

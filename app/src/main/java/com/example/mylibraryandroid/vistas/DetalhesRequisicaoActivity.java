@@ -92,7 +92,6 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
                 menuInflater.inflate(R.menu.menu_cancelar_requisicao, menu);
                 MenuItem item = menu.findItem(R.id.itemCancelarReq);
                 item.setIcon(R.drawable.ic_cancelar_requisicao);
-                //item.setEnabled(false);
             }
         }
 
@@ -107,7 +106,6 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
         switch (item.getItemId()) {
             case R.id.itemCancelarReq:
                 this.confirmDialog(token, requisicao.getId_requisicao());
-                //Singleton.getInstance(getApplicationContext()).cancelarRequisicaoAPI(getApplicationContext(), token, requisicao.getId_requisicao());
                 return true;
             case android.R.id.home:
                 finish();
@@ -118,14 +116,14 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
 
     }
 
-    public void confirmDialog(final String token, int id) {
+    public void confirmDialog(final String token, final int id) {
         new AlertDialog.Builder(this)
                 .setTitle("Cancelar Requisição")
                 .setMessage("Tem a certeza que pretende cancelar a requisição?")
-                .setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Singleton.getInstance(getApplicationContext()).cancelarRequisicaoAPI(getApplicationContext(), token, requisicao.getId_requisicao());
+                        Singleton.getInstance(getApplicationContext()).cancelarRequisicaoAPI(getApplicationContext(), token, id);
                     }
                 })
                 .setNegativeButton("Não", null)
@@ -137,4 +135,6 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
     public void onRefreshRequisicao(ArrayList<Requisicao> requisicoes) {
 
     }
+
+
 }

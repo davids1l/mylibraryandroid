@@ -44,10 +44,6 @@
                     android:textSize="18sp" />
             </LinearLayout>-->
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -61,7 +57,7 @@
                     android:layout_weight="0"
                     android:text="@string/detalhes_requisicao_estado"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tvEstadoReq"
@@ -84,7 +80,7 @@
                     android:layout_weight="0"
                     android:text="@string/detalhes_requisicao_dta_levantamento"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tvDataLevantamento"
@@ -109,7 +105,7 @@
                     android:layout_weight="0"
                     android:text="@string/detalhes_requisicao_dta_entrega"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tvDataEntrega"
@@ -132,7 +128,7 @@
                     android:layout_weight="0"
                     android:text="@string/detalhes_requisicao_bib_levantamento"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tvBibLevantamento"
@@ -170,6 +166,10 @@
                 android:layout_height="450dp">
 
             </FrameLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
         </LinearLayout>
     </ScrollView>

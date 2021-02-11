@@ -50,6 +50,8 @@ public class LivrosDetalhesReqAdaptador extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolderLista viewHolder = null;
+
         if (inflater == null){
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -57,16 +59,18 @@ public class LivrosDetalhesReqAdaptador extends BaseAdapter {
         if (convertView == null){
             convertView = inflater.inflate(R.layout.item_requisicao_detalhes_fragment, null);
 
-            ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
+            viewHolder = (ViewHolderLista) convertView.getTag();
 
             if (viewHolder == null){
                 viewHolder = new ViewHolderLista(convertView);
                 convertView.setTag(viewHolder);
             }
 
-            viewHolder.update(livrosDetalhesReq.get(position));
+        } else {
+            viewHolder = (ViewHolderLista) convertView.getTag();
         }
 
+        viewHolder.update(livrosDetalhesReq.get(position));
         return convertView;
     }
 

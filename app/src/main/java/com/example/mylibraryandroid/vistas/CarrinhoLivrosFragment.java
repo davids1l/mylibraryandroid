@@ -89,7 +89,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
                         0x3F, 0x25)));
                 // set item width
-                deleteItem.setWidth(170);
+                deleteItem.setWidth(190);
                 // set a icon
                 deleteItem.setIcon(R.drawable.ic_cancelar_requisicao);
                 // add to menu

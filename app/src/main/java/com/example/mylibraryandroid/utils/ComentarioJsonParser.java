@@ -19,10 +19,8 @@ public class ComentarioJsonParser {
 
         try{
             for (int i = 0; i < response.length(); i++){
-                JSONObject comentario = (JSONObject) response.get(i);
-                if(comentario.getString("id_comentario").equals("false")) {
-                    return comentarios;
-                } else {
+                JSONObject comentario = (JSONObject)response.get(i);
+                if(!comentario.getString("id_comentario").equals("false")) {
                     int id_comentario = comentario.getInt("id_comentario");
                     int id_livro = comentario.getInt("id_livro");
                     int id_utilizador = comentario.getInt("id_utilizador");
@@ -31,6 +29,8 @@ public class ComentarioJsonParser {
 
                     Comentario auxComentario = new Comentario(id_comentario, id_livro, id_utilizador, comentarioc, dta_comentario);
                     comentarios.add(auxComentario);
+                } else {
+                    return comentarios;
                 }
             }
         } catch (JSONException e) {

@@ -30,6 +30,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
     private ArrayList<Comentario> comentarios;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String id;
+    private String token;
 
     public ComentarioLivrosFragment() {
         // Required empty public constructor
@@ -41,6 +42,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         id = sharedPreferences.getString(MenuMainActivity.ID, "");
+        token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
 
         View view = inflater.inflate(R.layout.comentario_livros_fragment, container, false);
         lvComentarios = view.findViewById(R.id.lvComentarios);
@@ -49,7 +51,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
         swipeRefreshLayout.setOnRefreshListener(this);
 
         Singleton.getInstance(getContext()).setComentarioListener(this);
-        Singleton.getInstance(getContext()).getComentarioAPI(getContext(), id);
+        Singleton.getInstance(getContext()).getComentarioAPI(getContext(), id, token);
 
         comentarios = Singleton.getInstance(getContext()).getComentariosBD();
         if(comentarios.isEmpty()) {
@@ -61,7 +63,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-        Singleton.getInstance(getContext()).getComentarioAPI(getContext(), id);
+        Singleton.getInstance(getContext()).getComentarioAPI(getContext(), id, token);
         swipeRefreshLayout.setRefreshing(false);
         if(comentarios.isEmpty()) {
             Toast.makeText(getContext(), R.string.semComentarios, Toast.LENGTH_SHORT).show();

@@ -394,6 +394,7 @@ public class BDHelper extends SQLiteOpenHelper {
         //TODO IR BUSCAR OS DADOS À BD
         Cursor cursor = this.db.query(TABLE_NAME_UTILIZADOR, new String[]{ID_UTILIZADOR,NOME,APELIDO,NUMERO_LEITOR,EMAIL,DATA_NASCIMENTO,NIF,NUM_TELEMOVEL,FOTO_PERFIL}
         ,null,null, null, null,null);
+        cursor.close();
         return utilizador;
     }
 
@@ -421,12 +422,13 @@ public class BDHelper extends SQLiteOpenHelper {
     public ArrayList<Comentario> getAllComentariosDB() {
         ArrayList<Comentario> comentarios = new ArrayList<>();
 
-        Cursor cursor = this.db.query(TABLE_NAME_COM, new String[]{ID_COMENTARIO_COM,ID_LIVRO_COM, ID_UTILIZADOR_COM, COMENTARIO_COM, DTA_COM},
+        Cursor cursor = this.db.query(TABLE_NAME_COM, new String[]{ID_COMENTARIO_COM, ID_LIVRO_COM, ID_UTILIZADOR_COM, COMENTARIO_COM, DTA_COM},
                 null, null, null, null, null);
 
         if(cursor.moveToFirst()) {
             do {
                 Comentario auxComentario = new Comentario(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4));
+                comentarios.add(auxComentario);
             } while (cursor.moveToNext());
         }
         cursor.close();

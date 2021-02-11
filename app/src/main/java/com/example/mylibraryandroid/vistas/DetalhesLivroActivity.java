@@ -3,6 +3,7 @@ package com.example.mylibraryandroid.vistas;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,7 +46,6 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
     private int id_livro;
     private String id;
-    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +54,6 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
         //seta de go back
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        fragmentManager = getSupportFragmentManager();
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         id = sharedPreferences.getString(MenuMainActivity.ID, "");
@@ -82,8 +80,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         layoutComentarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "Teste :)", Toast.LENGTH_SHORT).show();
-                //carregarFragmentoComentario();
+                carregarFragmentoComentario();
             }
         });
 
@@ -118,9 +115,15 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     }
 
     private void carregarFragmentoComentario() {
-        //View view = Inflater.inflate(R.id.contentFragment);
-        Fragment fragment = new ComentarioLivrosFragment();
-        fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
+        ComentarioLivrosFragment comentarioLivrosFragment = new ComentarioLivrosFragment();
+        Toast.makeText(getApplicationContext(), "im here yoo", Toast.LENGTH_SHORT).show();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+            .replace(R.id.comentarios_livro, comentarioLivrosFragment, comentarioLivrosFragment.getTag())
+            .setReorderingAllowed(true)
+            .addToBackStack(null)
+            .commit();
     }
 
     @Override

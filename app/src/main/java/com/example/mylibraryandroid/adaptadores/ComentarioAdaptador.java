@@ -48,7 +48,7 @@ public class ComentarioAdaptador extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*if(inflater == null){
+        if(inflater == null){
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -64,7 +64,7 @@ public class ComentarioAdaptador extends BaseAdapter {
         }
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        id = sharedPreferences.getString(MenuMainActivity.ID, "");*/
+        id = sharedPreferences.getString(MenuMainActivity.ID, "");
 
         return convertView;
     }

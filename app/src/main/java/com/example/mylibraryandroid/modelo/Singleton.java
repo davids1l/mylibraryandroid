@@ -71,7 +71,7 @@ public class Singleton {
     private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
     private static final String mUrlAPIRemoverFavorito = IP + ":8888/backend/web/api/favorito/";
     private static final String mUrlAPIAdicionarFavorito = IP + ":8888/backend/web/api/favorito";
-    private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/favorito/utilizador/";
+    private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/comentario/utilizador/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -844,7 +844,7 @@ public class Singleton {
      * Acesso aos comentarios pela API
      **/
 
-    public void getComentarioAPI(final Context context, final String id) {
+    public void getComentarioAPI(final Context context, final String id, final String token) {
         if (!ComentarioJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 
@@ -867,14 +867,14 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });/*{
+            }) {
                 @Override
-                protected Map<String, String> getParams() {
+                public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
-                    params.put("token", token);
+                    params.put("authorization", token);
                     return params;
                 }
-            };*/
+            };
             volleyQueue.add(req);
         }
     }

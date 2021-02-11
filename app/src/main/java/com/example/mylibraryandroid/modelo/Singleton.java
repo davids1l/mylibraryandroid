@@ -343,7 +343,7 @@ public class Singleton {
         return null;
     }
 
-    public void getCatalogoAPI(final Context context) {
+    public void getCatalogoAPI(final Context context, final String token) {
         if (!LivroJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 

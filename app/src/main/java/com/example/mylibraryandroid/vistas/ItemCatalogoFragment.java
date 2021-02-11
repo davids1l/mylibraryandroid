@@ -54,7 +54,7 @@ public class ItemCatalogoFragment extends Fragment {
 
             Glide.with(this)
                     .load(l.getCapa())
-                    .placeholder(R.drawable.logoipl)
+                    .placeholder(R.drawable.ic_loading_capa)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgCapa);
         }

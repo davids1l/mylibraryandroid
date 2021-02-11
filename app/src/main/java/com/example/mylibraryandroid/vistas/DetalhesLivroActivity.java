@@ -97,10 +97,16 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
                     //request à API pelo total de livros em requisição
                     Singleton.getInstance(getApplicationContext()).totalEmRequisicao(getApplicationContext(), Integer.parseInt(id_utilizador));
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                     //adicionar livro ao carrinho
                     //verifica se o livro em questão esta em requisição, limita o total de livros no carrinho e verifica se são ambíguos
                     Singleton.getInstance(getApplicationContext()).verificarEmRequisicao(getApplicationContext(), id_livro);
+
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }

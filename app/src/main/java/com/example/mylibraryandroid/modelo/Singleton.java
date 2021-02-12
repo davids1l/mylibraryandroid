@@ -53,7 +53,7 @@ import java.util.Map;
 
 public class Singleton {
 
-    public static final String IP = "http://192.168.1.100";
+    public static final String IP = "http://192.168.8.103";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = IP + ":8888/backend/web/api/utilizador/login";
@@ -72,6 +72,7 @@ public class Singleton {
     private static final String mUrlAPIRemoverFavorito = IP + ":8888/backend/web/api/favorito/";
     private static final String mUrlAPIAdicionarFavorito = IP + ":8888/backend/web/api/favorito";
     private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/favorito/utilizador/";
+    private static final String mUrlAPIEditarFoto = IP + ":8888/backend/web/api/utilizador/uploadFoto/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -513,6 +514,46 @@ public class Singleton {
     public void adicionarDadosLeitorBD(Context context, Utilizador utilizador) {
         bdHelper.removerLeitorBD();
         adicionarDadoLeitorBD(utilizador);
+    }
+
+    public void perfilAlterarFoto(final Context context, final String imageUrl, final String id, final String token){
+        if (!JsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+
+        } else {
+            StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIEditarFoto + id, new Response.Listener<String>() {
+
+                @Override
+                public void onResponse(String response) {
+                    /*Utilizador utilizador = JsonParser.parserJsonEditarPerfil(response);
+
+                    if (perfilListener != null) {
+                        perfilListener.onRefreshUtilizador(utilizador);
+                    }*/
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("foto_perfil", imageUrl);
+                    return params;
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("authorization", token);
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
     }
 
     /*public Boolean adicionarCarrinho (int id_livro){

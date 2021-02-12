@@ -12,7 +12,7 @@ public class Utilizador {
     private String nif;
     private String numTelemovel;
     private String email;
-    private static final String IP = "http://192.168.1.100";
+    private static final String IP = "http://192.168.8.103";
     private String urlImagem = IP + ":8888/frontend/web/imgs/perfil/";
 
     public Utilizador(int id, int bloqueado, String nif, String email, String numTelemovel, String primeiroNome, String ultimoNome, String numero, String dtaBloqueado, String dtaNascimento, String dtaRegisto, String fotoPerfil, int idBiblioteca) {

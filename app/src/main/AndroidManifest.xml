@@ -30,6 +30,7 @@
         </provider>
         <activity android:name=".vistas.EditarPerfilActivity" />
         <activity android:name=".vistas.DetalhesLivroActivity" />
+        <activity android:name=".vistas.DetalhesRequisicaoActivity"></activity>
         <activity
             android:name=".vistas.MenuMainActivity"
             android:label="@string/app_name"

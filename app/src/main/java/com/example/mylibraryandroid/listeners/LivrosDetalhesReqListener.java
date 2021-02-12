@@ -4,9 +4,6 @@ import com.example.mylibraryandroid.modelo.Livro;
 
 import java.util.ArrayList;
 
-public interface CarrinhoListener {
-
-    void onRefreshCarrinhoLivros(ArrayList<Livro> carrinho);
-
-    void onRefreshDetalhes();
+public interface LivrosDetalhesReqListener {
+    void onRefreshDetalhesReq(ArrayList<Livro> livrosDetalhesRequisicao);
 }

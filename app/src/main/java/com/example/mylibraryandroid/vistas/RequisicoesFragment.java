@@ -145,4 +145,9 @@ public class RequisicoesFragment extends Fragment implements RequisicaoListener,
             lvRequisicoes.setAdapter(new RequisicoesAdaptador(getContext(), requisicoes));
         }
     }
+
+    @Override
+    public void onRefreshRequisicoes() {
+        //empty
+    }
 }

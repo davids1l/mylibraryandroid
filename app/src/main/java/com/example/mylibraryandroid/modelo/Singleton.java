@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.AutorListener;
 import com.example.mylibraryandroid.listeners.BibliotecaListener;
+import com.example.mylibraryandroid.listeners.CarrinhoListener;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
 import com.example.mylibraryandroid.listeners.ComentarioListener;
 import com.example.mylibraryandroid.listeners.EditarPerfilListener;
@@ -37,7 +38,9 @@ import com.example.mylibraryandroid.utils.JsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.example.mylibraryandroid.utils.RequisicaoJsonParser;
 import com.example.mylibraryandroid.utils.RequisicoesLivrosJsonParser;
+import com.example.mylibraryandroid.vistas.CarrinhoLivrosFragment;
 import com.example.mylibraryandroid.vistas.MenuMainActivity;
+import com.example.mylibraryandroid.vistas.RequisicoesFragment;
 
 import org.json.JSONArray;
 
@@ -84,6 +87,7 @@ public class Singleton {
     private EditarPerfilListener editarPerfilListener;
     private RequisicaoListener requisicaoListener;
     private RequisicaoLivroListener requisicaoLivroListener;
+    private CarrinhoListener carrinhoListener;
     private LivrosDetalhesReqListener livrosDetalhesReqListener;
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
@@ -159,6 +163,10 @@ public class Singleton {
 
     public void setComentarioListener(ComentarioListener comentarioListener) {
         this.comentarioListener = comentarioListener;
+    }
+
+    public void setCarrinhoListener(CarrinhoListener carrinhoListener){
+        this.carrinhoListener = carrinhoListener;
     }
 
     public void loginAPI(final String email, final String password, final Context context) {
@@ -831,16 +839,22 @@ public class Singleton {
         StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIRequisicao, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //CarrinhoJsonParser.parserJsonCarrinho(carrinho);
-
                 removerAllCarrinho();
+
+                if(carrinhoListener != null)
+                    //carrinhoListener.onRefreshCarrinhoLivros(getLivrosCarrinho());
+                    carrinhoListener.onRefreshCarrinhoLivros(getLivrosCarrinho());
+                //}
+
+                //carrinhoListener.onRefreshDetalhes();
 
                 Toast.makeText(context, "Requisição efetuada com sucesso!", Toast.LENGTH_LONG).show();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Ocorreu um erro, tente novamente!", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
@@ -945,8 +959,7 @@ public class Singleton {
                 public void onResponse(JSONArray response) {
                     requisicoes = RequisicaoJsonParser.parserJsonRequisicoes(response);
 
-                    //if(!requisicoes.isEmpty())
-                        adicionarRequisicoesBD(requisicoes);
+                    adicionarRequisicoesBD(requisicoes);
 
                     if(requisicaoListener != null)
                         requisicaoListener.onRefreshRequisicao(getRequisicoesBD());
@@ -957,14 +970,14 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            })/*{
+            }){
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
                     params.put("authorization", token);
                     return params;
                 }
-            };*/;
+            };
 
             volleyQueue.add(req);
         }
@@ -1001,7 +1014,15 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("authorization", token);
+
+                    return params;
+                }
+            };
 
             volleyQueue.add(req);
         }
@@ -1044,13 +1065,22 @@ public class Singleton {
         return totalLivros;
     }
 
-    public void cancelarRequisicaoAPI(final Context context, final String token, int id){
+    public void cancelarRequisicaoAPI(final Context context, final String token, final int id){
         if (!JsonParser.isConnectionInternet(context)){
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_SHORT).show();
         } else {
             StringRequest req = new StringRequest(Request.Method.DELETE, mUrlAPIDeleteRequisicao + id, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    SharedPreferences sharedPreferences = context.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+                    String id_utilizador = sharedPreferences.getString(MenuMainActivity.ID, "");
+
+                    getRequisicoesAPI(context, token, id_utilizador);
+
+                    if (requisicaoListener != null){
+                        requisicaoListener.onRefreshRequisicoes();
+                    }
+
                     Toast.makeText(context, "A requisição foi cancelada com sucesso", Toast.LENGTH_SHORT).show();
                 }
             }, new Response.ErrorListener() {

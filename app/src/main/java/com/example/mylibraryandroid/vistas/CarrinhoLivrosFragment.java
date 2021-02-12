@@ -80,6 +80,8 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         String tokenLeitor = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
         token = tokenLeitor;
 
+        Singleton.getInstance(getContext()).setCarrinhoListener(this);
+
         final View view = inflater.inflate(R.layout.carrinho_livros_fragment, container, false);
 
          lvCarrinhoLivros = (SwipeMenuListView) view.findViewById(R.id.lvCarrinhoLivros);
@@ -173,33 +175,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
                             //efetuar post para a REST CUSTOM que cria a requisição
                             Singleton.getInstance(getContext()).adicionarRequisicaoAPI(getContext(), id_bib, id_utilizador);
 
-                             /**try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }*/
-
-                            /*AsyncTask asyncTask = new AsyncTask<Integer, Void, Void>() {
-
-                                @Override
-                                protected Void doInBackground (Integer...integers){
-                                    Singleton.getInstance(getContext()).adicionarRequisicaoAPI(getContext(), id_bib, id_utilizador);
-                                    return null;
-                                }
-
-                                @Override
-                                protected void onPostExecute (Void aVoid){
-                                    //Singleton.getInstance(getContext()).removerAllCarrinho();
-                                    onRefresh();
-                                }
-                            }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);*/
-
-
-
-
-                            //Singleton.getInstance(getContext()).removerAllCarrinho();
                             dialog.dismiss();
-                            //dialog.dismiss();
 
                         } else {
                             Toast.makeText(getContext(), R.string.dialog_spinner_empty_error, Toast.LENGTH_LONG).show();
@@ -251,7 +227,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
     @Override
     public void onRefreshCarrinhoLivros(ArrayList<Livro> carrinho) {
-        //if(carrinho != null)
+        if(carrinho != null)
             lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), carrinho));
     }
 

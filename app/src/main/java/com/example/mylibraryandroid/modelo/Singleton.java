@@ -1,5 +1,6 @@
 package com.example.mylibraryandroid.modelo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.example.mylibraryandroid.utils.RequisicaoJsonParser;
 import com.example.mylibraryandroid.utils.RequisicoesLivrosJsonParser;
 import com.example.mylibraryandroid.vistas.CarrinhoLivrosFragment;
+import com.example.mylibraryandroid.vistas.DetalhesLivroActivity;
 import com.example.mylibraryandroid.vistas.MenuMainActivity;
 import com.example.mylibraryandroid.vistas.RequisicoesFragment;
 
@@ -842,7 +844,6 @@ public class Singleton {
                 removerAllCarrinho();
 
                 if(carrinhoListener != null)
-                    //carrinhoListener.onRefreshCarrinhoLivros(getLivrosCarrinho());
                     carrinhoListener.onRefreshCarrinhoLivros(getLivrosCarrinho());
                 //}
 
@@ -1008,6 +1009,7 @@ public class Singleton {
                     livrosRequisicao = RequisicoesLivrosJsonParser.parserJsonRequisicoesLivros(response);
 
                     adicionarLivrosRequisicaoBD(livrosRequisicao);
+
                 }
             }, new Response.ErrorListener() {
                 @Override

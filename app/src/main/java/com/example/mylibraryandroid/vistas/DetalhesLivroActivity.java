@@ -126,9 +126,8 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-            .replace(R.id.comentarios_livro, comentarioLivrosFragment, comentarioLivrosFragment.getTag())
+            .add(R.id.comentarios_livro, comentarioLivrosFragment, comentarioLivrosFragment.getTag())
             .setReorderingAllowed(true)
-            .addToBackStack(null)
             .commit();
     }
 

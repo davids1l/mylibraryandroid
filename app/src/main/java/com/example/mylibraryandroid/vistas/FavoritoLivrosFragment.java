@@ -66,6 +66,15 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
             Toast.makeText(getContext(), R.string.semFavoritos, Toast.LENGTH_SHORT).show();
         }
 
+        lvFavoritoLivros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), DetalhesLivroActivity.class);
+                intent.putExtra(DetalhesLivroActivity.ID_LIVRO, (int) id);
+                startActivityForResult(intent, 1);
+            }
+        });
+
         return view;
     }
 

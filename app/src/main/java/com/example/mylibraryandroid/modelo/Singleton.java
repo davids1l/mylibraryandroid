@@ -1,12 +1,16 @@
 package com.example.mylibraryandroid.modelo;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
 
 import com.android.volley.AuthFailureError;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -290,9 +294,7 @@ public class Singleton {
         return livrosFav;
     }
 
-    /**
-     * Acesso aos livros pela API
-     **/
+    /** Acesso aos livros pela API **/
     public void removerFavoritoBD(int id) {
         Favorito f = getFavorito(id);
 

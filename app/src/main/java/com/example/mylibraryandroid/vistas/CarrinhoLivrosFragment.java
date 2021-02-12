@@ -60,8 +60,6 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
     //private ArrayList<String> adapterList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String token;
-    //private Integer id_bib;
-    //private Integer id_utilizador;
 
     public CarrinhoLivrosFragment() {
         // Required empty public constructor
@@ -192,6 +190,8 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
 
         if (livrosCarrinho.isEmpty() || !LivroJsonParser.isConnectionInternet(getContext())){
+            /*fab.setClickable(false);
+            fab.setEnabled(false);*/
             fab.setVisibility(View.GONE);
             Toast.makeText(getContext(), R.string.carrinhoVazio, Toast.LENGTH_LONG).show();
         }

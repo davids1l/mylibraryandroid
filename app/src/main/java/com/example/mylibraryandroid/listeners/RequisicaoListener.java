@@ -6,4 +6,5 @@ import java.util.ArrayList;
 
 public interface RequisicaoListener {
     void onRefreshRequisicao(ArrayList<Requisicao> requisicoes);
+    void onRefreshRequisicoes();
 }

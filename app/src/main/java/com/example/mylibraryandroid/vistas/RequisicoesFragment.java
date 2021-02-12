@@ -1,5 +1,6 @@
 package com.example.mylibraryandroid.vistas;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -144,5 +145,10 @@ public class RequisicoesFragment extends Fragment implements RequisicaoListener,
         if (requisicoes != null){
             lvRequisicoes.setAdapter(new RequisicoesAdaptador(getContext(), requisicoes));
         }
+    }
+
+    @Override
+    public void onRefreshRequisicoes() {
+        //empty
     }
 }

@@ -26,7 +26,7 @@ import com.example.mylibraryandroid.utils.LivroJsonParser;
 
 import java.util.ArrayList;
 
-public class DetalhesRequisicaoActivity extends AppCompatActivity implements RequisicaoListener {
+public class DetalhesRequisicaoActivity extends AppCompatActivity {
 
     public static final String ID_REQUISICAO = "ID_REQUISICAO";
 
@@ -124,17 +124,11 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity implements Req
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Singleton.getInstance(getApplicationContext()).cancelarRequisicaoAPI(getApplicationContext(), token, id);
+                        finish();
                     }
                 })
                 .setNegativeButton("Não", null)
                 .show();
     }
-
-
-    @Override
-    public void onRefreshRequisicao(ArrayList<Requisicao> requisicoes) {
-
-    }
-
 
 }

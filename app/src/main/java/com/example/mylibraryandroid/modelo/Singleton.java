@@ -1018,7 +1018,7 @@ public class Singleton {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            }){
+            });/*{
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
@@ -1026,7 +1026,7 @@ public class Singleton {
 
                     return params;
                 }
-            };
+            };*/
 
             volleyQueue.add(req);
         }

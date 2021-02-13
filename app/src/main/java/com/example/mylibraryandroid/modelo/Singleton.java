@@ -80,7 +80,7 @@ public class Singleton {
     private static final String mUrlAPILeitorEmail = IP + ":8888/backend/web/api/user/";
     private static final String mUrlAPIRemoverFavorito = IP + ":8888/backend/web/api/favorito/";
     private static final String mUrlAPIAdicionarFavorito = IP + ":8888/backend/web/api/favorito";
-    private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/comentario/utilizador/";
+    private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/comentario";
     private static final String mUrlAPIEditarFoto = IP + ":8888/backend/web/api/utilizador/uploadFoto/";
     private LoginListener loginListener;
     private RegistarListener registarListener;
@@ -346,13 +346,26 @@ public class Singleton {
         }
     }
 
-    public String findComentariosByIDS(int id_livro, int id_utilizador) {
+    public ArrayList<Comentario> findComentariosByIDS(int id_livro, int id_utilizador) {
+        ArrayList<Comentario> comentarios = new ArrayList<>();
         for(Comentario c: comentario) {
             if(c.getId_livro() == id_livro && c.getId_utilizador() == id_utilizador) {
-                return c.getId_comentario() + "";
+                comentarios.add(c);
             }
         }
-        return null;
+        return comentarios;
+    }
+
+    public ArrayList<Comentario> getComentariosLivro(int id_livro) {
+        ArrayList<Comentario> comentarios = new ArrayList<>();
+        ArrayList<Comentario> comentariosBD = getComentariosBD();
+
+        for(Comentario c: comentariosBD) {
+            if(c.getId_livro() == id_livro) {
+                comentarios.add(c);
+            }
+        }
+        return comentarios;
     }
 
     public void getCatalogoAPI(final Context context, final String token) {
@@ -923,7 +936,7 @@ public class Singleton {
      * Acesso aos comentarios pela API
      **/
 
-    public void getComentarioAPI(final Context context, final String id, final String token) {
+    public void getComentarioAPI(final Context context, final String token) {
         if (!ComentarioJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 
@@ -931,7 +944,7 @@ public class Singleton {
                 comentarioListener.onRefreshComentarios(getComentariosBD());
             }
         } else {
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIComentario + id, null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIComentario, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     comentario = ComentarioJsonParser.parserJsonComentario(response);

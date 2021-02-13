@@ -17,13 +17,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mylibraryandroid.R;
+import com.example.mylibraryandroid.adaptadores.ComentarioAdaptador;
 import com.example.mylibraryandroid.listeners.CatalogoListener;
+import com.example.mylibraryandroid.modelo.Comentario;
 import com.example.mylibraryandroid.modelo.Livro;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
@@ -46,6 +49,8 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
     private int id_livro;
     private String id;
+    private String token;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         id = sharedPreferences.getString(MenuMainActivity.ID, "");
+        token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
 
         id_livro = getIntent().getIntExtra(ID_LIVRO, -1);
         livro = Singleton.getInstance(this).getLivro(id_livro);
@@ -76,13 +82,13 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
         Singleton.getInstance(getApplicationContext()).setCatalogoListener(this);
 
-        LinearLayout layoutComentarios = (LinearLayout) findViewById(R.id.ll_comentarios);
+        /*LinearLayout layoutComentarios = (LinearLayout) findViewById(R.id.ll_comentarios);
         layoutComentarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //carregarFragmentoComentario();
             }
-        });
+        });*/
         carregarFragmentoComentario();
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
@@ -123,6 +129,10 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
     private void carregarFragmentoComentario() {
         ComentarioLivrosFragment comentarioLivrosFragment = new ComentarioLivrosFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("index", id_livro );
+        comentarioLivrosFragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

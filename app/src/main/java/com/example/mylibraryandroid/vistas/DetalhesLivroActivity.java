@@ -80,9 +80,10 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         layoutComentarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                carregarFragmentoComentario();
+                //carregarFragmentoComentario();
             }
         });
+        carregarFragmentoComentario();
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener(){
@@ -121,13 +122,12 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     }
 
     private void carregarFragmentoComentario() {
-        Fragment comentarioLivrosFragment = new ComentarioLivrosFragment();
-        Toast.makeText(getApplicationContext(), "im here yoo", Toast.LENGTH_SHORT).show();
+        ComentarioLivrosFragment comentarioLivrosFragment = new ComentarioLivrosFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-            .replace(R.id.comentarios_livro, comentarioLivrosFragment, comentarioLivrosFragment.getTag())
-            .setReorderingAllowed(true)
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.comentarios_livro, comentarioLivrosFragment, comentarioLivrosFragment.getTag())
+            .addToBackStack(null)
             .commit();
     }
 

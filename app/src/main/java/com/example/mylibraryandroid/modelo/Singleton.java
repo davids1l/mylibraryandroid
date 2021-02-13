@@ -927,8 +927,9 @@ public class Singleton {
         if (!ComentarioJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
 
-            if (comentarioListener != null)
+            if (comentarioListener != null) {
                 comentarioListener.onRefreshComentarios(getComentariosBD());
+            }
         } else {
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIComentario + id, null, new Response.Listener<JSONArray>() {
                 @Override
@@ -938,8 +939,9 @@ public class Singleton {
                         adicionarComentariosBD(comentario);
                     }
 
-                    if (comentarioListener != null)
+                    if (comentarioListener != null) {
                         comentarioListener.onRefreshComentarios(getComentariosBD());
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override

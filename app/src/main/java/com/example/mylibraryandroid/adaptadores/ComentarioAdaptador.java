@@ -81,7 +81,7 @@ public class ComentarioAdaptador extends BaseAdapter {
         }
 
         public void update(Comentario comentario) {
-            tvUtilizadorCom.setText(comentario.getId_utilizador());
+            tvUtilizadorCom.setText(comentario.getId_utilizador()+"");
             tvComentario.setText(comentario.getComentario());
             tvDtaCom.setText(comentario.getDta_comentario());
 

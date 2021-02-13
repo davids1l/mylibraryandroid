@@ -24,9 +24,10 @@ import com.example.mylibraryandroid.listeners.PerfilListener;
 import com.example.mylibraryandroid.modelo.BDHelper;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.modelo.Utilizador;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
-public class MenuMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MenuMainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     public static final String EMAIL = "EMAIL";
     public static final String TOKEN = "TOKEN";
@@ -34,30 +35,35 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
     public static final String PREF_INFO_USER = "PREF_INFO_USER";
 
     private FragmentManager fragmentManager;
-    private NavigationView navigationView;
+    //private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private String email = "";
     private TextView tvEmail;
+    private BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_main);
+        //setContentView(R.layout.activity_menu_main);
+        setContentView(R.layout.activity_menu_fundo);
+        navigationView = findViewById(R.id.bottom_navigation);
+        navigationView.getMenu().findItem(R.id.nav_catalogo).setChecked(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        navigationView = findViewById(R.id.nav_view);
+        //navigationView = findViewById(R.id.nav_view);
         drawerLayout = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
-                toolbar, R.string.ndOpen, R.string.ndClose);
-        toggle.syncState();
-        drawerLayout.addDrawerListener(toggle);
 
-        navigationView.setNavigationItemSelectedListener(this);
+        /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.ndOpen, R.string.ndClose);
+        toggle.syncState();
+        drawerLayout.addDrawerListener(toggle);*/
+
+        //navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setOnNavigationItemSelectedListener(this);
 
         fragmentManager = getSupportFragmentManager();
 
-        carregarCabecalho();
+        //carregarCabecalho();
         carregarFragmentoInicial();
 
     }
@@ -65,11 +71,11 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
     private void carregarCabecalho() {
         SharedPreferences sharedPrefInfoUser = getSharedPreferences(PREF_INFO_USER, Context.MODE_PRIVATE);
 
-        email = sharedPrefInfoUser.getString(EMAIL, "Sem Email");
+        /*email = sharedPrefInfoUser.getString(EMAIL, "Sem Email");
 
         View hView = navigationView.getHeaderView(0);
         tvEmail = hView.findViewById(R.id.tvEmail);
-        tvEmail.setText(email);
+        tvEmail.setText(email);*/
     }
 
     private void carregarFragmentoInicial() {
@@ -111,7 +117,7 @@ public class MenuMainActivity extends AppCompatActivity implements NavigationVie
         if (fragment != null)
             fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        //drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

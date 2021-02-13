@@ -16,6 +16,7 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:background="@color/colorPrimary"
+            app:titleTextColor="@color/colorMenuButtons"
             android:popupTheme="@style/AppTheme.PopUpOverlay"/>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -24,6 +25,7 @@
         android:id="@+id/contentFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="56dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </FrameLayout>
 

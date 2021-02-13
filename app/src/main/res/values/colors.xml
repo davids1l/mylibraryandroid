@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#f06635</color> /* #3700B3 */
     <color name="colorAccent">#03DAC5</color>
     <color name="fabCarrinho">#4F7B3C</color>
+    <color name="colorMenuButtons">#ffffff</color>
 </resources>

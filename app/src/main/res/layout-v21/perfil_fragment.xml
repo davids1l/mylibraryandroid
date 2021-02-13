@@ -8,193 +8,202 @@
     android:orientation="vertical"
     tools:context=".vistas.PerfilFragment">
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/ivImagemPerfil"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            app:civ_border_width="3dp"
-            app:civ_border_color="#f26b3b"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
-
-        <Button
-            android:id="@+id/btnUpload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:text=" Editar Foto "
-            android:clickable="false"
-            android:textColor="@android:color/white" />
-
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvNumLeitorLabel"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:text="Nº de Leitor:"
-                android:textSize="20sp" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
 
-            <TextView
-                android:id="@+id/tvNumLeitor"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivImagemPerfil"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                app:civ_border_color="#f26b3b"
+                app:civ_border_width="3dp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+            <Button
+                android:id="@+id/btnUpload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:padding="10dp"
+                android:text=" Editar Foto "
+                android:textColor="@android:color/white" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvNomeLabel"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Nome:"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tvNome"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
+                <TextView
+                    android:id="@+id/tvNumLeitorLabel"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:text="Nº de Leitor:"
+                    android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvNumLeitor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvEmailLabel"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:text="Email:"
-                android:textSize="20sp" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
-            <TextView
-                android:id="@+id/tvEmail"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
+                <TextView
+                    android:id="@+id/tvNomeLabel"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nome:"
+                    android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvNome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvNumTelemovelLabel"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Telemóvel:"
-                android:textSize="20sp" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
-            <TextView
-                android:id="@+id/tvNumTelemovel"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
+                <TextView
+                    android:id="@+id/tvEmailLabel"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:text="Email:"
+                    android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvDataNascimentoLabel"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Data de Nascimento:"
-                android:textSize="20sp" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
-            <TextView
-                android:id="@+id/tvDataNascimento"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
+                <TextView
+                    android:id="@+id/tvNumTelemovelLabel"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Telemóvel:"
+                    android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvNumTelemovel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvNIFLabel"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:text="NIF:"
-                android:textSize="20sp" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
-            <TextView
-                android:id="@+id/tvNIF"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvDataNascimentoLabel"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Data de Nascimento:"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tvDataNascimento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvNIFLabel"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:text="NIF:"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tvNIF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabGuardarPerfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_gravity="bottom|end"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:clickable="true"
         android:src="@android:drawable/ic_menu_edit" />
 
 </FrameLayout>

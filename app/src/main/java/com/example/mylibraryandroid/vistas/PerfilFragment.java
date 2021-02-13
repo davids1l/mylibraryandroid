@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -54,7 +55,7 @@ import java.util.Date;
 import static androidx.core.content.FileProvider.getUriForFile;
 
 
-public class PerfilFragment extends Fragment implements PerfilListener {
+public class PerfilFragment extends Fragment implements PerfilListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     private TextView tvNumLeitor, tvNome, tvEmail, tvNumTelemovel, tvDataNascimento, tvNIF;
@@ -68,6 +69,10 @@ public class PerfilFragment extends Fragment implements PerfilListener {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private String atualFotoPath;
     private Bitmap bitmap;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private String id;
+    private String token;
+
     public PerfilFragment() {
         // Required empty public constructor
     }
@@ -77,8 +82,8 @@ public class PerfilFragment extends Fragment implements PerfilListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        String id = sharedPreferences.getString(MenuMainActivity.ID,"");
-        String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
+        id = sharedPreferences.getString(MenuMainActivity.ID,"");
+        token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
 
         View view = inflater.inflate(R.layout.perfil_fragment, container, false);
 
@@ -90,6 +95,9 @@ public class PerfilFragment extends Fragment implements PerfilListener {
         tvDataNascimento = view.findViewById(R.id.tvDataNascimento);
         tvNIF = view.findViewById(R.id.tvNIF);
         imagemPerfil = view.findViewById(R.id.ivImagemPerfil);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
 
         Singleton.getInstance(getContext()).setPerfilListener(this);
@@ -127,9 +135,9 @@ public class PerfilFragment extends Fragment implements PerfilListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        /*SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         String id = sharedPreferences.getString(MenuMainActivity.ID,"");
-        String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
+        String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");*/
 
         switch (requestCode){
             case PICK_IMAGE:
@@ -149,7 +157,6 @@ public class PerfilFragment extends Fragment implements PerfilListener {
             default:
                 if(resultCode == Activity.RESULT_OK){
                     Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
-                    //Singleton.getInstance(getContext()).getLeitorEmailAPI(getContext(), id, token);
                     Toast.makeText(getContext(), R.string.editarDadosSucesso, Toast.LENGTH_SHORT).show();
                 }
         }
@@ -223,5 +230,11 @@ public class PerfilFragment extends Fragment implements PerfilListener {
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
+    }
+
+    @Override
+    public void onRefresh() {
+        Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

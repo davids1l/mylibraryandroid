@@ -120,14 +120,14 @@ public class DetalhesRequisicaoActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Cancelar Requisição")
                 .setMessage("Tem a certeza que pretende cancelar a requisição?")
-                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Singleton.getInstance(getApplicationContext()).cancelarRequisicaoAPI(getApplicationContext(), token, id);
                         finish();
                     }
                 })
-                .setNegativeButton("Não", null)
+                .setNegativeButton(android.R.string.no, null)
                 .show();
     }
 

@@ -109,9 +109,6 @@ public class MenuMainActivity extends AppCompatActivity implements BottomNavigat
                 fragment = new PerfilFragment();
                 setTitle(item.getTitle());
                 break;
-            case R.id.nav_logout:
-                logout();
-                break;
         }
 
         if (fragment != null)
@@ -119,15 +116,5 @@ public class MenuMainActivity extends AppCompatActivity implements BottomNavigat
 
         //drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void logout(){
-        SharedPreferences sharedPrefUser = getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPrefUser.edit();
-        editor.clear();
-        editor.apply();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

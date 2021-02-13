@@ -26,6 +26,9 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -64,10 +67,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
     private ImageView imagemPerfil;
     private BDHelper bdHelper;
     static final int PERMISSAO_IMAGEM = 2;
-    static final int PERMISSAO_CAMARA = 1;
     public static final int PICK_IMAGE = 2;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private String atualFotoPath;
     private Bitmap bitmap;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String id;
@@ -81,6 +81,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        setHasOptionsMenu(true);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         id = sharedPreferences.getString(MenuMainActivity.ID,"");
         token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
@@ -103,35 +104,62 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         Singleton.getInstance(getContext()).setPerfilListener(this);
         Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
 
-        FloatingActionButton fab = view.findViewById(R.id.fabGuardarPerfil);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(JsonParser.isConnectionInternet(getContext())){
-                    Intent intent = new Intent(getContext(), EditarPerfilActivity.class);
-                    intent.putExtra(EditarPerfilActivity.NOME, dadosLeitor.getPrimeiroNome());
-                    intent.putExtra(EditarPerfilActivity.APELIDO, dadosLeitor.getUltimoNome());
-                    intent.putExtra(EditarPerfilActivity.NUM_TELEMOVEL, dadosLeitor.getNumTelemovel());
-                    intent.putExtra(EditarPerfilActivity.DATA_NASCIMENTO, dadosLeitor.getDtaNascimento());
-                    intent.putExtra(EditarPerfilActivity.NIF, dadosLeitor.getNif());
-                    startActivityForResult(intent, 1);
-                }else {
-                    Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        Button btnUpload = view.findViewById(R.id.btnUpload);
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_IMAGEM);
-            }
-
-        });
 
         return view;
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_perfil, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.editarFoto:
+                if(JsonParser.isConnectionInternet(getContext())){
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_IMAGEM);
+                }else {
+                    Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case R.id.editarDados:
+                editarDados();
+                break;
+
+            case R.id.logout:
+                logout();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void logout(){
+        SharedPreferences sharedPrefUser = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefUser.edit();
+        editor.clear();
+        editor.apply();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void editarDados(){
+        if(JsonParser.isConnectionInternet(getContext())){
+            Intent intent = new Intent(getContext(), EditarPerfilActivity.class);
+            intent.putExtra(EditarPerfilActivity.NOME, dadosLeitor.getPrimeiroNome());
+            intent.putExtra(EditarPerfilActivity.APELIDO, dadosLeitor.getUltimoNome());
+            intent.putExtra(EditarPerfilActivity.NUM_TELEMOVEL, dadosLeitor.getNumTelemovel());
+            intent.putExtra(EditarPerfilActivity.DATA_NASCIMENTO, dadosLeitor.getDtaNascimento());
+            intent.putExtra(EditarPerfilActivity.NIF, dadosLeitor.getNif());
+            startActivityForResult(intent, 1);
+        }else {
+            Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

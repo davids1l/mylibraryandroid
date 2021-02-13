@@ -9,7 +9,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="20dp" />
 
     <EditText
         android:id="@+id/etPrimeiroNome"
@@ -113,24 +113,21 @@
 
     <Button
         android:id="@+id/btnRegistar"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:background="#f26b3b"
+        android:textColor="#ffffff"
         android:text="Registar"
         android:onClick="onClickRegistar"/>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="Faça login aqui"
+        android:text="Inicie Sessão aqui"
         android:onClick="onClickLogin"/>
 
 </LinearLayout>

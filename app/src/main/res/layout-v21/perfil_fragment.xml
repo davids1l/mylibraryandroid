@@ -20,7 +20,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="30dp" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivImagemPerfil"
@@ -32,17 +32,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
-
-            <Button
-                android:id="@+id/btnUpload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:clickable="false"
-                android:padding="10dp"
-                android:text=" Editar Foto "
-                android:textColor="@android:color/white" />
+                android:layout_height="50dp" />
 
 
             <LinearLayout
@@ -153,7 +143,7 @@
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Data de Nascimento:"
+                    android:text="Nascimento:"
                     android:textSize="20sp" />
 
                 <TextView
@@ -195,15 +185,5 @@
         </LinearLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabGuardarPerfil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:clickable="true"
-        android:src="@android:drawable/ic_menu_edit" />
 
 </FrameLayout>

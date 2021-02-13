@@ -53,7 +53,6 @@ import javax.net.ssl.HandshakeCompletedEvent;
 
 public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener, SwipeRefreshLayout.OnRefreshListener {
 
-    //private ListView lvCarrinhoLivros;
     private SwipeMenuListView lvCarrinhoLivros;
     private ArrayList<Livro> livrosCarrinho;
     private ArrayList<Biblioteca> bibliotecas;
@@ -89,22 +88,16 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
 
             @Override
             public void create(SwipeMenu menu) {
-                // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getContext());
-                // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
                         0x3F, 0x25)));
-                // set item width
                 deleteItem.setWidth(190);
-                // set a icon
                 deleteItem.setIcon(R.drawable.ic_cancelar_requisicao);
-                // add to menu
                 menu.addMenuItem(deleteItem);
             }
         };
 
-        // set creator
         lvCarrinhoLivros.setMenuCreator(creator);
 
         lvCarrinhoLivros.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
@@ -112,7 +105,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
-                        // delete
+                        //botão delete
                         if (!livrosCarrinho.isEmpty()){
                             Livro livro = livrosCarrinho.get(position);
                             Singleton.getInstance(getContext()).removerCarrinho(livro.getId_livro());

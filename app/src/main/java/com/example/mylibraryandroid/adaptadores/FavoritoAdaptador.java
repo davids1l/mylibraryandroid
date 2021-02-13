@@ -68,7 +68,7 @@ public class FavoritoAdaptador extends BaseAdapter {
             viewHolder.update(livros.get(position));
         }
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        /*SharedPreferences sharedPreferences = context.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         id = sharedPreferences.getString(MenuMainActivity.ID, "");
 
         Button remove = (Button) convertView.findViewById(R.id.remFavorite);
@@ -79,12 +79,12 @@ public class FavoritoAdaptador extends BaseAdapter {
                 Livro itemPos = livros.get(position);
                 dialogRemover(id_utilizador, itemPos);
             }
-        });
+        });*/
 
         return convertView;
     }
 
-    private void dialogRemover(final int id_utilizador, final Livro itemPos) {
+    /*private void dialogRemover(final int id_utilizador, final Livro itemPos) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         final String token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
         AlertDialog.Builder builder;
@@ -106,7 +106,7 @@ public class FavoritoAdaptador extends BaseAdapter {
                 })
                 .setIcon(android.R.drawable.ic_delete)
                 .show();
-    }
+    }*/
 
     private class ViewHolderLista {
         private TextView tvTitulo, tvAutor, tvIdioma, tvFormato;
@@ -121,8 +121,10 @@ public class FavoritoAdaptador extends BaseAdapter {
         }
 
         public void update(Livro livro) {
+            String nomeAutor = Singleton.getInstance(context).getNomeAutor(livro.getId_autor());
+
             tvTitulo.setText(livro.getTitulo());
-            tvAutor.setText(livro.getId_autor()+"");
+            tvAutor.setText(nomeAutor);
             tvIdioma.setText(livro.getIdioma());
             tvFormato.setText(livro.getFormato());
 

@@ -907,6 +907,9 @@ public class Singleton {
                 params.put("id_utilizador", id_utilizador + "");
                 params.put("carrinho_size", carrinho.size() + "");
 
+
+                //params.put("token", token);
+
                 for (int i = 0; i < carrinho.size(); i++) {
                     params.put("id_livro" + i, carrinho.get(i) + "");
                 }
@@ -1130,7 +1133,8 @@ public class Singleton {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Ocorreu um erro, tente novamente!", Toast.LENGTH_SHORT).show();
                 }
             }){
                 @Override

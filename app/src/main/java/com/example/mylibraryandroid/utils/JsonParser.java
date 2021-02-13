@@ -101,17 +101,17 @@ public class JsonParser {
             String nome = dados.getString("primeiro_nome");
             String apelido = dados.getString("ultimo_nome");
             String numero = dados.getString("numero");
-            int bloqueado = dados.getInt("bloqueado");
+            //int bloqueado = dados.getInt("bloqueado");
             String dataBloqueado = dados.getString("dta_bloqueado");
             String dataNascimento = dados.getString("dta_nascimento");
             String nif = dados.getString("nif");
             String numTelemovel = dados.getString("num_telemovel");
             String dataRegisto = dados.getString("dta_registo");
             String fotoPerfil = dados.getString("foto_perfil");
-            int idBiblioteca = dados.getInt("id_biblioteca");
+            //int idBiblioteca = dados.getInt("id_biblioteca");
             String email = null;
 
-            utilizador = new Utilizador(id, bloqueado, nif, email, numTelemovel, nome, apelido, numero, dataBloqueado, dataNascimento, dataRegisto, fotoPerfil, idBiblioteca);
+            utilizador = new Utilizador(id, 0, nif, email, numTelemovel, nome, apelido, numero, dataBloqueado, dataNascimento, dataRegisto, fotoPerfil, 0);
         } catch (JSONException e) {
             e.printStackTrace();
         }

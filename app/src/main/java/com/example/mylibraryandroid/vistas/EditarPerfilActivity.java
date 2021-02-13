@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.EditarPerfilListener;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.utils.JsonParser;
+import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class EditarPerfilActivity extends AppCompatActivity implements EditarPerfilListener {
@@ -33,6 +35,9 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         setContentView(R.layout.activity_editar_perfil);
         setTitle("Editar Dados Pessoais");
 
+        //seta de go back
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Singleton.getInstance(this).setEditarPerfilListener(this);
         final String nome = getIntent().getStringExtra(NOME);
         final String apelido = getIntent().getStringExtra(APELIDO);
@@ -41,8 +46,8 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         final String nif = getIntent().getStringExtra(NIF);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        final String id = sharedPreferences.getString(MenuMainActivity.ID,"");
-        final String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
+        final String id = sharedPreferences.getString(MenuMainActivity.ID, "");
+        final String token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
 
         etNome = findViewById(R.id.etNome);
         etApelido = findViewById(R.id.etApelido);
@@ -55,9 +60,9 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         etNome.setText(nome);
         etApelido.setText(apelido);
         etTelemovel.setText(numTelemovel);
-        etDia.setText(dataNascimento.substring(8,10));
-        etMes.setText(dataNascimento.substring(5,7));
-        etAno.setText(dataNascimento.substring(0,4));
+        etDia.setText(dataNascimento.substring(8, 10));
+        etMes.setText(dataNascimento.substring(5, 7));
+        etAno.setText(dataNascimento.substring(0, 4));
         etNIF.setText(nif);
 
         FloatingActionButton fab = findViewById(R.id.fabGuardarPerfil);
@@ -65,13 +70,13 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
             @Override
             public void onClick(View v) {
                 if (JsonParser.isConnectionInternet(getApplicationContext())) {
-                        String nome = etNome.getText().toString();
-                        String apelido = etApelido.getText().toString();
-                        String telemovel = etTelemovel.getText().toString();
-                        String dia = etDia.getText().toString();
-                        String mes = etMes.getText().toString();
-                        String ano = etAno.getText().toString();
-                        String nif = etNIF.getText().toString();
+                    String nome = etNome.getText().toString();
+                    String apelido = etApelido.getText().toString();
+                    String telemovel = etTelemovel.getText().toString();
+                    String dia = etDia.getText().toString();
+                    String mes = etMes.getText().toString();
+                    String ano = etAno.getText().toString();
+                    String nif = etNIF.getText().toString();
 
                     if (!isNomeValid(nome)) {
                         etNome.setError(getString(R.string.campoBranco));
@@ -96,8 +101,8 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                     if (!isDiaBlank(dia)) {
                         etDia.setError(getString(R.string.campoBranco));
                         return;
-                    }else {
-                        if(!isDiaValid(Integer.parseInt(dia))){
+                    } else {
+                        if (!isDiaValid(Integer.parseInt(dia))) {
                             etDia.setError(getString(R.string.diaInvalido));
                             return;
                         }
@@ -106,8 +111,8 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                     if (!isMesBlank(mes)) {
                         etMes.setError(getString(R.string.campoBranco));
                         return;
-                    }else {
-                        if (!isMesValid(Integer.parseInt(mes))){
+                    } else {
+                        if (!isMesValid(Integer.parseInt(mes))) {
                             etMes.setError(getString(R.string.mesInvalido));
                             return;
                         }
@@ -116,14 +121,14 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                     if (isAnoBlank(ano) == 1) {
                         etAno.setError(getString(R.string.campoBranco));
                         return;
-                    }else {
-                        if(isAnoBlank(ano) == 2){
+                    } else {
+                        if (isAnoBlank(ano) == 2) {
                             etAno.setError(getString(R.string.anoTerQuatroDigitos));
                             return;
                         }
                     }
 
-                    if(!isAnoValid(Integer.parseInt(ano))){
+                    if (!isAnoValid(Integer.parseInt(ano))) {
                         etAno.setError(getString(R.string.anoInvalido));
                         return;
                     }
@@ -155,6 +160,14 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         finish();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        
+        finish();
+        return true;
+
+    }
+
     private void guardarInfoSharedPref(String email, String token) {
         SharedPreferences sharedPrefUser = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefUser.edit();
@@ -165,15 +178,15 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
 
 
     //Validações para verificar os dados que vão ser atualizados
-    private boolean isNomeValid(String nome){
-        if(nome == null){
+    private boolean isNomeValid(String nome) {
+        if (nome == null) {
             return false;
         }
         return nome.length() >= 1;
     }
 
-    private boolean isApelidoValid(String apelido){
-        if(apelido == null){
+    private boolean isApelidoValid(String apelido) {
+        if (apelido == null) {
             return false;
         }
         return apelido.length() >= 1;
@@ -191,56 +204,56 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         }
     }
 
-    private boolean isDiaBlank(String dia){
-        if(dia == null){
+    private boolean isDiaBlank(String dia) {
+        if (dia == null) {
             return false;
         }
         return dia.length() >= 1;
     }
 
-    private boolean isDiaValid(int dia){
-        if(dia < 1 || dia > 31){
+    private boolean isDiaValid(int dia) {
+        if (dia < 1 || dia > 31) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
 
-    private boolean isMesBlank(String mes){
-        if(mes == null){
+    private boolean isMesBlank(String mes) {
+        if (mes == null) {
             return false;
         }
         return mes.length() >= 1;
     }
 
-    private boolean isMesValid(int mes){
-        if(mes < 1 || mes > 12){
+    private boolean isMesValid(int mes) {
+        if (mes < 1 || mes > 12) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
 
-    private int isAnoBlank(String ano){
-        if(ano == null){
+    private int isAnoBlank(String ano) {
+        if (ano == null) {
             return 1;
-        }else {
-            if(ano.length() != 4){
+        } else {
+            if (ano.length() != 4) {
                 return 2;
             }
         }
         return 0;
     }
 
-    private boolean isAnoValid(int ano){
-        if(ano < 1900 || ano > 2021){
+    private boolean isAnoValid(int ano) {
+        if (ano < 1900 || ano > 2021) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
 
-    private boolean isNIFValid(String nif){
+    private boolean isNIFValid(String nif) {
         if (nif.length() != 9) {
             return false;
         }

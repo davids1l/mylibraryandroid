@@ -60,8 +60,6 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
     //private ArrayList<String> adapterList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String token;
-    //private Integer id_bib;
-    //private Integer id_utilizador;
 
     public CarrinhoLivrosFragment() {
         // Required empty public constructor

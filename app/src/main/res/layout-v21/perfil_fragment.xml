@@ -19,10 +19,9 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivImagemPerfil"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/logoipl"
-            android:elevation="30dp"
+            android:layout_gravity="center"
             app:civ_border_width="3dp"
             app:civ_border_color="#f26b3b"/>
 

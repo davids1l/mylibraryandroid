@@ -27,6 +27,8 @@ public class LivrosDetalhesReqAdaptador extends BaseAdapter {
     private ArrayList<Livro> livrosDetalhesReq;
     private LayoutInflater inflater;
     private String nomeAutor;
+    private static final String IP = "http://192.168.1.100";
+    private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     public LivrosDetalhesReqAdaptador(Context context, ArrayList<Livro> livrosDetalhesReq) {
         this.context = context;
@@ -91,7 +93,7 @@ public class LivrosDetalhesReqAdaptador extends BaseAdapter {
             tvAutor.setText(nomeAutor);
 
             Glide.with(context)
-                    .load(livroDetalhesReq.getCapa())
+                    .load(urlCapas+livroDetalhesReq.getCapa())
                     .placeholder(R.drawable.loading_capa)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgCapaDetalhesReq);

@@ -30,6 +30,8 @@ public class FavoritoAdaptador extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<Livro> livros;
     private String id;
+    private static final String IP = "http://192.168.1.100";
+    private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     public FavoritoAdaptador(Context context, ArrayList<Livro> livros) {
         this.context = context;
@@ -129,7 +131,7 @@ public class FavoritoAdaptador extends BaseAdapter {
             tvFormato.setText(livro.getFormato());
 
             Glide.with(context)
-                    .load(livro.getCapa())
+                    .load(urlCapas+livro.getCapa())
                     .placeholder(R.drawable.logoipl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageCapa);

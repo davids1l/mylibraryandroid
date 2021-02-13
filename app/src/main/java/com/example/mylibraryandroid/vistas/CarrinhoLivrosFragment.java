@@ -126,7 +126,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         //Singleton.getInstance(getContext()).setCarrinhoListener(this);
         livrosCarrinho =  Singleton.getInstance(getContext()).getLivrosCarrinho();
 
-        lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
+        lvCarrinhoLivros.setAdapter(new CarrinhoAdaptador(getContext(), livrosCarrinho));
 
         Singleton.getInstance(getContext()).getBibliotecasAPI(getContext());
 
@@ -209,9 +209,9 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
         livrosCarrinho =  Singleton.getInstance(getContext()).getLivrosCarrinho();
 
         if (!livrosCarrinho.isEmpty()){
-           lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
+           lvCarrinhoLivros.setAdapter(new CarrinhoAdaptador(getContext(), livrosCarrinho));
         } else {
-            lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), livrosCarrinho));
+            lvCarrinhoLivros.setAdapter(new CarrinhoAdaptador(getContext(), livrosCarrinho));
             Toast.makeText(getContext(), R.string.carrinhoVazio, Toast.LENGTH_SHORT).show();
         }
 
@@ -221,7 +221,7 @@ public class CarrinhoLivrosFragment extends Fragment implements CarrinhoListener
     @Override
     public void onRefreshCarrinhoLivros(ArrayList<Livro> carrinho) {
         if(carrinho != null)
-            lvCarrinhoLivros.setAdapter(new CatalogoAdaptador(getContext(), carrinho));
+            lvCarrinhoLivros.setAdapter(new CarrinhoAdaptador(getContext(), carrinho));
     }
 
     @Override

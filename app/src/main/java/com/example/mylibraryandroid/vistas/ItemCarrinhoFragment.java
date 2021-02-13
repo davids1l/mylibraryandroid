@@ -37,7 +37,7 @@ public class ItemCarrinhoFragment extends Fragment {
         tvIdioma = view.findViewById(R.id.tvIdioma);
         tvFormato = view.findViewById(R.id.tvFormato);
         imgCapa = view.findViewById(R.id.imageCapa);
-        carregarLivroCarrinho();
+        //carregarLivroCarrinho();
 
         return view;
     }

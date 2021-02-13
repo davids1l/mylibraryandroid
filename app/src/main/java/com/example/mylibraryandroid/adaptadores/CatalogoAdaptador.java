@@ -23,6 +23,8 @@ public class CatalogoAdaptador extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<Livro> catalogo;
     private String nomeAutor;
+    private static final String IP = "http://192.168.1.100";
+    private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     public CatalogoAdaptador(Context context, ArrayList<Livro> catalogo){
         this.context = context;
@@ -91,7 +93,7 @@ public class CatalogoAdaptador extends BaseAdapter {
             tvFormato.setText(livro.getFormato());
 
             Glide.with(context)
-                    .load(livro.getCapa())
+                    .load(urlCapas+livro.getCapa())
                     .placeholder(R.drawable.loading_capa)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgCapa);

@@ -43,6 +43,9 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     private String desigEditora;
     private String nomeBib;
 
+    private static final String IP = "http://192.168.1.100";
+    private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
+
     private int id_livro;
     private String id;
     private FragmentManager fragmentManager;
@@ -70,7 +73,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         tvGenero = findViewById(R.id.tvGenero);
         tvIdioma = findViewById(R.id.tvIdioma);
         tvSinopse = findViewById(R.id.tvSinopse);
-        tvBiblioteca = findViewById(R.id.tvBiblioteca);
+        //tvBiblioteca = findViewById(R.id.tvBiblioteca);
         tvEditora = findViewById(R.id.tvEditora);
         tvPaginas = findViewById(R.id.tvPaginas);
         tvFormato = findViewById(R.id.tvFormato);
@@ -153,30 +156,30 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(LivroJsonParser.isConnectionInternet(getApplicationContext())) {
-            SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-            String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
-            switch (item.getItemId()) {
-                case R.id.itemFavorito:
+        SharedPreferences sharedPreferences = this.getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
+        switch (item.getItemId()) {
+            case R.id.itemFavorito:
+                if (LivroJsonParser.isConnectionInternet(getApplicationContext())) {
                     int id_utilizador = Integer.parseInt(id);
                     Singleton.getInstance(getApplicationContext()).adicionarFavoritoAPI(getApplicationContext(), id_utilizador, id_livro, token);
                     item.setIcon(R.drawable.ic_favorito);
                     item.setEnabled(false);
-                    return true;
-                case android.R.id.home:
-                    finish();
-                    return true;
-            }
-        }else {
-            Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     public void popularDetalhesLivro(){
         nomeAutor = Singleton.getInstance(getApplicationContext()).getNomeAutor(livro.getId_autor());
         desigEditora = Singleton.getInstance(getApplicationContext()).getDesignacaoEditora(livro.getId_editora());
-        nomeBib = Singleton.getInstance(getApplicationContext()).getNomeBiblioteca(livro.getId_biblioteca());
+        //nomeBib = Singleton.getInstance(getApplicationContext()).getNomeBiblioteca(livro.getId_biblioteca());
 
         tvTitulo.setText(livro.getTitulo());
         tvAutor.setText(nomeAutor);
@@ -186,12 +189,12 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
         tvIdioma.setText(livro.getIdioma());
         tvSinopse.setText(livro.getSinopse());
         tvFormato.setText(livro.getFormato());
-        tvBiblioteca.setText(nomeBib);
+        //tvBiblioteca.setText(nomeBib);
         tvPaginas.setText(livro.getPaginas()+"");
         tvEditora.setText(desigEditora);
 
         Glide.with(this)
-                .load(livro.getCapa())
+                .load(urlCapas+livro.getCapa())
                 .placeholder(R.drawable.loading_capa)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imgCapa);

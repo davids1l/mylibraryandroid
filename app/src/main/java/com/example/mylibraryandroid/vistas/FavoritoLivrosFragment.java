@@ -62,9 +62,10 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
         token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
 
         Singleton.getInstance(getContext()).setFavoritoListener(this);
-        Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id, token);
+        //Singleton.getInstance(getContext()).getFavoritoAPI(getContext(), id, token);
 
         favoritoLivros = Singleton.getInstance(getContext()).getLivrosFavoritosBD();
+
         if(favoritoLivros.isEmpty()){
             Toast.makeText(getContext(), R.string.semFavoritos, Toast.LENGTH_SHORT).show();
         }
@@ -95,7 +96,7 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
         lvFavoritoLivros.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                if(JsonParser.isConnectionInternet(getContext()) && (!favoritoLivros.isEmpty())){
+                if(JsonParser.isConnectionInternet(getContext())){
                     Livro livro = favoritoLivros.get(position);
                     dialogRemover(Integer.parseInt(id), livro);
                 }
@@ -113,13 +114,12 @@ public class FavoritoLivrosFragment extends Fragment implements SwipeRefreshLayo
             }
         });
 
+        lvFavoritoLivros.setAdapter(new FavoritoAdaptador(getContext(), favoritoLivros));
 
         return view;
     }
 
     private void dialogRemover(final int id_utilizador, final Livro itemPos) {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        final String token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Remover Livro")

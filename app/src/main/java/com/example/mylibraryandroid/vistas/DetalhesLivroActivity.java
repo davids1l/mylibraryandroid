@@ -121,12 +121,12 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     }
 
     private void carregarFragmentoComentario() {
-        ComentarioLivrosFragment comentarioLivrosFragment = new ComentarioLivrosFragment();
+        Fragment comentarioLivrosFragment = new ComentarioLivrosFragment();
         Toast.makeText(getApplicationContext(), "im here yoo", Toast.LENGTH_SHORT).show();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-            .add(R.id.comentarios_livro, comentarioLivrosFragment, comentarioLivrosFragment.getTag())
+            .replace(R.id.comentarios_livro, comentarioLivrosFragment, comentarioLivrosFragment.getTag())
             .setReorderingAllowed(true)
             .commit();
     }

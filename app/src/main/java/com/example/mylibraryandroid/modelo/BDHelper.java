@@ -415,6 +415,8 @@ public class BDHelper extends SQLiteOpenHelper {
         values.put(NIF, utilizador.getNif());
         values.put(NUM_TELEMOVEL, utilizador.getNumTelemovel());
         values.put(FOTO_PERFIL, utilizador.getFoto_perfil());
+        values.put(DATA_REGISTO, utilizador.getDtaRegisto());
+        values.put(BLOQUEADO, utilizador.getBloqueado());
 
         this.db.insert(TABLE_NAME_UTILIZADOR, null, values);
     }

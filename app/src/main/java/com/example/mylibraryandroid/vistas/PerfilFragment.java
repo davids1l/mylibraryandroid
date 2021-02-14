@@ -72,6 +72,8 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
     private SwipeRefreshLayout swipeRefreshLayout;
     private String id;
     private String token;
+    private static final String IP = "http://192.168.1.100";
+    private String urlImagem = IP + ":8888/frontend/web/imgs/perfil/";
 
     public PerfilFragment() {
         // Required empty public constructor
@@ -216,7 +218,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
 
 
         Glide.with(getContext())
-                .load(utilizador.getFoto_perfil())
+                .load(urlImagem+utilizador.getFoto_perfil())
                 //.placeholder(R.drawable.logoipl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imagemPerfil);

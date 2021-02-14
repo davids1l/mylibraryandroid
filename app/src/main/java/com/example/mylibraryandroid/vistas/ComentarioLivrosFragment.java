@@ -60,10 +60,6 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
 
         comentarios = Singleton.getInstance(getContext()).getComentariosLivro(indexID_LIVRO);
 
-        if(comentarios.isEmpty()) {
-            Toast.makeText(getContext(), R.string.semComentarios, Toast.LENGTH_SHORT).show();
-        }
-
         return view;
     }
 
@@ -71,9 +67,6 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
     public void onRefresh() {
         Singleton.getInstance(getContext()).getComentarioAPI(getContext(), token);
         swipeRefreshLayout.setRefreshing(false);
-        if(comentarios.isEmpty()) {
-            Toast.makeText(getContext(), R.string.semComentarios, Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override

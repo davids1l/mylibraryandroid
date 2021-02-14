@@ -29,7 +29,7 @@ public class ComentarioAdaptador extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<Comentario> comentarios;
     private String id;
-    private static final String IP = "http://192.168.8.103";
+    private static final String IP = "http://192.168.1.100";
     private String urlImagem = IP + ":8888/frontend/web/imgs/perfil/";
 
     public ComentarioAdaptador(Context context, ArrayList<Comentario> comentarios) {

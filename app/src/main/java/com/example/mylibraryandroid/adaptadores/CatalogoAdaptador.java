@@ -23,7 +23,7 @@ public class CatalogoAdaptador extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<Livro> catalogo;
     private String nomeAutor;
-    private static final String IP = "http://192.168.8.103";
+    private static final String IP = "http://192.168.1.100";
     private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     public CatalogoAdaptador(Context context, ArrayList<Livro> catalogo){

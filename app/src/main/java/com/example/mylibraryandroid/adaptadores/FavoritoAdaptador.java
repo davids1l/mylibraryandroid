@@ -30,7 +30,7 @@ public class FavoritoAdaptador extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<Livro> livros;
     private String id;
-    private static final String IP = "http://192.168.8.103";
+    private static final String IP = "http://192.168.1.100";
     private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     public FavoritoAdaptador(Context context, ArrayList<Livro> livros) {

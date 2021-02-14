@@ -47,7 +47,7 @@ public class DetalhesLivroActivity extends AppCompatActivity implements Catalogo
     private String desigEditora;
     private String nomeBib;
 
-    private static final String IP = "http://192.168.8.103";
+    private static final String IP = "http://192.168.1.100";
     private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     private int id_livro;

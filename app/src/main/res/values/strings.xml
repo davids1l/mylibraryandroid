@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">MyLibrary</string>
-    <string name="etEmail">Introduza o Email!</string>
-    <string name="etPassword">Introduza a Password!</string>
-    <string name="btnLogin">Login</string>
+    <string name="etEmail">Email</string>
+    <string name="etPassword">Palavra-passe</string>
+    <string name="btnLogin">Iniciar Sessão</string>
     <string name="actLogin">Login</string>
     <string name="etEmailInválido">Email inválido</string>
     <string name="etPasswordInválida">Password inválida</string>

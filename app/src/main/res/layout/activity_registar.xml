@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="10dp"
-    tools:context=".vistas.LoginActivity">
+    tools:context=".vistas.RegistarActivity">
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="20dp" />
 
     <EditText
         android:id="@+id/etPrimeiroNome"
@@ -43,32 +43,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/etDia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Dia"
-            android:inputType="numberDecimal" />
 
         <EditText
-            android:id="@+id/etMes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/dataEscolhida"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
             android:layout_weight="1"
-            android:ems="10"
-            android:hint="Mes"
-            android:inputType="numberDecimal" />
+            android:hint="Data de nascimento"
+            android:inputType="date" />
 
-        <EditText
-            android:id="@+id/etAno"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnEscolherData"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="Ano"
-            android:inputType="numberDecimal" />
+            android:text="Escolher Data" />
+
     </LinearLayout>
 
     <EditText
@@ -113,24 +102,21 @@
 
     <Button
         android:id="@+id/btnRegistar"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:background="#f26b3b"
+        android:textColor="#ffffff"
         android:text="Registar"
         android:onClick="onClickRegistar"/>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="Faça login aqui"
+        android:text="Inicie Sessão aqui"
         android:onClick="onClickLogin"/>
 
 </LinearLayout>

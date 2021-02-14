@@ -22,6 +22,8 @@ public class CarrinhoAdaptador extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Livro> carrinho;
+    private static final String IP = "http://192.168.8.103";
+    private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     public CarrinhoAdaptador(Context context, ArrayList<Livro> carrinho){
         this.context = context;
@@ -45,6 +47,8 @@ public class CarrinhoAdaptador extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolderLista viewHolder = null;
+
         if(inflater == null){
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -52,20 +56,21 @@ public class CarrinhoAdaptador extends BaseAdapter {
         if(convertView == null){
             convertView = inflater.inflate(R.layout.item_carrinho_fragment, null);
 
-            ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
+            viewHolder = (ViewHolderLista) convertView.getTag();
 
             if(viewHolder == null){
                 viewHolder = new ViewHolderLista(convertView);
                 convertView.setTag(viewHolder);
             }
 
-            viewHolder.update(carrinho.get(position));
         }
+
+        viewHolder.update(carrinho.get(position));
         return convertView;
         }
 
     private class ViewHolderLista {
-        private TextView tvTitulo, tvAutor,tvIdioma, tvFormato;
+        private TextView tvTitulo, tvAutor, tvIdioma, tvFormato;
         private ImageView imgCapa;
 
         public ViewHolderLista(View view){
@@ -83,7 +88,7 @@ public class CarrinhoAdaptador extends BaseAdapter {
             tvFormato.setText(livro.getFormato());
 
             Glide.with(context)
-                    .load(livro.getCapa())
+                    .load(urlCapas+livro.getCapa())
                     .placeholder(R.drawable.logoipl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgCapa);

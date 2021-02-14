@@ -26,6 +26,9 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -64,10 +67,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
     private ImageView imagemPerfil;
     private BDHelper bdHelper;
     static final int PERMISSAO_IMAGEM = 2;
-    static final int PERMISSAO_CAMARA = 1;
     public static final int PICK_IMAGE = 2;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private String atualFotoPath;
     private Bitmap bitmap;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String id;
@@ -80,12 +80,12 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        View view = inflater.inflate(R.layout.perfil_fragment, container, false);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        id = sharedPreferences.getString(MenuMainActivity.ID,"");
-        token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
-
-        View view = inflater.inflate(R.layout.perfil_fragment, container, false);
+        id = sharedPreferences.getString(MenuMainActivity.ID, "");
+        token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
 
         bdHelper = new BDHelper(getContext());
         tvNumLeitor = view.findViewById(R.id.tvNumLeitor);
@@ -103,35 +103,62 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         Singleton.getInstance(getContext()).setPerfilListener(this);
         Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
 
-        FloatingActionButton fab = view.findViewById(R.id.fabGuardarPerfil);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(JsonParser.isConnectionInternet(getContext())){
-                    Intent intent = new Intent(getContext(), EditarPerfilActivity.class);
-                    intent.putExtra(EditarPerfilActivity.NOME, dadosLeitor.getPrimeiroNome());
-                    intent.putExtra(EditarPerfilActivity.APELIDO, dadosLeitor.getUltimoNome());
-                    intent.putExtra(EditarPerfilActivity.NUM_TELEMOVEL, dadosLeitor.getNumTelemovel());
-                    intent.putExtra(EditarPerfilActivity.DATA_NASCIMENTO, dadosLeitor.getDtaNascimento());
-                    intent.putExtra(EditarPerfilActivity.NIF, dadosLeitor.getNif());
-                    startActivityForResult(intent, 1);
-                }else {
-                    Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        Button btnUpload = view.findViewById(R.id.btnUpload);
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_IMAGEM);
-            }
-
-        });
 
         return view;
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_perfil, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.editarFoto:
+                if (JsonParser.isConnectionInternet(getContext())) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_IMAGEM);
+                } else {
+                    Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case R.id.editarDados:
+                editarDados();
+                break;
+
+            case R.id.logout:
+                logout();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void logout() {
+        SharedPreferences sharedPrefUser = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefUser.edit();
+        editor.clear();
+        editor.apply();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void editarDados() {
+        if (JsonParser.isConnectionInternet(getContext())) {
+            Intent intent = new Intent(getContext(), EditarPerfilActivity.class);
+            intent.putExtra(EditarPerfilActivity.NOME, dadosLeitor.getPrimeiroNome());
+            intent.putExtra(EditarPerfilActivity.APELIDO, dadosLeitor.getUltimoNome());
+            intent.putExtra(EditarPerfilActivity.NUM_TELEMOVEL, dadosLeitor.getNumTelemovel());
+            intent.putExtra(EditarPerfilActivity.DATA_NASCIMENTO, dadosLeitor.getDtaNascimento());
+            intent.putExtra(EditarPerfilActivity.NIF, dadosLeitor.getNif());
+            startActivityForResult(intent, 1);
+        } else {
+            Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -139,9 +166,9 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         String id = sharedPreferences.getString(MenuMainActivity.ID,"");
         String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");*/
 
-        switch (requestCode){
+        switch (requestCode) {
             case PICK_IMAGE:
-                if(resultCode == Activity.RESULT_OK){
+                if (resultCode == Activity.RESULT_OK) {
                     Uri uri = data.getData();
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
@@ -155,14 +182,14 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
                 }
                 break;
             default:
-                if(resultCode == Activity.RESULT_OK){
+                if (resultCode == Activity.RESULT_OK) {
                     Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
                     Toast.makeText(getContext(), R.string.editarDadosSucesso, Toast.LENGTH_SHORT).show();
                 }
         }
     }
 
-    public void atribuirFoto(Uri uri){
+    public void atribuirFoto(Uri uri) {
         Glide.with(getContext())
                 .load(uri)
                 .placeholder(R.drawable.logoipl)
@@ -180,9 +207,9 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         tvNome.setText(nome);
         tvNumTelemovel.setText(utilizador.getNumTelemovel());
         String data = utilizador.getDtaNascimento();
-        String dia = data.substring(8,10);
-        String mes = data.substring(5,7);
-        String ano = data.substring(0,4);
+        String dia = data.substring(8, 10);
+        String mes = data.substring(5, 7);
+        String ano = data.substring(0, 4);
         tvDataNascimento.setText(dia + "/" + mes + "/" + ano);
         tvNIF.setText(utilizador.getNif());
         tvEmail.setText(utilizador.getEmail());
@@ -209,7 +236,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSAO_IMAGEM:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     carregarFotoGaleria();
                 }
                 break;

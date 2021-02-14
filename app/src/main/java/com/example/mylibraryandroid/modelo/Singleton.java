@@ -425,9 +425,9 @@ public class Singleton {
                 @Override
                 public void onResponse(JSONArray response) {
                     favorito = FavoritoJsonParser.parserJsonFavorito(response);
-                    if (!favorito.isEmpty()) {
+                    //if (!favorito.isEmpty()) {
                         adicionarFavoritosBD(favorito);
-                    }
+                    //}
 
                     if (favoritoListener != null)
                         favoritoListener.onRefreshFavoritoLivros(getLivrosFavoritosBD());

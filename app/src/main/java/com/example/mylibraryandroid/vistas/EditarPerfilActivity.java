@@ -1,13 +1,20 @@
 package com.example.mylibraryandroid.vistas;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -19,6 +26,8 @@ import com.example.mylibraryandroid.utils.JsonParser;
 import com.example.mylibraryandroid.utils.LivroJsonParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Calendar;
+
 public class EditarPerfilActivity extends AppCompatActivity implements EditarPerfilListener {
 
     public static final String NOME = "NOME";
@@ -26,7 +35,10 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
     public static final String NUM_TELEMOVEL = "NUM_TELEMOVEL";
     public static final String DATA_NASCIMENTO = "DATA_NASCIMENTO";
     public static final String NIF = "NIF";
-    private EditText etNome, etApelido, etTelemovel, etDia, etMes, etAno, etNIF;
+    private EditText etNome, etApelido, etTelemovel, etNIF, etDataNascimento;
+    private DatePickerDialog.OnDateSetListener DateSetListener;
+    private Button btnAlterarData;
+    private String DataDia, DataMes, DataAno;
 
 
     @Override
@@ -52,18 +64,51 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         etNome = findViewById(R.id.etNome);
         etApelido = findViewById(R.id.etApelido);
         etTelemovel = findViewById(R.id.etTelemovel);
-        etDia = findViewById(R.id.etDia);
-        etMes = findViewById(R.id.etMes);
-        etAno = findViewById(R.id.etAno);
+
         etNIF = findViewById(R.id.etNIF);
+        etDataNascimento = findViewById(R.id.dataEscolhida);
+        etDataNascimento.setEnabled(false);
+        btnAlterarData = findViewById(R.id.btnEscolherData);
 
         etNome.setText(nome);
         etApelido.setText(apelido);
         etTelemovel.setText(numTelemovel);
-        etDia.setText(dataNascimento.substring(8, 10));
-        etMes.setText(dataNascimento.substring(5, 7));
-        etAno.setText(dataNascimento.substring(0, 4));
+        final String dia = dataNascimento.substring(8, 10);
+        String mes = dataNascimento.substring(5, 7);
+        String ano = dataNascimento.substring(0, 4);
+
         etNIF.setText(nif);
+        final String data = dia + "/" + mes + "/" + ano;
+        etDataNascimento.setText(data);
+
+
+        btnAlterarData.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(EditarPerfilActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, DateSetListener, year, month, day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                dialog.show();
+            }
+        });
+
+        DateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String data = dayOfMonth + "/" + month + "/" + year;
+                etDataNascimento.setText(data);
+                DataDia = dayOfMonth + "";
+                DataMes = month + "";
+                DataAno = year + "";
+            }
+        };
 
         FloatingActionButton fab = findViewById(R.id.fabGuardarPerfil);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,9 +118,9 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                     String nome = etNome.getText().toString();
                     String apelido = etApelido.getText().toString();
                     String telemovel = etTelemovel.getText().toString();
-                    String dia = etDia.getText().toString();
-                    String mes = etMes.getText().toString();
-                    String ano = etAno.getText().toString();
+                    String dia = DataDia;
+                    String mes = DataMes;
+                    String ano = DataAno;
                     String nif = etNIF.getText().toString();
 
                     if (!isNomeValid(nome)) {
@@ -96,41 +141,6 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                             etTelemovel.setError(getString(R.string.telemovelErroComecar));
                             return;
                         }
-                    }
-
-                    if (!isDiaBlank(dia)) {
-                        etDia.setError(getString(R.string.campoBranco));
-                        return;
-                    } else {
-                        if (!isDiaValid(Integer.parseInt(dia))) {
-                            etDia.setError(getString(R.string.diaInvalido));
-                            return;
-                        }
-                    }
-
-                    if (!isMesBlank(mes)) {
-                        etMes.setError(getString(R.string.campoBranco));
-                        return;
-                    } else {
-                        if (!isMesValid(Integer.parseInt(mes))) {
-                            etMes.setError(getString(R.string.mesInvalido));
-                            return;
-                        }
-                    }
-
-                    if (isAnoBlank(ano) == 1) {
-                        etAno.setError(getString(R.string.campoBranco));
-                        return;
-                    } else {
-                        if (isAnoBlank(ano) == 2) {
-                            etAno.setError(getString(R.string.anoTerQuatroDigitos));
-                            return;
-                        }
-                    }
-
-                    if (!isAnoValid(Integer.parseInt(ano))) {
-                        etAno.setError(getString(R.string.anoInvalido));
-                        return;
                     }
 
                     if (!isNIFValid(nif)) {
@@ -201,55 +211,6 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
             } else {
                 return 0;
             }
-        }
-    }
-
-    private boolean isDiaBlank(String dia) {
-        if (dia == null) {
-            return false;
-        }
-        return dia.length() >= 1;
-    }
-
-    private boolean isDiaValid(int dia) {
-        if (dia < 1 || dia > 31) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean isMesBlank(String mes) {
-        if (mes == null) {
-            return false;
-        }
-        return mes.length() >= 1;
-    }
-
-    private boolean isMesValid(int mes) {
-        if (mes < 1 || mes > 12) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private int isAnoBlank(String ano) {
-        if (ano == null) {
-            return 1;
-        } else {
-            if (ano.length() != 4) {
-                return 2;
-            }
-        }
-        return 0;
-    }
-
-    private boolean isAnoValid(int ano) {
-        if (ano < 1900 || ano > 2021) {
-            return false;
-        } else {
-            return true;
         }
     }
 

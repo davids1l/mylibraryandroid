@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 import static androidx.core.content.FileProvider.getUriForFile;
 
@@ -72,7 +73,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
     private SwipeRefreshLayout swipeRefreshLayout;
     private String id;
     private String token;
-    private static final String IP = "http://192.168.1.100";
+    private static final String IP = "http://192.168.8.103";
     private String urlImagem = IP + ":8888/frontend/web/imgs/perfil/";
 
     public PerfilFragment() {
@@ -217,9 +218,9 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         tvEmail.setText(utilizador.getEmail());
 
 
-        Glide.with(getContext())
-                .load(urlImagem+utilizador.getFoto_perfil())
-                //.placeholder(R.drawable.logoipl)
+        Glide.with(Objects.requireNonNull(getContext()))
+                .load(urlImagem + utilizador.getFoto_perfil())
+                .placeholder(R.drawable.logoipl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imagemPerfil);
 

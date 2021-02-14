@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,7 +75,7 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
         etNome.setText(nome);
         etApelido.setText(apelido);
         etTelemovel.setText(numTelemovel);
-        final String dia = dataNascimento.substring(8, 10);
+        String dia = dataNascimento.substring(8, 10);
         String mes = dataNascimento.substring(5, 7);
         String ano = dataNascimento.substring(0, 4);
 
@@ -102,11 +104,20 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month = month + 1;
-                String data = dayOfMonth + "/" + month + "/" + year;
+
+                String mes = month + "";
+                String dia = dayOfMonth + "";
+
+                if(mes.length() != 2){
+                    mes = "0" + mes;
+                }
+
+                if(dia.length() != 2){
+                    dia = "0" + dia;
+                }
+
+                String data = dia + "/" + mes + "/" + year;
                 etDataNascimento.setText(data);
-                DataDia = dayOfMonth + "";
-                DataMes = month + "";
-                DataAno = year + "";
             }
         };
 
@@ -118,9 +129,11 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                     String nome = etNome.getText().toString();
                     String apelido = etApelido.getText().toString();
                     String telemovel = etTelemovel.getText().toString();
-                    String dia = DataDia;
-                    String mes = DataMes;
-                    String ano = DataAno;
+
+                    DataDia = etDataNascimento.getText().toString().substring(0,2);
+                    DataMes = etDataNascimento.getText().toString().substring(3,5);
+                    DataAno = etDataNascimento.getText().toString().substring(6,10);
+
                     String nif = etNIF.getText().toString();
 
                     if (!isNomeValid(nome)) {
@@ -148,7 +161,7 @@ public class EditarPerfilActivity extends AppCompatActivity implements EditarPer
                         return;
                     }
 
-                    Singleton.getInstance(getApplicationContext()).atualizarDadosLeitorAPI(getApplicationContext(), nome, apelido, telemovel, dia, mes, ano, nif, id, token);
+                    Singleton.getInstance(getApplicationContext()).atualizarDadosLeitorAPI(getApplicationContext(), nome, apelido, telemovel, DataDia, DataMes, DataAno, nif, id, token);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }

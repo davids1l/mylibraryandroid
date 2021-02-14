@@ -59,7 +59,7 @@ import java.util.Map;
 
 public class Singleton {
 
-    public static final String IP = "http://192.168.1.100";
+    public static final String IP = "http://192.168.8.103";
     private static Singleton instance = null;
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = IP + ":8888/backend/web/api/utilizador/login";

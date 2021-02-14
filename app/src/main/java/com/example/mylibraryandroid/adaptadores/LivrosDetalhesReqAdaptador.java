@@ -27,7 +27,7 @@ public class LivrosDetalhesReqAdaptador extends BaseAdapter {
     private ArrayList<Livro> livrosDetalhesReq;
     private LayoutInflater inflater;
     private String nomeAutor;
-    private static final String IP = "http://192.168.1.100";
+    private static final String IP = "http://192.168.8.103";
     private String urlCapas = IP + ":8888/backend/web/imgs/capas/";
 
     public LivrosDetalhesReqAdaptador(Context context, ArrayList<Livro> livrosDetalhesReq) {

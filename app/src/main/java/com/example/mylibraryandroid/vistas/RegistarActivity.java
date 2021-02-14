@@ -1,22 +1,42 @@
 package com.example.mylibraryandroid.vistas;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.listeners.RegistarListener;
 import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.utils.JsonParser;
 
-public class RegistarActivity extends AppCompatActivity implements RegistarListener {
-    private EditText etPrimeiroNome, etApelido, etEmail, etDia, etMes, etAno, etNif, etTelefone, etPassword, etConfPassword;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+public class RegistarActivity extends AppCompatActivity implements RegistarListener{
+    private EditText etPrimeiroNome, etApelido, etEmail, etNif, etTelefone, etPassword, etConfPassword, dataEscolhida;
+    private Button btnEscolherData;
+    private DatePickerDialog.OnDateSetListener DateSetListener;
+    private String dataSelecionada;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,16 +47,45 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
         etPrimeiroNome = findViewById(R.id.etPrimeiroNome);
         etApelido = findViewById(R.id.etApelido);
         etEmail = findViewById(R.id.etEmail);
-        etDia = findViewById(R.id.etDia);
-        etMes = findViewById(R.id.etMes);
-        etAno = findViewById(R.id.etAno);
         etNif = findViewById(R.id.tvNIF);
         etTelefone = findViewById(R.id.etTelefone);
         etPassword = findViewById(R.id.etPassword);
         etConfPassword = findViewById(R.id.etConfPassword);
 
+        dataEscolhida = findViewById(R.id.dataEscolhida);
+        dataEscolhida.setEnabled(false);
+        btnEscolherData = findViewById(R.id.btnEscolherData);
+
+
+        btnEscolherData.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(RegistarActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, DateSetListener, year, month, day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                dialog.show();
+            }
+        });
+
+        DateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String data = dayOfMonth + "/" + month + "/" + year;
+                dataEscolhida.setText(data);
+                dataSelecionada = year + "/" + month + "/" + dayOfMonth;
+            }
+        };
+
         Singleton.getInstance(getApplicationContext()).setRegistarListener(this);
     }
+
 
     public void onClickLogin(View view) {
         Intent intent;
@@ -49,15 +98,17 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
             String primeiro_nome = etPrimeiroNome.getText().toString();
             String ultimo_nome = etApelido.getText().toString();
             String email = etEmail.getText().toString();
-            String dta_nascimento = etAno.getText().toString() + "/" + etMes.getText().toString() + "/" + etDia.getText().toString();
+            String dta_nascimento = dataSelecionada;
             String nif = etNif.getText().toString();
             String num_telemovel = etTelefone.getText().toString();
             String password = etPassword.getText().toString();
             String confPassword = etConfPassword.getText().toString();
 
-            String ano = etAno.getText().toString();
-            String mes = etMes.getText().toString();
-            String dia = etDia.getText().toString();
+
+            /*if (!isDataBlank(dta_nascimento)) {
+                Toast.makeText(getApplicationContext(), "Data de nascimento em branco", Toast.LENGTH_SHORT).show();
+                return;
+            }*/
 
 
             if (!isNomeValid(primeiro_nome)) {
@@ -74,44 +125,6 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
                 etEmail.setError(getString(R.string.etEmailInválido));
                 return;
             }
-
-
-            if (!isDiaBlank(dia)){
-                etDia.setError(getString(R.string.campoBranco));
-                return;
-            }else {
-                if(!isDiaValid(Integer.parseInt(dia))){
-                    etDia.setError(getString(R.string.diaInvalido));
-                    return;
-                }
-            }
-
-            if(!isMesBlank(mes)){
-                etMes.setError(getString(R.string.campoBranco));
-                return;
-            }else {
-                if (!isMesValid(Integer.parseInt(mes))){
-                    etMes.setError(getString(R.string.mesInvalido));
-                    return;
-                }
-            }
-
-
-            if (isAnoBlank(ano) == 1){
-                etAno.setError(getString(R.string.campoBranco));
-                return;
-            }else {
-                if(isAnoBlank(ano) == 2){
-                    etAno.setError(getString(R.string.anoTerQuatroDigitos));
-                    return;
-                }
-            }
-
-            if(!isAnoValid(Integer.parseInt(ano))){
-                etAno.setError(getString(R.string.anoInvalido));
-                return;
-            }
-
 
 
             if (!isNifValid(nif)) {
@@ -159,6 +172,13 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
     }
 
     //Validações dos dados a enviar para API
+    private boolean isDataBlank(String data){
+        if (data == null) {
+            return false;
+        }
+        return data.length() >= 1;
+    }
+
     private boolean isNomeValid(String nome) {
         if (nome == null) {
             return false;
@@ -216,55 +236,5 @@ public class RegistarActivity extends AppCompatActivity implements RegistarListe
             return false;
         }
         return true;
-    }
-
-    private int isAnoBlank(String ano){
-        if(ano == null){
-            return 1;
-        }else {
-            if(ano.length() != 4){
-                return 2;
-            }
-        }
-        return 0;
-    }
-
-    private boolean isAnoValid(int ano){
-        if(ano < 1900 || ano > 2021){
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    private boolean isMesValid(int mes){
-        if(mes < 1 || mes > 12){
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    private boolean isMesBlank(String mes){
-        if(mes == null){
-            return false;
-        }
-        return mes.length() >= 1;
-    }
-
-
-    private boolean isDiaBlank(String dia){
-        if(dia == null){
-            return false;
-        }
-        return dia.length() >= 1;
-    }
-
-    private boolean isDiaValid(int dia){
-        if(dia < 1 || dia > 31){
-            return false;
-        }else {
-            return true;
-        }
     }
 }

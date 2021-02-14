@@ -80,13 +80,12 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         setHasOptionsMenu(true);
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        id = sharedPreferences.getString(MenuMainActivity.ID,"");
-        token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");
-
         View view = inflater.inflate(R.layout.perfil_fragment, container, false);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
+        id = sharedPreferences.getString(MenuMainActivity.ID, "");
+        token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
 
         bdHelper = new BDHelper(getContext());
         tvNumLeitor = view.findViewById(R.id.tvNumLeitor);
@@ -115,11 +114,11 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.editarFoto:
-                if(JsonParser.isConnectionInternet(getContext())){
+                if (JsonParser.isConnectionInternet(getContext())) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_IMAGEM);
-                }else {
+                } else {
                     Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -136,7 +135,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
     }
 
 
-    private void logout(){
+    private void logout() {
         SharedPreferences sharedPrefUser = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefUser.edit();
         editor.clear();
@@ -146,8 +145,8 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
     }
 
 
-    public void editarDados(){
-        if(JsonParser.isConnectionInternet(getContext())){
+    public void editarDados() {
+        if (JsonParser.isConnectionInternet(getContext())) {
             Intent intent = new Intent(getContext(), EditarPerfilActivity.class);
             intent.putExtra(EditarPerfilActivity.NOME, dadosLeitor.getPrimeiroNome());
             intent.putExtra(EditarPerfilActivity.APELIDO, dadosLeitor.getUltimoNome());
@@ -155,7 +154,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
             intent.putExtra(EditarPerfilActivity.DATA_NASCIMENTO, dadosLeitor.getDtaNascimento());
             intent.putExtra(EditarPerfilActivity.NIF, dadosLeitor.getNif());
             startActivityForResult(intent, 1);
-        }else {
+        } else {
             Toast.makeText(getContext(), R.string.noInternet, Toast.LENGTH_SHORT).show();
         }
     }
@@ -167,9 +166,9 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         String id = sharedPreferences.getString(MenuMainActivity.ID,"");
         String token = sharedPreferences.getString(MenuMainActivity.TOKEN,"");*/
 
-        switch (requestCode){
+        switch (requestCode) {
             case PICK_IMAGE:
-                if(resultCode == Activity.RESULT_OK){
+                if (resultCode == Activity.RESULT_OK) {
                     Uri uri = data.getData();
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
@@ -183,14 +182,14 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
                 }
                 break;
             default:
-                if(resultCode == Activity.RESULT_OK){
+                if (resultCode == Activity.RESULT_OK) {
                     Singleton.getInstance(getContext()).getDadosLeitorAPI(getContext(), id, token);
                     Toast.makeText(getContext(), R.string.editarDadosSucesso, Toast.LENGTH_SHORT).show();
                 }
         }
     }
 
-    public void atribuirFoto(Uri uri){
+    public void atribuirFoto(Uri uri) {
         Glide.with(getContext())
                 .load(uri)
                 .placeholder(R.drawable.logoipl)
@@ -208,9 +207,9 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         tvNome.setText(nome);
         tvNumTelemovel.setText(utilizador.getNumTelemovel());
         String data = utilizador.getDtaNascimento();
-        String dia = data.substring(8,10);
-        String mes = data.substring(5,7);
-        String ano = data.substring(0,4);
+        String dia = data.substring(8, 10);
+        String mes = data.substring(5, 7);
+        String ano = data.substring(0, 4);
         tvDataNascimento.setText(dia + "/" + mes + "/" + ano);
         tvNIF.setText(utilizador.getNif());
         tvEmail.setText(utilizador.getEmail());
@@ -237,7 +236,7 @@ public class PerfilFragment extends Fragment implements PerfilListener, SwipeRef
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSAO_IMAGEM:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     carregarFotoGaleria();
                 }
                 break;

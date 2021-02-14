@@ -166,14 +166,14 @@ public class BDHelper extends SQLiteOpenHelper {
                 APELIDO+" TEXT NOT NULL, " +
                 NUMERO_LEITOR+" TEXT NOT NULL, " +
                 EMAIL+" TEXT NOT NULL, " +
-                //BLOQUEADO + " INTEGER, " +
-                //DATA_BLOQUEADO + " TEXT, " +
+                BLOQUEADO + " INTEGER, " +
+                DATA_BLOQUEADO + " TEXT, " +
                 DATA_NASCIMENTO+" TEXT NOT NULL, " +
                 NIF+" INTEGER NOT NULL, " +
                 NUM_TELEMOVEL+" INTEGER NOT NULL, " +
-                //DATA_REGISTO + " TEXT NOT NULL, " +
-                FOTO_PERFIL+" TEXT NOT NULL);";
-                //ID_BIBLIOTECA + " INTEGER);";
+                DATA_REGISTO + " TEXT NOT NULL, " +
+                FOTO_PERFIL+" TEXT NOT NULL, " +
+                ID_BIBLIOTECA + " INTEGER);";
 
         db.execSQL(createTableUtilizador);
 
@@ -432,6 +432,50 @@ public class BDHelper extends SQLiteOpenHelper {
         cursor.close();
         return utilizador;
     }
+
+    public void adicionarUtilizadorBD(Utilizador utilizador) {
+        ContentValues values = new ContentValues();
+        values.put(ID_UTILIZADOR, utilizador.getId());
+        values.put(NOME, utilizador.getPrimeiroNome());
+        values.put(APELIDO, utilizador.getUltimoNome());
+        values.put(NUMERO_LEITOR, utilizador.getNumero());
+        values.put(EMAIL, utilizador.getEmail());
+        values.put(DATA_NASCIMENTO, utilizador.getDtaNascimento());
+        values.put(NIF, utilizador.getNif());
+        values.put(NUM_TELEMOVEL, utilizador.getNumTelemovel());
+        values.put(FOTO_PERFIL, utilizador.getFoto_perfil());
+        values.put(BLOQUEADO, utilizador.getBloqueado());
+        values.put(DATA_BLOQUEADO, utilizador.getDtaBloqueado());
+        values.put(DATA_REGISTO, utilizador.getDtaRegisto());
+        values.put(ID_BIBLIOTECA, utilizador.getId_biblioteca());
+
+        this.db.insert(TABLE_NAME_UTILIZADOR, null, values);
+    }
+
+    public ArrayList<Utilizador> getAllUtilizadoresBD(){
+        ArrayList<Utilizador> utilizadores = new ArrayList<>();
+
+        //TODO IR BUSCAR OS DADOS À BD
+        Cursor cursor = this.db.query(TABLE_NAME_UTILIZADOR, new String[]{ID_UTILIZADOR,BLOQUEADO, NIF, EMAIL,NUM_TELEMOVEL, NOME,APELIDO, NUMERO_LEITOR, DATA_BLOQUEADO, DATA_NASCIMENTO, DATA_REGISTO,
+                        FOTO_PERFIL, ID_BIBLIOTECA}
+                ,null,null, null, null,null);
+
+
+        if (cursor.moveToFirst()){
+            do {
+                Utilizador auxUtilizador = new Utilizador(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3),
+                        cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8),
+                        cursor.getString(9),cursor.getString(10),cursor.getString(11),cursor.getInt(12));
+                utilizadores.add(auxUtilizador);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return utilizadores;
+    }
+
+    public void removerAllUtilizadoresBD() { this.db.delete(TABLE_NAME_UTILIZADOR, null, null); }
+
+
 
 
     public void adicionarComentarioBD(Comentario comentario) {

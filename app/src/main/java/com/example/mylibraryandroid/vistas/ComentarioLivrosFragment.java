@@ -29,7 +29,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
     private ListView lvComentarios;
     private ArrayList<Comentario> comentarios;
     private SwipeRefreshLayout swipeRefreshLayout;
-    //private String id;
+    private String id;
     private String token;
     private int indexID_LIVRO;
 
@@ -42,7 +42,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
         setHasOptionsMenu(true);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(MenuMainActivity.PREF_INFO_USER, Context.MODE_PRIVATE);
-        //id = sharedPreferences.getString(MenuMainActivity.ID, "");
+        id = sharedPreferences.getString(MenuMainActivity.ID, "");
         token = sharedPreferences.getString(MenuMainActivity.TOKEN, "");
 
         View view = inflater.inflate(R.layout.comentario_livros_fragment, container, false);
@@ -53,6 +53,7 @@ public class ComentarioLivrosFragment extends Fragment implements SwipeRefreshLa
 
         Singleton.getInstance(getContext()).setComentarioListener(this);
         Singleton.getInstance(getContext()).getComentarioAPI(getContext(), token);
+        Singleton.getInstance(getContext()).getUtilizadoresAPI(getContext(), token);
 
         Bundle args = getArguments();
         indexID_LIVRO = args.getInt("index", 0);

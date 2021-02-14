@@ -34,6 +34,7 @@ import com.example.mylibraryandroid.listeners.PerfilListener;
 import com.example.mylibraryandroid.listeners.RegistarListener;
 import com.example.mylibraryandroid.listeners.RequisicaoListener;
 import com.example.mylibraryandroid.listeners.RequisicaoLivroListener;
+import com.example.mylibraryandroid.listeners.UtilizadorListener;
 import com.example.mylibraryandroid.utils.AutorJsonParser;
 import com.example.mylibraryandroid.utils.BibliotecaJsonParser;
 import com.example.mylibraryandroid.utils.EditoraJsonParser;
@@ -82,6 +83,7 @@ public class Singleton {
     private static final String mUrlAPIAdicionarFavorito = IP + ":8888/backend/web/api/favorito";
     private static final String mUrlAPIComentario = IP + ":8888/backend/web/api/comentario";
     private static final String mUrlAPIEditarFoto = IP + ":8888/backend/web/api/utilizador/uploadFoto/";
+    private static final String mUrlAPIUtilizador = IP + ":8888/backend/web/api/utilizador/dados-utilizadores";
     private LoginListener loginListener;
     private RegistarListener registarListener;
     private CatalogoListener catalogoListener;
@@ -95,6 +97,7 @@ public class Singleton {
     private RequisicaoListener requisicaoListener;
     private RequisicaoLivroListener requisicaoLivroListener;
     private CarrinhoListener carrinhoListener;
+    private UtilizadorListener utilizadorListener;
     private LivrosDetalhesReqListener livrosDetalhesReqListener;
     private BDHelper bdHelper;
     private ArrayList<Livro> catalogo;
@@ -105,6 +108,7 @@ public class Singleton {
     private ArrayList<Editora> editoras;
     private ArrayList<Requisicao> requisicoes;
     private ArrayList<RequisicaoLivro> livrosRequisicao;
+    private ArrayList<Utilizador> utilizadores;
     private Integer totalReq;
     public String totalLivrosReq;
     private ArrayList<Comentario> comentario;
@@ -141,6 +145,10 @@ public class Singleton {
 
     public void setAutorListener(AutorListener autorListener) {
         this.autorListener = autorListener;
+    }
+
+    public void setUtilizadorListener(UtilizadorListener utilizadorListener) {
+        this.utilizadorListener = utilizadorListener;
     }
 
     public void setFavoritoListener(FavoritoListener favoritoListener) {
@@ -803,6 +811,74 @@ public class Singleton {
         return null;
     }
 
+    public void getUtilizadoresAPI(final Context context, final String token) {
+        if (!JsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, R.string.noInternet, Toast.LENGTH_LONG).show();
+        } else {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIUtilizador, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    utilizadores = JsonParser.parserJsonUtilizadores(response);
+                    adicionarUtilizadoresBD(utilizadores);
+
+                    if (utilizadorListener != null)
+                        utilizadorListener.onRefreshUtilizadores(utilizadores);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("authorization", token);
+
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void adicionarUtilizadorBD(Utilizador utilizador) {
+        bdHelper.adicionarUtilizadorBD(utilizador);
+    }
+
+    public void adicionarUtilizadoresBD(ArrayList<Utilizador> utilizadores) {
+        bdHelper.removerAllUtilizadoresBD();
+        for (Utilizador u : utilizadores)
+            adicionarUtilizadorBD(u);
+    }
+
+    public ArrayList<Utilizador> getAllUtilizadoresBD() {
+        return bdHelper.getAllUtilizadoresBD();
+    }
+
+    public String getNomeUtilizadorComentario(int idUtilizador) {
+        ArrayList<Utilizador> auxUtilizador = getAllUtilizadoresBD();
+
+        for (Utilizador u : auxUtilizador) {
+            if (u.getId() == idUtilizador) {
+                return u.getPrimeiroNome() + " " + u.getUltimoNome();
+            }
+        }
+
+        return null;
+    }
+
+    public String getFotoUtilizadorComentario(int id_utilizador) {
+        ArrayList<Utilizador> auxUtilizador = getAllUtilizadoresBD();
+
+        for (Utilizador u : auxUtilizador) {
+            if (u.getId() == id_utilizador) {
+                return u.getFoto_perfil();
+            }
+        }
+
+        return null;
+    }
 
     public void adicionarEditoraBD(Editora editora) {
         bdHelper.adicionarEditoraDB(editora);

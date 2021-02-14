@@ -4,11 +4,14 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.example.mylibraryandroid.modelo.Autor;
 import com.example.mylibraryandroid.modelo.Utilizador;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class JsonParser {
     public static String[] parserJsonLogin(String response) {
@@ -74,6 +77,37 @@ public class JsonParser {
             e.printStackTrace();
         }
         return utilizador;
+    }
+
+    public static ArrayList<Utilizador> parserJsonUtilizadores(JSONArray response){
+        ArrayList<Utilizador> utilizadores = new ArrayList<>();
+
+        try {
+            for (int i=0; i<response.length(); i++){
+                JSONObject utilizador = (JSONObject) response.get(i);
+
+                int id_utilizador = utilizador.getInt("id_utilizador");
+                String primeiro_nome = utilizador.getString("primeiro_nome");
+                String ultimo_nome = utilizador.getString("ultimo_nome");
+                String numero = utilizador.getString("numero");
+                //int bloqueado = utilizador.getInt("bloqueado");
+                String dta_bloqueado = utilizador.getString("dta_bloqueado");
+                String dta_nascimento = utilizador.getString("dta_nascimento");
+                String nif = utilizador.getString("nif");
+                String num_telemovel = utilizador.getString("num_telemovel");
+                String dta_registo = utilizador.getString("dta_registo");
+                String foto_perfil = utilizador.getString("foto_perfil");
+                //int id_biblioteca = utilizador.getInt("id_biblioteca");
+                String email = utilizador.getString("email");
+
+                Utilizador auxUtilizador = new Utilizador(id_utilizador, 0, nif, email, num_telemovel, primeiro_nome, ultimo_nome,
+                        numero, dta_bloqueado, dta_nascimento, dta_registo, foto_perfil, 0);
+                utilizadores.add(auxUtilizador);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return utilizadores;
     }
 
 

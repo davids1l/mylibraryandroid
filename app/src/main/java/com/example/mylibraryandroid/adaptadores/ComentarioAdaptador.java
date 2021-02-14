@@ -1,5 +1,6 @@
 package com.example.mylibraryandroid.adaptadores;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
@@ -14,9 +15,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mylibraryandroid.R;
 import com.example.mylibraryandroid.modelo.Comentario;
 import com.example.mylibraryandroid.modelo.Livro;
+import com.example.mylibraryandroid.modelo.Singleton;
 import com.example.mylibraryandroid.vistas.MenuMainActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ComentarioAdaptador extends BaseAdapter {
 
@@ -24,6 +29,8 @@ public class ComentarioAdaptador extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<Comentario> comentarios;
     private String id;
+    private static final String IP = "http://192.168.1.100";
+    private String urlImagem = IP + ":8888/frontend/web/imgs/perfil/";
 
     public ComentarioAdaptador(Context context, ArrayList<Comentario> comentarios) {
         this.context = context;
@@ -81,12 +88,22 @@ public class ComentarioAdaptador extends BaseAdapter {
         }
 
         public void update(Comentario comentario) {
-            tvUtilizadorCom.setText(comentario.getId_utilizador()+"");
+            String nomeUtilizador = Singleton.getInstance(context).getNomeUtilizadorComentario(comentario.getId_utilizador());
+            String fotoUtilizador = Singleton.getInstance(context).getFotoUtilizadorComentario(comentario.getId_utilizador());
+
+            tvUtilizadorCom.setText(nomeUtilizador);
             tvComentario.setText(comentario.getComentario());
-            tvDtaCom.setText(comentario.getDta_comentario());
+
+            String data = comentario.getDta_comentario();
+            String dia = data.substring(8, 10);
+            String mes = data.substring(5, 7);
+            String ano = data.substring(0, 4);
+            String dataCom = dia + "/" + mes + "/" + ano + data.substring(10);
+
+            tvDtaCom.setText(dataCom);
 
             Glide.with(context)
-                    .load(comentario.getId_utilizador())
+                    .load(urlImagem + fotoUtilizador)
                     .placeholder(R.drawable.logoipl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imgPerfil);
